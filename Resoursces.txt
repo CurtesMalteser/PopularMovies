@@ -1,0 +1,32 @@
+My own project JSONCurrencies that I created to practice what we learnt during the challenge.
+
+https://github.com/CurtesMalteser/JSONCurrencies
+
+How to add a spinner next to a menu in the toolbar
+
+https://stackoverflow.com/a/37250623
+
+Spinner
+
+http://www.brainysolutions.org/Course/Section/485/learn-android-development-for-beginners-spinner
+
+CardView implementation
+
+https://developer.android.com/training/material/lists-cards.html
+
+Multi Screen Suppor
+https://android-developers.googleblog.com/2011/07/new-tools-for-managing-screen-sizes.html
+https://developer.android.com/training/multiscreen/screensizes.html#TaskUseSWQuali
+https://stackoverflow.com/questions/9279111/determine-if-the-device-is-a-smartphone-or-tablet
+
+My project failled because the package name had an underscore, this is the official Java convetion when it has an .
+Also, if that is an error, the error is caused by Android Studio.
+
+The Java™ Tutorials -> Naming a Package -> Naming Conventions 
+https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html
+
+Link shared with doesn't mention hyphen cases and this isn't the official documentation. But I refactored the package name anyway.
+https://www.javatpoint.com/java-naming-conventions
+
+API Key on gradle file
+https://richardroseblog.wordpress.com/2016/05/29/hiding-secret-api-keys-from-git/

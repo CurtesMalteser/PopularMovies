@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="menu_array">
+        <item>@string/string_popular</item>
+        <item>@string/string_top_rated</item>
+    </string-array>
+</resources>
