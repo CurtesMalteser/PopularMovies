@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.curtesmalteser.popularmoviesstage1.MoviesModel;
+import com.curtesmalteser.popularmoviesstage1.utils.Result;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -21,17 +21,17 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
     private Context mContext;
-    private List<MoviesModel> mMoviesArrayList;
+    private List<Result> mMoviesArrayList;
     final private ListItemClickListener mOnClickListener;
 
     public interface ListItemClickListener {
-        void onListItemClick(MoviesModel moviesModel);
+        void onListItemClick(Result result);
     }
 
-    public MoviesAdapter(Context context, List<MoviesModel> moviesModelArrayList,
+    public MoviesAdapter(Context context, List<Result> resultArrayList,
                          ListItemClickListener listener) {
         this.mContext = context;
-        this.mMoviesArrayList = moviesModelArrayList;
+        this.mMoviesArrayList = resultArrayList;
         this.mOnClickListener = listener;
     }
 
@@ -71,7 +71,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         }
 
         void bind(int listIndex) {
-            MoviesModel model = mMoviesArrayList.get(listIndex);
+            Result model = mMoviesArrayList.get(listIndex);
 
             Picasso.with(mContext)
                     .load(NetworkUtils.getPosterUrl(model.getPosterPath()))
@@ -81,8 +81,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            MoviesModel moviesModelList = mMoviesArrayList.get(clickedPosition);
-            mOnClickListener.onListItemClick(moviesModelList);
+            Result resultList = mMoviesArrayList.get(clickedPosition);
+            mOnClickListener.onListItemClick(resultList);
         }
     }
 }

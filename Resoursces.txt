@@ -30,3 +30,12 @@ https://www.javatpoint.com/java-naming-conventions
 
 API Key on gradle file
 https://richardroseblog.wordpress.com/2016/05/29/hiding-secret-api-keys-from-git/
+
+Retrofit Tutorial
+https://www.journaldev.com/13639/retrofit-android-example-tutorial
+
+New Json Model
+http://www.jsonschema2pojo.org/
+
+bottom navigation icons top star and heart
+https://www.flaticon.com/

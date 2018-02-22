@@ -1,22 +1,34 @@
-package com.curtesmalteser.popularmoviesstage1;
+package com.curtesmalteser.popularmoviesstage1.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by António "Curtes Malteser" Bastião on 16/02/2018.
  */
 
 
-public class MoviesModel implements Parcelable {
-
+public class Result implements Parcelable {
+    @SerializedName("vote_average")
+    @Expose
     private String voteAverage; // vote average
+    @SerializedName("title")
+    @Expose
     private String title; //title
+    @SerializedName("poster_path")
+    @Expose
     private String posterPath; // movie poster
+    @SerializedName("overview")
+    @Expose
     private String overview; // plot synopsis
+    @SerializedName("release_date")
+    @Expose
     private String releaseDate; // release date
 
-    public MoviesModel(String voteAverage, String title, String posterPath, String overview, String releaseDate) {
+    public Result(String voteAverage, String title, String posterPath, String overview, String releaseDate) {
         this.voteAverage = voteAverage;
         this.title = title;
         this.posterPath = posterPath;
@@ -24,7 +36,7 @@ public class MoviesModel implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    protected MoviesModel(Parcel in) {
+    protected Result(Parcel in) {
         voteAverage = in.readString();
         title = in.readString();
         posterPath = in.readString();
@@ -32,15 +44,15 @@ public class MoviesModel implements Parcelable {
         releaseDate = in.readString();
     }
 
-    public static final Creator<MoviesModel> CREATOR = new Creator<MoviesModel>() {
+    public static final Creator<Result> CREATOR = new Creator<Result>() {
         @Override
-        public MoviesModel createFromParcel(Parcel in) {
-            return new MoviesModel(in);
+        public Result createFromParcel(Parcel in) {
+            return new Result(in);
         }
 
         @Override
-        public MoviesModel[] newArray(int size) {
-            return new MoviesModel[size];
+        public Result[] newArray(int size) {
+            return new Result[size];
         }
     };
 

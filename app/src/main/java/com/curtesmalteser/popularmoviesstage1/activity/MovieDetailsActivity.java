@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.curtesmalteser.popularmoviesstage1.MoviesModel;
+import com.curtesmalteser.popularmoviesstage1.utils.Result;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -41,7 +41,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if (getIntent().hasExtra(getResources().getString(R.string.string_extra))) {
-            MoviesModel model = getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+            Result model = getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
 
             Picasso.with(this)
                     .load(NetworkUtils.getPosterUrl(model.getPosterPath()))

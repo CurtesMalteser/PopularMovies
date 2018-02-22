@@ -3,8 +3,12 @@
     <string name="title_menu_spinner">Menu Spinner</string>
     <string name="string_popular">Popular</string>
     <string name="string_top_rated">Top Rated</string>
+    <string name="string_favorite">Favorite</string>
     <string name="string_extra" translatable="false">movies</string>
     <string name="string_vote_average">%s/10</string>
     <string name="check_internet_connection">Please, check your Internet connection.</string>
     <string name="separator">|</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
