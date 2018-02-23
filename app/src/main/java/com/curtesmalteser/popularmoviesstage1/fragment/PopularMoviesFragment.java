@@ -20,7 +20,6 @@ import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
-import com.curtesmalteser.popularmoviesstage1.utils.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +54,7 @@ public class PopularMoviesFragment extends Fragment
     public PopularMoviesFragment() {
         // Required empty public constructor
     }
-    
+
     public static PopularMoviesFragment newInstance() {
         PopularMoviesFragment fragment = new PopularMoviesFragment();
         /*Bundle args = new Bundle();
@@ -92,7 +91,7 @@ public class PopularMoviesFragment extends Fragment
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
                 public void onResponse(Call<MoviesModel> call, Response<MoviesModel> response) {
-                    moviesAdapter = new MoviesAdapter(getContext(), response.body().getResults(), PopularMoviesFragment.this);
+                    moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), PopularMoviesFragment.this);
                     recyclerView.setAdapter(moviesAdapter);
                 }
 
@@ -105,10 +104,10 @@ public class PopularMoviesFragment extends Fragment
     }
 
     @Override
-    public void onListItemClick(Result result) {
+    public void onListItemClick(MoviesModel moviesModel) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra(getResources().getString(R.string.string_extra), result);
-        onButtonPressed(result);
+        intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
+        onButtonPressed(moviesModel);
         startActivity(intent);
     }
 
@@ -119,29 +118,15 @@ public class PopularMoviesFragment extends Fragment
         ButterKnife.bind(this, view);
 
         recyclerView.setHasFixedSize(true);
-
-        boolean tablet = getResources().getBoolean(R.bool.is_tablet);
-        boolean isTen = getResources().getBoolean(R.bool.is_ten);
-        boolean island = getResources().getBoolean(R.bool.is_landscape);
-
-        if (tablet && isTen && island)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
-        else if (tablet && isTen)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        else if (tablet && island)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        else if (tablet)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
 
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Result uri) {
+    public void onButtonPressed(MoviesModel moviesModel) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(moviesModel);
         }
     }
 
@@ -152,7 +137,7 @@ public class PopularMoviesFragment extends Fragment
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnOverviewFragmentInteractionListener");
         }
     }
 
@@ -174,6 +159,6 @@ public class PopularMoviesFragment extends Fragment
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Result uri);
+        void onFragmentInteraction(MoviesModel uri);
     }
 }

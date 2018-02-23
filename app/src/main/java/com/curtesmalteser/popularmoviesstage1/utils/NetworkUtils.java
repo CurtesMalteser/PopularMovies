@@ -1,11 +1,15 @@
 package com.curtesmalteser.popularmoviesstage1.utils;
 
 import android.net.Uri;
+import android.util.Log;
+
+import com.curtesmalteser.popularmoviesstage1.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -16,78 +20,15 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    final static String BASE_URL = "https://api.themoviedb.org/3";
+    final static String POSTER_URL = "http://image.tmdb.org/t/p";
 
-    final static String POSTER_URL = "http://image.tmdb.org/t/p/w185/";
+    public static Uri getPosterUrl(String width, String poster) {
 
-    final static String MOVIE_POPULAR = "movie/popular";
-
-    final static String MOVIE_TOP_RATED = "movie/top_rated";
-
-    final static String API = "api_key";
-
-
-    public static URL buildUrlPopularMovies(String key) {
-
-        Uri buildUri = Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath(MOVIE_POPULAR)
-                .appendQueryParameter(API, key)
+        Uri buildUri = Uri.parse(POSTER_URL).buildUpon()
+                .appendEncodedPath(width)
+                .appendEncodedPath(poster)
                 .build();
-
-        URL url = null;
-
-        try {
-            url = new URL(buildUri.toString());
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        return url;
+        Log.d("AJDB", "getPosterUrl: " + buildUri.toString());
+        return buildUri;
     }
-
-    public static URL buildUrlTopRated(String key) {
-
-        Uri buildUri = Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath(MOVIE_TOP_RATED)
-                .appendQueryParameter(API, key)
-                .build();
-
-        URL url = null;
-
-        try {
-            url = new URL(buildUri.toString());
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        return url;
-    }
-
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-
-        } finally {
-            urlConnection.disconnect();
-        }
-    }
-
-    public static String getPosterUrl(String poster) {
-
-        return POSTER_URL + poster;
-    }
-
 }

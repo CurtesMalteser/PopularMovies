@@ -10,6 +10,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:textSize="@dimen/textTitle"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="@+id/guideline"
@@ -32,16 +33,6 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <TextView
-        android:id="@+id/overview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding_exterior"
-        android:layout_marginRight="@dimen/padding_exterior"
-        android:layout_marginTop="@dimen/padding_start_end"
-        android:layout_marginBottom="@dimen/padding_exterior"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/votesAndDate"
-        tools:text="Minions Stuart, Kevin and Bob are recruited by Scarlet Overkill, a super-villain who, alongside her inventor husband Herb, hatches a plot to take over the world." />
+
 
 </android.support.constraint.ConstraintLayout>

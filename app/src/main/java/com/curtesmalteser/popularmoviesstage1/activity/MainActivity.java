@@ -13,7 +13,7 @@ import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment;
 import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment;
 import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment;
-import com.curtesmalteser.popularmoviesstage1.utils.Result;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Result result) {
+    public void onFragmentInteraction(MoviesModel moviesModel) {
 
     }
 

@@ -3,7 +3,6 @@ package com.curtesmalteser.popularmoviesstage1.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,7 +20,6 @@ import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
-import com.curtesmalteser.popularmoviesstage1.utils.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,26 +98,28 @@ public class TopRatedMoviesFragment extends Fragment
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
                 public void onResponse(Call<MoviesModel> call, Response<MoviesModel> response) {
-                    moviesAdapter = new MoviesAdapter(getContext(), response.body().getResults(), TopRatedMoviesFragment.this);
+                    moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), TopRatedMoviesFragment.this);
                     recyclerView.setAdapter(moviesAdapter);
                 }
+
                 @Override
                 public void onFailure(Call<MoviesModel> call, Throwable t) {
                     Log.d("AJDB", "onFailure:" + t.getMessage().toString());
                 }
             });
-        } else Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onListItemClick(Result result) {
+    public void onListItemClick(MoviesModel moviesModel) {
 
         if (mListener != null) {
-            mListener.onFragmentInteraction(result);
+            mListener.onFragmentInteraction(moviesModel);
         }
 
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra(getResources().getString(R.string.string_extra), result);
+        intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
         startActivity(intent);
     }
 
@@ -130,21 +130,7 @@ public class TopRatedMoviesFragment extends Fragment
         ButterKnife.bind(this, view);
 
         recyclerView.setHasFixedSize(true);
-
-        boolean tablet = getResources().getBoolean(R.bool.is_tablet);
-        boolean isTen = getResources().getBoolean(R.bool.is_ten);
-        boolean island = getResources().getBoolean(R.bool.is_landscape);
-
-        if (tablet && isTen && island)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
-        else if (tablet && isTen)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        else if (tablet && island)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        else if (tablet)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
 
         return view;
     }
@@ -163,7 +149,7 @@ public class TopRatedMoviesFragment extends Fragment
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnOverviewFragmentInteractionListener");
         }
     }
 
@@ -185,6 +171,6 @@ public class TopRatedMoviesFragment extends Fragment
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Result result);
+        void onFragmentInteraction(MoviesModel moviesModel);
     }
 }

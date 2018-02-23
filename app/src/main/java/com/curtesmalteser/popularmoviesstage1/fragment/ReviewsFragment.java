@@ -1,33 +1,27 @@
 package com.curtesmalteser.popularmoviesstage1.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.curtesmalteser.popularmoviesstage1.R;
-import com.curtesmalteser.popularmoviesstage1.activity.MovieDetailsActivity;
-import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FavoriteMoviesFragment.OnFragmentInteractionListener} interface
+ * {@link OnReviewsFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FavoriteMoviesFragment#newInstance} factory method to
+ * Use the {@link ReviewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FavoriteMoviesFragment extends Fragment
-        implements MoviesAdapter.ListItemClickListener {
-
+public class ReviewsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,62 +31,62 @@ public class FavoriteMoviesFragment extends Fragment
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnReviewsFragmentInteractionListener mListener;
 
-    private static final String PREFERENCES_NAME = "movies_preferences";
-    private final String SELECTION = "selection";
-
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-
-    public FavoriteMoviesFragment() {
+    public ReviewsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ReviewsFragment.
+     */
     // TODO: Rename and change types and number of parameters
-    //public static FavoriteMoviesFragment newInstance(String param1, String param2) {
-    public static FavoriteMoviesFragment newInstance() {
-        FavoriteMoviesFragment fragment = new FavoriteMoviesFragment();
-       /* Bundle args = new Bundle();
+    public static ReviewsFragment newInstance(String param1, String param2) {
+        ReviewsFragment fragment = new ReviewsFragment();
+        Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
+        if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
-    }
-
-    @Override
-    public void onListItemClick(MoviesModel moviesModel) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(moviesModel);
-            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-            intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
-            startActivity(intent);
         }
+        onButtonPressed("Reviews");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_reviews, container, false);
         ButterKnife.bind(this, view);
-
+        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+        Log.d("AJDB", model.getTitle() + " id: " + model.getId());
         return view;
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(String position) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(position);
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnReviewsFragmentInteractionListener) {
+            mListener = (OnReviewsFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnOverviewFragmentInteractionListener");
@@ -115,8 +109,8 @@ public class FavoriteMoviesFragment extends Fragment
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnReviewsFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(MoviesModel moviesModel);
+        void onFragmentInteraction(String position);
     }
 }

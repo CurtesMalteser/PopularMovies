@@ -37,5 +37,14 @@ https://www.journaldev.com/13639/retrofit-android-example-tutorial
 New Json Model
 http://www.jsonschema2pojo.org/
 
-bottom navigation icons top star and heart
+Bottom Navigation Bar
+http://www.truiton.com/2017/01/android-bottom-navigation-bar-example/
+
+Bottom Navigation icons "top star" and "heart"
 https://www.flaticon.com/
+
+GridLayourManager : Auto-Column Span
+https://codentrick.com/part-4-android-recyclerview-grid/
+
+TabLayout and ViewPager in your Android App
+https://android.jlelse.eu/tablayout-and-viewpager-in-your-android-app-738b8840c38a
