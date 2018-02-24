@@ -1,17 +1,25 @@
 package com.curtesmalteser.popularmoviesstage1.fragment;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
+import com.curtesmalteser.popularmoviesstage1.utils.VideosModel;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class VideosFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -23,6 +31,8 @@ public class VideosFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ConnectivityManager cm;
 
     public VideosFragment() {
         // Required empty public constructor
@@ -53,6 +63,10 @@ public class VideosFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+        makeVideosQuery(model.getId());
     }
 
     @Override
@@ -62,6 +76,32 @@ public class VideosFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void makeVideosQuery(String movieId) {
+        MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
+        Call<VideosModel> call;
+
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+
+            call = apiInterface.getVideos(movieId, BuildConfig.API_KEY);
+            call.enqueue(new Callback<VideosModel>() {
+                @Override
+                public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
+                    Log.d("AJDB", response.body().getVideosModels().get(0).getName() + " Key: " + response.body().getVideosModels().get(0).getKey());
+                    // moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), TopRatedMoviesFragment.this);
+                    //recyclerView.setAdapter(moviesAdapter);
+                }
+
+                @Override
+                public void onFailure(Call<VideosModel> call, Throwable t) {
+                    Log.d("AJDB", "onFailure:" + t.getMessage().toString());
+                }
+            });
+        } else
+            Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -1,26 +1,28 @@
 package com.curtesmalteser.popularmoviesstage1.fragment;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
+import com.curtesmalteser.popularmoviesstage1.utils.ReviewsModel;
+import com.curtesmalteser.popularmoviesstage1.utils.VideosModel;
 
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnReviewsFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ReviewsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ReviewsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +33,8 @@ public class ReviewsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnReviewsFragmentInteractionListener mListener;
+
+    private ConnectivityManager cm;
 
     public ReviewsFragment() {
         // Required empty public constructor
@@ -58,59 +61,46 @@ public class ReviewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+/*        if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        onButtonPressed("Reviews");
+        }*/
+        cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+        makeReviewsQuery(model.getId());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reviews, container, false);
-        ButterKnife.bind(this, view);
-        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
-        Log.d("AJDB", model.getTitle() + " id: " + model.getId());
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(String position) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(position);
-        }
+    private void makeReviewsQuery(String movieId) {
+        MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
+        Call<ReviewsModel> call;
+
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+
+            call = apiInterface.getReviews(movieId, BuildConfig.API_KEY);
+            call.enqueue(new Callback<ReviewsModel>() {
+                @Override
+                public void onResponse(Call<ReviewsModel> call, Response<ReviewsModel> response) {
+                    Log.d("AJDB", ""+response.body().getReviewsModels().size());
+                    // moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), TopRatedMoviesFragment.this);
+                    //recyclerView.setAdapter(moviesAdapter);
+                }
+
+                @Override
+                public void onFailure(Call<ReviewsModel> call, Throwable t) {
+                    Log.d("AJDB", "onFailure:" + t.getMessage().toString());
+                }
+            });
+        } else
+            Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnReviewsFragmentInteractionListener) {
-            mListener = (OnReviewsFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnOverviewFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnReviewsFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String position);
-    }
 }

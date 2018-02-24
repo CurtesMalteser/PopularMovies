@@ -17,7 +17,7 @@ public class MoviesModel implements Parcelable {
 
     @SerializedName("results")
     @Expose
-    private List<MoviesModel> moviesModels = null;
+    private List<MoviesModel> moviesModels;
     @SerializedName("id")
     @Expose
     private String id;

@@ -32,9 +32,10 @@ API Key on gradle file
 https://richardroseblog.wordpress.com/2016/05/29/hiding-secret-api-keys-from-git/
 
 Retrofit Tutorial
+http://square.github.io/retrofit/
 https://www.journaldev.com/13639/retrofit-android-example-tutorial
 
-New Json Model
+New Json Model -> In fact I changed this POJO's to match just what I used and I created my own POJO's for Videos and Reviews
 http://www.jsonschema2pojo.org/
 
 Bottom Navigation Bar
@@ -42,6 +43,7 @@ http://www.truiton.com/2017/01/android-bottom-navigation-bar-example/
 
 Bottom Navigation icons "top star" and "heart"
 https://www.flaticon.com/
+https://stackoverflow.com/questions/40325422/selected-tabs-color-in-bottom-navigation-view
 
 GridLayourManager : Auto-Column Span
 https://codentrick.com/part-4-android-recyclerview-grid/

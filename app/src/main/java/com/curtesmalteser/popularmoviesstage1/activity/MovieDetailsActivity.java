@@ -19,8 +19,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieDetailsActivity extends AppCompatActivity
-        implements ReviewsFragment.OnReviewsFragmentInteractionListener{
+public class MovieDetailsActivity extends AppCompatActivity{
 
     @BindView(R.id.posterInDetailsActivity)
     ImageView poster;
@@ -48,6 +47,7 @@ public class MovieDetailsActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        // TODO: 23/02/2018 check internet connection..........................................
         if (getIntent().hasExtra(getResources().getString(R.string.string_extra))) {
             MoviesModel model = getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
 
@@ -78,10 +78,5 @@ public class MovieDetailsActivity extends AppCompatActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(String position) {
-
     }
 }

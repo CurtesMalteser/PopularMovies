@@ -2,6 +2,7 @@ package com.curtesmalteser.popularmoviesstage1.utils;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -14,4 +15,10 @@ public interface MoviesAPIInterface {
 
         @GET("movie/top_rated")
         Call<MoviesModel> getTopRated(@Query("api_key") String apiKey);
+
+        @GET("movie/{id}/videos")
+        Call<VideosModel> getVideos(@Path("id") String movieId, @Query("api_key") String apiKey);
+
+        @GET("movie/{id}/reviews")
+        Call<ReviewsModel> getReviews(@Path("id") String movieId, @Query("api_key") String apiKey);
 }
