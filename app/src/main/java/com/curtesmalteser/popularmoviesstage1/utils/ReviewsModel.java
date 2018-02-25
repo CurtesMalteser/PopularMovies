@@ -9,7 +9,6 @@ import java.util.List;
  * Created by António "Curtes Malteser" Bastião on 24/02/2018.
  */
 
-
 public class ReviewsModel {
     @SerializedName("results")
     @Expose

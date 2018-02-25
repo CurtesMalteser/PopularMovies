@@ -1,9 +1,13 @@
 package com.curtesmalteser.popularmoviesstage1.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,25 +16,34 @@ import android.widget.Toast;
 
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
+import com.curtesmalteser.popularmoviesstage1.adapter.VideosAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.VideosModel;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class VideosFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import static android.provider.MediaStore.Video.Thumbnails.VIDEO_ID;
 
+public class VideosFragment extends Fragment
+        implements VideosAdapter.ListItemClickListener{
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = VideosFragment.class.getSimpleName();
+
+    @BindView(R.id.videosRecyclerView)
+    RecyclerView mRecyclerView;
+
+    private VideosAdapter mVideosAdapter;
+
+    private List<VideosModel> mVideosList;
 
     private ConnectivityManager cm;
 
@@ -38,31 +51,9 @@ public class VideosFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment VideosFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static VideosFragment newInstance(String param1, String param2) {
-        VideosFragment fragment = new VideosFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
@@ -73,8 +64,9 @@ public class VideosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos, container, false);
-
-        // Inflate the layout for this fragment
+        ButterKnife.bind(this, view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
@@ -90,18 +82,27 @@ public class VideosFragment extends Fragment {
             call.enqueue(new Callback<VideosModel>() {
                 @Override
                 public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
-                    Log.d("AJDB", response.body().getVideosModels().get(0).getName() + " Key: " + response.body().getVideosModels().get(0).getKey());
-                    // moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), TopRatedMoviesFragment.this);
-                    //recyclerView.setAdapter(moviesAdapter);
+                    if (response.body().getVideosModels().size() != 0) {
+                    mVideosList = response.body().getVideosModels();
+                    mVideosAdapter = new VideosAdapter(mVideosList, VideosFragment.this);
+                    mRecyclerView.setAdapter(mVideosAdapter);
+                    } else {
+                        Log.d(TAG, "There are no videos for this movie.");
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<VideosModel> call, Throwable t) {
-                    Log.d("AJDB", "onFailure:" + t.getMessage().toString());
+                    Log.d(TAG, "onFailure:" + t.getMessage().toString());
                 }
             });
         } else
             Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onListItemClick(VideosModel videosModelModel) {
+        Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(), BuildConfig.YOUTUBE_KEY, videosModelModel.getKey());
+        startActivity(intent);
+    }
 }

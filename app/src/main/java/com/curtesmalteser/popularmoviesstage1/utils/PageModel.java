@@ -9,7 +9,6 @@ import java.util.List;
  * Created by António "Curtes Malteser" Bastião on 21/02/2018.
  */
 
-
 public class PageModel {
 
     @SerializedName("page")

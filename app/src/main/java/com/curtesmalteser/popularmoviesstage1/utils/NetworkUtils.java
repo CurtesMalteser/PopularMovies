@@ -17,7 +17,6 @@ import java.util.Scanner;
  * Created by António "Curtes Malteser" Bastião on 17/02/2018.
  */
 
-
 public class NetworkUtils {
 
     final static String POSTER_URL = "http://image.tmdb.org/t/p";
@@ -28,7 +27,6 @@ public class NetworkUtils {
                 .appendEncodedPath(width)
                 .appendEncodedPath(poster)
                 .build();
-        Log.d("AJDB", "getPosterUrl: " + buildUri.toString());
         return buildUri;
     }
 }

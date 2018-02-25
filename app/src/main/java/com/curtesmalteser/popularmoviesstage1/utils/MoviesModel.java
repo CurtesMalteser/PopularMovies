@@ -12,7 +12,6 @@ import java.util.List;
  * Created by António "Curtes Malteser" Bastião on 16/02/2018.
  */
 
-
 public class MoviesModel implements Parcelable {
 
     @SerializedName("results")

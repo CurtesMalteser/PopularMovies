@@ -13,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by António "Curtes Malteser" Bastião on 21/02/2018.
  */
 
-
 public class MoviesAPIClient {
 
     private static final String BASE_URL = "https://api.themoviedb.org/3/";

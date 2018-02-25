@@ -91,7 +91,7 @@ public class ReviewsFragment extends Fragment {
                 public void onResponse(Call<ReviewsModel> call, Response<ReviewsModel> response) {
                     Log.d("AJDB", ""+response.body().getReviewsModels().size());
                     // moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), TopRatedMoviesFragment.this);
-                    //recyclerView.setAdapter(moviesAdapter);
+                    //mRecyclerView.setAdapter(moviesAdapter);
                 }
 
                 @Override

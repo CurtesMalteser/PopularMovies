@@ -12,6 +12,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField("String", "API_KEY", API_KEY)
+        buildConfigField("String", "YOUTUBE_KEY", YOUTUBE_KEY)
     }
     buildTypes {
         release {
@@ -48,4 +49,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
