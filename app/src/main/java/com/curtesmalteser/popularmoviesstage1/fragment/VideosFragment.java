@@ -101,8 +101,8 @@ public class VideosFragment extends Fragment
     }
 
     @Override
-    public void onListItemClick(VideosModel videosModelModel) {
-        Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(), BuildConfig.YOUTUBE_KEY, videosModelModel.getKey());
+    public void onListItemClick(VideosModel videosModel) {
+        Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(), BuildConfig.YOUTUBE_KEY, videosModel.getKey());
         startActivity(intent);
     }
 }

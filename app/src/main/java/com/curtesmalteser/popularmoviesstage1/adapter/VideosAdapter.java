@@ -20,14 +20,13 @@ import java.util.List;
  * Created by António "Curtes Malteser" Bastião on 25/02/2018.
  */
 
-
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosViewHolder> {
 
     private List<VideosModel> mVideosArrayList;
     final private VideosAdapter.ListItemClickListener mOnClickListener;
 
     public interface ListItemClickListener {
-        void onListItemClick(VideosModel videosModelModel);
+        void onListItemClick(VideosModel videosModel);
     }
 
     public VideosAdapter(List<VideosModel> videosModelArrayList,
