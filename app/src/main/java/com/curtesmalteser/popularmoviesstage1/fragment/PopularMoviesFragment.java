@@ -59,7 +59,9 @@ public class PopularMoviesFragment extends Fragment
 
     private MoviesAdapter moviesAdapter;
 
-    private List<MoviesModel> mMoviesList;
+    private ArrayList<MoviesModel> mMoviesList;
+
+    private Parcelable stateRecyclerView;
 
     private ConnectivityManager cm;
 
@@ -85,14 +87,6 @@ public class PopularMoviesFragment extends Fragment
             mParam2 = getArguments().getString(ARG_PARAM2);
         }*/
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if(savedInstanceState != null) {
-            if (savedInstanceState.containsKey(RECYCLER_VIEW_STATE)){
-                String state = savedInstanceState.getString(RECYCLER_VIEW_STATE);
-                Log.d("AJDB", state);
-            }
-        } else
-        makeMoviesQuery();
     }
 
     private void makeMoviesQuery() {
@@ -107,6 +101,7 @@ public class PopularMoviesFragment extends Fragment
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
                 public void onResponse(Call<MoviesModel> call, Response<MoviesModel> response) {
+                    Log.d("AJDB", "get movies:");
                     mMoviesList = response.body().getMoviesModels();
                     moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
                     mRecyclerView.setAdapter(moviesAdapter);
@@ -137,6 +132,14 @@ public class PopularMoviesFragment extends Fragment
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
+        if(savedInstanceState == null) {
+            makeMoviesQuery();
+        } else {
+                Log.d("AJDB", "mMoviesList: " + savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST).size());
+                mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
+                mRecyclerView.setAdapter(new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this));
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+        }
 
         return view;
     }
@@ -183,6 +186,7 @@ public class PopularMoviesFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(RECYCLER_VIEW_STATE, "onSaveInstanceState!");
+        stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
     }
 }

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,8 +67,12 @@ public class VideosFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos, container, false);
         ButterKnife.bind(this, view);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        mDividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.item_decoration));
+        mRecyclerView.addItemDecoration(mDividerItemDecoration);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         return view;
     }
 
@@ -84,7 +90,7 @@ public class VideosFragment extends Fragment
                 public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
                     if (response.body().getVideosModels().size() != 0) {
                     mVideosList = response.body().getVideosModels();
-                    mVideosAdapter = new VideosAdapter(mVideosList, VideosFragment.this);
+                    mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
                     mRecyclerView.setAdapter(mVideosAdapter);
                     } else {
                         Log.d(TAG, "There are no videos for this movie.");

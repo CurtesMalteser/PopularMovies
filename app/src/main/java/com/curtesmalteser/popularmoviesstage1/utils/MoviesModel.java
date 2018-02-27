@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by António "Curtes Malteser" Bastião on 16/02/2018.
@@ -16,7 +16,7 @@ public class MoviesModel implements Parcelable {
 
     @SerializedName("results")
     @Expose
-    private List<MoviesModel> moviesModels;
+    private ArrayList<MoviesModel> moviesModels;
     @SerializedName("id")
     @Expose
     private String id;
@@ -77,7 +77,7 @@ public class MoviesModel implements Parcelable {
         dest.writeString(releaseDate);
     }
 
-    public List<MoviesModel> getMoviesModels() {
+    public ArrayList<MoviesModel> getMoviesModels() {
         return moviesModels;
     }
 

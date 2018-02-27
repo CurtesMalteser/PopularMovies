@@ -7,7 +7,7 @@
     <string name="string_extra" translatable="false">movies</string>
     <string name="string_vote_average">%s/10</string>
     <string name="check_internet_connection">Please, check your Internet connection.</string>
-    <string name="separator">|</string>
+    <string name="release_date_string">Release Date:</string>
     <string name="poster_width_segment">w342</string>
     <string name="string_overview">Overview</string>
     <string name="string_videos">Videos</string>

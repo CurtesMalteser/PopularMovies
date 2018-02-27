@@ -6,8 +6,11 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.curtesmalteser.popularmoviesstage1.adapter.SimpleFragmentPagerAdapter;
 import com.curtesmalteser.popularmoviesstage1.fragment.ReviewsFragment;
@@ -39,6 +42,11 @@ public class MovieDetailsActivity extends AppCompatActivity{
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
 
+    @BindView(R.id.likeButton)
+    ImageButton likeButton;
+
+    private boolean state;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +76,21 @@ public class MovieDetailsActivity extends AppCompatActivity{
 
             tabLayout.setupWithViewPager(viewPager);
         }
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (state == false ) {
+                    state = true;
+                Toast.makeText(MovieDetailsActivity.this, "You like this movie!", Toast.LENGTH_SHORT).show();
+                likeButton.setImageResource(R.drawable.ic_heart_red);
+                } else {
+                    state = false;
+                    Toast.makeText(MovieDetailsActivity.this, "You don't like this movie!", Toast.LENGTH_SHORT).show();
+                    likeButton.setImageResource(R.drawable.ic_heart_white);
+                }
+            }
+        });
     }
 
     @Override

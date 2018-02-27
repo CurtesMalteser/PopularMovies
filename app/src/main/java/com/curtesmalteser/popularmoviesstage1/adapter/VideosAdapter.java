@@ -6,13 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.curtesmalteser.popularmoviesstage1.R;
+import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils;
 import com.curtesmalteser.popularmoviesstage1.utils.VideosModel;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ import java.util.List;
 
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosViewHolder> {
 
+    private Context mContext;
     private List<VideosModel> mVideosArrayList;
     final private VideosAdapter.ListItemClickListener mOnClickListener;
 
@@ -29,8 +33,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosView
         void onListItemClick(VideosModel videosModel);
     }
 
-    public VideosAdapter(List<VideosModel> videosModelArrayList,
+    public VideosAdapter(Context context, List<VideosModel> videosModelArrayList,
                          VideosAdapter.ListItemClickListener listener) {
+        this.mContext = context;
         this.mVideosArrayList = videosModelArrayList;
         this.mOnClickListener = listener;
     }
@@ -61,27 +66,26 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosView
     public class VideosViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        YouTubeThumbnailView tubeThumbnailView;
+        ImageView thumbnailView;
         TextView title;
-        TextView type;
 
         public VideosViewHolder(View itemView) {
             super(itemView);
 
+            thumbnailView = itemView.findViewById(R.id.thumbnailView);
             title = itemView.findViewById(R.id.videoTitle);
-            type = itemView.findViewById(R.id.videoType);
 
             itemView.setOnClickListener(this);
         }
 
         void bind(int listIndex) {
             VideosModel model = mVideosArrayList.get(listIndex);
-            Log.d("AJDB", "bind: " + model.getName());
+
+            Picasso.with(mContext)
+                    .load(NetworkUtils.getThumbnail(model.getKey()))
+                    .into(thumbnailView);
 
             title.setText(model.getName());
-            type.setText(model.getType());
-
-
         }
 
         @Override

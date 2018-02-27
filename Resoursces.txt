@@ -50,3 +50,6 @@ https://codentrick.com/part-4-android-recyclerview-grid/
 
 TabLayout and ViewPager in your Android App
 https://android.jlelse.eu/tablayout-and-viewpager-in-your-android-app-738b8840c38a
+
+YouTuve Thumbnails URL
+https://coderwall.com/p/nihgwq/get-a-thumbnail-from-a-youtube-video

@@ -10,6 +10,7 @@
         android:id="@+id/overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/string_overview" />
+        android:text="@string/string_overview"
+        android:padding="@dimen/padding_start_end"/>
 
 </ScrollView>
