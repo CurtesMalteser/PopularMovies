@@ -2,6 +2,7 @@ package com.curtesmalteser.popularmoviesstage1.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         void bind(int listIndex) {
             MoviesModel model = mMoviesArrayList.get(listIndex);
-
             Picasso.with(mContext)
                     .load(NetworkUtils.getPosterUrl(mContext.getString(R.string.poster_width_segment), model.getPosterPath()))
                     .into(poster);

@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +24,6 @@ import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +47,7 @@ public class PopularMoviesFragment extends Fragment
     private static final String RECYCLER_VIEW_STATE = "recyclerViewState";
     private static final String SAVED_STATE_MOVIES_LIST = "moviesListSaved";
 
-    private OnFragmentInteractionListener mListener;
+    private OnPopularMoviesConfigChangesListener mListener;
 
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selection";
@@ -64,7 +62,6 @@ public class PopularMoviesFragment extends Fragment
     private Parcelable stateRecyclerView;
 
     private ConnectivityManager cm;
-
 
     public PopularMoviesFragment() {
         // Required empty public constructor
@@ -82,11 +79,33 @@ public class PopularMoviesFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         /*if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }*/
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
+        ButterKnife.bind(this, view);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
+        if (savedInstanceState == null) {
+            makeMoviesQuery();
+        } else {
+            mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
+            Log.d("AJDB", "mMoviesList: " + mMoviesList.size());
+            moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
+            mRecyclerView.setAdapter(moviesAdapter);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+        }
+
+        return view;
     }
 
     private void makeMoviesQuery() {
@@ -105,6 +124,9 @@ public class PopularMoviesFragment extends Fragment
                     mMoviesList = response.body().getMoviesModels();
                     moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
                     mRecyclerView.setAdapter(moviesAdapter);
+                    if (mListener != null) {
+                        mListener.onPopularMoviesConfigChangesListener(mMoviesList);
+                    }
                 }
 
                 @Override
@@ -124,38 +146,16 @@ public class PopularMoviesFragment extends Fragment
         startActivity(intent);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
-        ButterKnife.bind(this, view);
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
-        if(savedInstanceState == null) {
-            makeMoviesQuery();
-        } else {
-                Log.d("AJDB", "mMoviesList: " + savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST).size());
-                mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-                mRecyclerView.setAdapter(new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this));
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
-        }
-
-        return view;
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(MoviesModel moviesModel) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(moviesModel);
-        }
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnPopularMoviesConfigChangesListener) {
+            mListener = (OnPopularMoviesConfigChangesListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnOverviewFragmentInteractionListener");
@@ -168,24 +168,18 @@ public class PopularMoviesFragment extends Fragment
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(MoviesModel uri);
+    public interface OnPopularMoviesConfigChangesListener {
+        //void onPopularMoviesConfigChangesListener(Parcelable stateRecyclerView, ArrayList<MoviesModel> mMoviesList);
+        void onPopularMoviesConfigChangesListener( ArrayList<MoviesModel> mMoviesList);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+       /* if (mListener != null) {
+            Log.d("AJDB", "lol ");
+            mListener.onPopularMoviesConfigChangesListener(mRecyclerView.getLayoutManager().onSaveInstanceState(), mMoviesList);
+        }*/
         stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
     }
