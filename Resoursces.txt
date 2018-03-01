@@ -53,3 +53,6 @@ https://android.jlelse.eu/tablayout-and-viewpager-in-your-android-app-738b8840c3
 
 YouTuve Thumbnails URL
 https://coderwall.com/p/nihgwq/get-a-thumbnail-from-a-youtube-video
+
+Fixed Fragment Lifecycle persistance on config. changes with setRetainInstance(true); with my Mentor help
+https://developer.android.com/guide/topics/resources/runtime-changes.html#RetainingAnObject

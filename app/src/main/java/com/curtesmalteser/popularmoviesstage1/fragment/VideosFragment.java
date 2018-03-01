@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -36,7 +37,7 @@ import retrofit2.Response;
 import static android.provider.MediaStore.Video.Thumbnails.VIDEO_ID;
 
 public class VideosFragment extends Fragment
-        implements VideosAdapter.ListItemClickListener{
+        implements VideosAdapter.ListItemClickListener {
 
     private static final String TAG = VideosFragment.class.getSimpleName();
 
@@ -56,7 +57,10 @@ public class VideosFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRetainInstance(true);
+        /** TODO: 01/03/2018 fix this fragment lifecycle
+         * missing fill onSaveInstanceState and recover it in onCreateView
+        **/
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
         makeVideosQuery(model.getId());
@@ -89,9 +93,11 @@ public class VideosFragment extends Fragment
                 @Override
                 public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
                     if (response.body().getVideosModels().size() != 0) {
-                    mVideosList = response.body().getVideosModels();
-                    mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
-                    mRecyclerView.setAdapter(mVideosAdapter);
+                        Log.d(TAG, "getMovies called");
+                        Log.d(TAG, "getMovies called");
+                        mVideosList = response.body().getVideosModels();
+                        mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
+                        mRecyclerView.setAdapter(mVideosAdapter);
                     } else {
                         Log.d(TAG, "There are no videos for this movie.");
                     }
@@ -110,5 +116,10 @@ public class VideosFragment extends Fragment
     public void onListItemClick(VideosModel videosModel) {
         Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(), BuildConfig.YOUTUBE_KEY, videosModel.getKey());
         startActivity(intent);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }

@@ -50,6 +50,12 @@ public class ReviewsFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        /** TODO: 01/03/2018
+         * Fix the Frament Lifecycle -> All steps are missing
+         * 1.onSaveInstanceState
+         * 2.onCreateView
+         **/
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
         makeReviewsQuery(model.getId());

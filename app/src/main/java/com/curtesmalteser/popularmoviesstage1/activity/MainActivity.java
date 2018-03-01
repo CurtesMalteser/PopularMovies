@@ -31,14 +31,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selected_fragment";
-    private static final String RECYCLER_VIEW_STATE = "recyclerViewState";
-    private static final String SAVED_STATE_MOVIES_LIST = "moviesListSaved";
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    private ArrayList<MoviesModel> mMoviesList;
-
-    private PopularMoviesFragment popularMoviesFragment;
 
     @BindView(R.id.bottomNavigationMenu)
     BottomNavigationView bottomNavigationMenu;
@@ -51,23 +45,18 @@ public class MainActivity extends AppCompatActivity
         // Stetho
         Stetho.initializeWithDefaults(this);
 
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(SAVED_STATE_MOVIES_LIST)) {
-                mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-            }
-        }
-
         ButterKnife.bind(this);
 
-        if (popularMoviesFragment == null) {
-            Log.d(TAG, "the Frgament is null");
-            bottomNavigationMenu.setOnNavigationItemSelectedListener
-                    (new BottomNavigationView.OnNavigationItemSelectedListener() {
-                        @Override
-                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                            return setFragment(item.getItemId());
-                        }
-                    });
+        bottomNavigationMenu.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        return setFragment(item.getItemId());
+                    }
+                });
+
+        if (savedInstanceState == null) {
+            Log.d("AJDB", "the Frgament is null");
 
             setFragment(readPreferences());
         }
@@ -79,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.action_popular_movies:
                 selectedFragment = PopularMoviesFragment.newInstance();
-                popularMoviesFragment = new PopularMoviesFragment();
                 savePreferences(R.id.action_popular_movies);
                 break;
             case R.id.action_top_rated_movies:
@@ -113,15 +101,7 @@ public class MainActivity extends AppCompatActivity
         return sharedPreferences.getInt(SELECTION, R.id.action_popular_movies);
     }
 
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
-    }
-
     @Override
     public void onPopularMoviesConfigChangesListener(ArrayList<MoviesModel> moviesList) {
-        this.mMoviesList = moviesList;
     }
 }

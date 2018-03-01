@@ -35,15 +35,6 @@ import retrofit2.Response;
 public class PopularMoviesFragment extends Fragment
         implements MoviesAdapter.ListItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private static final String RECYCLER_VIEW_STATE = "recyclerViewState";
     private static final String SAVED_STATE_MOVIES_LIST = "moviesListSaved";
 
@@ -69,10 +60,6 @@ public class PopularMoviesFragment extends Fragment
 
     public static PopularMoviesFragment newInstance() {
         PopularMoviesFragment fragment = new PopularMoviesFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
         return fragment;
     }
 
@@ -80,15 +67,11 @@ public class PopularMoviesFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
         ButterKnife.bind(this, view);
@@ -124,9 +107,6 @@ public class PopularMoviesFragment extends Fragment
                     mMoviesList = response.body().getMoviesModels();
                     moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
                     mRecyclerView.setAdapter(moviesAdapter);
-                    if (mListener != null) {
-                        mListener.onPopularMoviesConfigChangesListener(mMoviesList);
-                    }
                 }
 
                 @Override
@@ -142,13 +122,7 @@ public class PopularMoviesFragment extends Fragment
     public void onListItemClick(MoviesModel moviesModel) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
-        onButtonPressed(moviesModel);
         startActivity(intent);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(MoviesModel moviesModel) {
-
     }
 
     @Override
@@ -169,17 +143,12 @@ public class PopularMoviesFragment extends Fragment
     }
 
     public interface OnPopularMoviesConfigChangesListener {
-        //void onPopularMoviesConfigChangesListener(Parcelable stateRecyclerView, ArrayList<MoviesModel> mMoviesList);
         void onPopularMoviesConfigChangesListener( ArrayList<MoviesModel> mMoviesList);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-       /* if (mListener != null) {
-            Log.d("AJDB", "lol ");
-            mListener.onPopularMoviesConfigChangesListener(mRecyclerView.getLayoutManager().onSaveInstanceState(), mMoviesList);
-        }*/
         stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
     }

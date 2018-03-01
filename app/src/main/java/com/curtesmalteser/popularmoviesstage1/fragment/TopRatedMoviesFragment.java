@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,8 @@ import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -37,53 +41,60 @@ import retrofit2.Response;
  */
 public class TopRatedMoviesFragment extends Fragment
         implements MoviesAdapter.ListItemClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selection";
 
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-
     private MoviesAdapter moviesAdapter;
+
     private ConnectivityManager cm;
+    private static final String SAVED_STATE_MOVIES_LIST = "moviesListSaved";
+
+    private ArrayList<MoviesModel> mMoviesList;
+
+    private Parcelable stateRecyclerView;
+
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
 
     public TopRatedMoviesFragment() {
         // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
-    //public static TopRatedMoviesFragment newInstance(String param1, String param2) {
     public static TopRatedMoviesFragment newInstance() {
         TopRatedMoviesFragment fragment = new TopRatedMoviesFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
+        setRetainInstance(true);
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
 
-        makeMoviesQuery();
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
+        ButterKnife.bind(this, view);
 
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
+        if (savedInstanceState == null) {
+            makeMoviesQuery();
+        } else {
+            mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
+            moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, TopRatedMoviesFragment.this);
+            mRecyclerView.setAdapter(moviesAdapter);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+        }
+
+        return view;
     }
 
     private void makeMoviesQuery() {
@@ -98,13 +109,14 @@ public class TopRatedMoviesFragment extends Fragment
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
                 public void onResponse(Call<MoviesModel> call, Response<MoviesModel> response) {
-                    moviesAdapter = new MoviesAdapter(getContext(), response.body().getMoviesModels(), TopRatedMoviesFragment.this);
-                    recyclerView.setAdapter(moviesAdapter);
+                    mMoviesList = response.body().getMoviesModels();
+                    moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, TopRatedMoviesFragment.this);
+                    mRecyclerView.setAdapter(moviesAdapter);
                 }
 
                 @Override
                 public void onFailure(Call<MoviesModel> call, Throwable t) {
-                    Log.d("AJDB", "onFailure:" + t.getMessage().toString());
+                    Log.d(TAG, "onFailure:" + t.getMessage().toString());
                 }
             });
         } else
@@ -113,34 +125,10 @@ public class TopRatedMoviesFragment extends Fragment
 
     @Override
     public void onListItemClick(MoviesModel moviesModel) {
-
-        if (mListener != null) {
-            mListener.onFragmentInteraction(moviesModel);
-        }
-
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
         startActivity(intent);
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
-        ButterKnife.bind(this, view);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
-
-        return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onPopularMoviesConfigChangesListener(uri);
-        }
-    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -160,7 +148,13 @@ public class TopRatedMoviesFragment extends Fragment
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(MoviesModel moviesModel);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
     }
 }
