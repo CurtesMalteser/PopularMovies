@@ -1,6 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.activity;
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -29,10 +30,10 @@ public class MainActivity extends AppCompatActivity
         TopRatedMoviesFragment.OnFragmentInteractionListener,
         FavoriteMoviesFragment.OnFragmentInteractionListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selected_fragment";
-
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.bottomNavigationMenu)
     BottomNavigationView bottomNavigationMenu;
