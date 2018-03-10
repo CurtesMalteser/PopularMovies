@@ -7,16 +7,6 @@
     android:layout_height="match_parent"
     tools:context="com.curtesmalteser.popularmoviesstage1.activity.MainActivity">
 
-    <!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationMenu"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem ="@layout/single_card_view"/>-->
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"

@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.R;
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -72,10 +74,37 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         }
 
         void bind(int listIndex) {
-            MoviesModel model = mMoviesArrayList.get(listIndex);
+            final MoviesModel model = mMoviesArrayList.get(listIndex);
+
             Picasso.with(mContext)
                     .load(NetworkUtils.getPosterUrl(mContext.getString(R.string.poster_width_segment), model.getPosterPath()))
-                    .into(poster);
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(poster, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            //Try again online if cache failed
+                            Picasso.with(mContext)
+                                    .load(NetworkUtils.getPosterUrl(mContext.getString(R.string.poster_width_segment), model.getPosterPath()))
+                                    .error(R.drawable.ic_heart_white)
+                                    .into(poster, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            Log.v("Picasso", "Could not fetch image");
+                                        }
+                                    });
+                        }
+                    });
+
         }
 
         @Override

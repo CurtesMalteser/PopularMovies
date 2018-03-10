@@ -26,6 +26,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.curtesmalteser.popularmoviesstage1.activity.MainActivity" />
         </activity>
+
+        <provider
+            android:name="com.curtesmalteser.popularmoviesstage1.db.MoviesContentProvider"
+            android:authorities="com.curtesmalteser.popularmoviesstage1"
+            android:exported="false"/>
     </application>
 
 </manifest>

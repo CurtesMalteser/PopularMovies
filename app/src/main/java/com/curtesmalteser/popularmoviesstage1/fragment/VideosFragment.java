@@ -6,9 +6,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,8 +31,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.provider.MediaStore.Video.Thumbnails.VIDEO_ID;
 
 public class VideosFragment extends Fragment
         implements VideosAdapter.ListItemClickListener {
@@ -80,7 +76,7 @@ public class VideosFragment extends Fragment
         return view;
     }
 
-    private void makeVideosQuery(String movieId) {
+    private void makeVideosQuery(int movieId) {
         MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
         Call<VideosModel> call;
 
@@ -88,12 +84,11 @@ public class VideosFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
-            call = apiInterface.getVideos(movieId, BuildConfig.API_KEY);
+            call = apiInterface.getVideos(String.valueOf(movieId), BuildConfig.API_KEY);
             call.enqueue(new Callback<VideosModel>() {
                 @Override
                 public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
                     if (response.body().getVideosModels().size() != 0) {
-                        Log.d(TAG, "getMovies called");
                         Log.d(TAG, "getMovies called");
                         mVideosList = response.body().getVideosModels();
                         mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);

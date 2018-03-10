@@ -64,16 +64,25 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="@dimen/padding_start_end"
-        android:layout_marginRight="@dimen/padding_start_end"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@+id/releaseDateLabel"
         app:layout_constraintTop_toBottomOf="@+id/releaseDate"
         app:srcCompat="@drawable/ic_heart_white" />
+
+    <TextView
+        android:id="@+id/tvAddRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:paddingLeft="@dimen/padding_start_end"
+        android:paddingRight="@dimen/padding_start_end"
+        app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+        app:layout_constraintStart_toEndOf="@+id/likeButton"
+        app:layout_constraintTop_toTopOf="@+id/likeButton"
+        tools:text="@string/string_add_fav" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,9 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.activity;
 
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,7 +11,6 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.curtesmalteser.popularmoviesstage1.R;
-import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment;
 import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment;
 import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment;

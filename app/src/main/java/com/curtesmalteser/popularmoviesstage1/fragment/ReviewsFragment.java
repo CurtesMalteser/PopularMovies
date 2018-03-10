@@ -75,7 +75,7 @@ public class ReviewsFragment extends Fragment
         return view;
     }
 
-    private void makeReviewsQuery(String movieId) {
+    private void makeReviewsQuery(int movieId) {
         MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
         Call<ReviewsModel> call;
 
@@ -83,7 +83,7 @@ public class ReviewsFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
-            call = apiInterface.getReviews(movieId, BuildConfig.API_KEY);
+            call = apiInterface.getReviews(String.valueOf(movieId), BuildConfig.API_KEY);
             call.enqueue(new Callback<ReviewsModel>() {
                 @Override
                 public void onResponse(Call<ReviewsModel> call, Response<ReviewsModel> response) {

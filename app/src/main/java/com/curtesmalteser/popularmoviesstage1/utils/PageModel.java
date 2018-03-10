@@ -3,8 +3,6 @@ package com.curtesmalteser.popularmoviesstage1.utils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 /**
  * Created by António "Curtes Malteser" Bastião on 21/02/2018.
  */

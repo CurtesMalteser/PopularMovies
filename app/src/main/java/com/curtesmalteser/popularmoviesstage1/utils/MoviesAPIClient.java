@@ -1,9 +1,5 @@
 package com.curtesmalteser.popularmoviesstage1.utils;
 
-import android.content.res.Resources;
-
-import com.curtesmalteser.popularmoviesstage1.R;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

@@ -43,6 +43,7 @@ public class PopularMoviesFragment extends Fragment
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selection";
 
+
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
@@ -69,6 +70,7 @@ public class PopularMoviesFragment extends Fragment
         setRetainInstance(true);
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,

@@ -19,7 +19,7 @@ public class MoviesModel implements Parcelable {
     private ArrayList<MoviesModel> moviesModels;
     @SerializedName("id")
     @Expose
-    private String id;
+    private int id;
     @SerializedName("vote_average")
     @Expose
     private String voteAverage; // vote average
@@ -39,8 +39,18 @@ public class MoviesModel implements Parcelable {
     @Expose
     private String releaseDate; // release date
 
+    public MoviesModel(int id, String voteAverage, String title, String posterPath, String backdropPath, String overview, String releaseDate) {
+        this.id = id;
+        this.voteAverage = voteAverage;
+        this.title = title;
+        this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+    }
+
     protected MoviesModel(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         voteAverage = in.readString();
         title = in.readString();
         posterPath = in.readString();
@@ -68,7 +78,7 @@ public class MoviesModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(voteAverage);
         dest.writeString(title);
         dest.writeString(posterPath);
@@ -81,7 +91,7 @@ public class MoviesModel implements Parcelable {
         return moviesModels;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

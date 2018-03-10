@@ -56,3 +56,6 @@ https://coderwall.com/p/nihgwq/get-a-thumbnail-from-a-youtube-video
 
 Fixed Fragment Lifecycle persistance on config. changes with setRetainInstance(true); with my Mentor help
 https://developer.android.com/guide/topics/resources/runtime-changes.html#RetainingAnObject
+
+How do I use disk caching in Picasso?
+https://stackoverflow.com/a/30686992

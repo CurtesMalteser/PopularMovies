@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Popular Movies - Stage 1</string>
+    <string name="app_name">Popular Movies</string>
     <string name="title_menu_spinner">Menu Spinner</string>
     <string name="string_popular">Popular</string>
     <string name="string_top_rated">Top Rated</string>
@@ -12,4 +12,8 @@
     <string name="string_overview">Overview</string>
     <string name="string_videos">Videos</string>
     <string name="string_reviews">Reviews</string>
+    <string name="string_add_fav">Add to favorites.</string>
+    <string name="string_remove_fav">Remove from favorites.</string>
+    <string name="string_error_add_fav">Error! Isn\'t possible to add this movie as favorite. Please, try later!</string>
+    <string name="string_unknow_uri">Unknown Uri</string>
 </resources>

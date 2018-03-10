@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.db.MoviesContract;
 import com.curtesmalteser.popularmoviesstage1.db.MoviesDbHelper;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,8 +45,15 @@ public class FavoriteMoviesFragment extends Fragment
 
     private SQLiteDatabase mDb;
 
+
     @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
+
+    private MoviesAdapter moviesAdapter;
+
+    private ArrayList<MoviesModel> mMoviesList = new ArrayList<>();
+
+    private Parcelable stateRecyclerView;
 
     public FavoriteMoviesFragment() {
         // Required empty public constructor
@@ -52,11 +63,13 @@ public class FavoriteMoviesFragment extends Fragment
         FavoriteMoviesFragment fragment = new FavoriteMoviesFragment();
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+        // TODO: 10/03/2018 remove SQLdbHelper and replace with ContenProvider
         MoviesDbHelper dbHelper = new MoviesDbHelper(getContext());
         mDb = dbHelper.getReadableDatabase();
         Cursor cursor = getAllGuests();
@@ -64,8 +77,17 @@ public class FavoriteMoviesFragment extends Fragment
         for (int i = 0; i < cursor.getCount(); i++) {
             if (!cursor.moveToPosition(i))
                 return;
-            else
-                Log.d("AJDB", "Title: " + cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_TITLE)) + " auto id: " +  cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry._ID)));
+            else {
+                mMoviesList.add(new MoviesModel(cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_ID)),
+                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_VOTE_AVERAGE)),
+                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_POSTER_PATH)),
+                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_BACKDROP_PATH)),
+                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE))));
+
+                Log.d("AJDB", "Poster: " + mMoviesList.get(i).getTitle());
+            }
         }
         cursor.close();
     }
@@ -100,8 +122,21 @@ public class FavoriteMoviesFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
         ButterKnife.bind(this, view);
 
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
+        //if (savedInstanceState == null) {
+           // makeMoviesQuery();
+       // } else {
+          //  mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
+            Log.d("AJDB", "mMoviesList: " + mMoviesList.size());
+            moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, FavoriteMoviesFragment.this);
+            mRecyclerView.setAdapter(moviesAdapter);
+            //mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+      //  }
+
         return view;
     }
+
 
     @Override
     public void onAttach(Context context) {
