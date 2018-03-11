@@ -15,5 +15,6 @@
     <string name="string_add_fav">Add to favorites.</string>
     <string name="string_remove_fav">Remove from favorites.</string>
     <string name="string_error_add_fav">Error! Isn\'t possible to add this movie as favorite. Please, try later!</string>
-    <string name="string_unknow_uri">Unknown Uri</string>
+    <string name="string_unknow_uri">Unknown Uri </string>
+    <string name="string_fail_insert">Failed to insert row into</string>
 </resources>

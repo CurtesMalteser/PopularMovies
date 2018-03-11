@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 
 import com.curtesmalteser.popularmoviesstage1.R;
 
+import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.COLUMN_NAME_ID;
 import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.TABLE_NAME;
 
 /**
@@ -57,17 +58,38 @@ public class MoviesContentProvider extends ContentProvider {
 
         switch (match) {
             case MOVIES:
+                retCursor = db.query(
+                        TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case MOVIE_WITH_ID:
 
-        /*        cursor = db.query(
+                String id = uri.getPathSegments().get(1);
 
-                )*/
+                String mSelection = COLUMN_NAME_ID + " = ? ";
+                String[] mSelectionArgs = new String[]{id};
+
+                retCursor = db.query(
+                        TABLE_NAME,
+                        projection,
+                        mSelection,
+                        mSelectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             default:
                 throw new UnsupportedOperationException(getContext().getString(R.string.string_unknow_uri) + uri);
         }
-
-
-        return null;
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
 
     @Nullable
@@ -94,7 +116,7 @@ public class MoviesContentProvider extends ContentProvider {
                     returnUri = ContentUris.withAppendedId(MoviesContract.MoviesEntry.CONTENT_URI, id);
 
                 } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    throw new android.database.SQLException(getContext().getString(R.string.string_fail_insert) + uri);
                 }
                 break;
 
@@ -110,7 +132,28 @@ public class MoviesContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mMoviesDbHelper.getWritableDatabase();
+
+        int match = sUriMatcher.match(uri);
+        int tasksDeleted; // starts as 0
+
+        String mSelection = COLUMN_NAME_ID + " = ? ";
+
+
+        switch (match) {
+            case MOVIE_WITH_ID:
+                String id = uri.getPathSegments().get(1);
+                tasksDeleted = db.delete(TABLE_NAME, mSelection, new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (tasksDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return tasksDeleted;
     }
 
     @Override

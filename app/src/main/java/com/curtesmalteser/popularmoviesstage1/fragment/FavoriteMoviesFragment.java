@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +31,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.provider.BaseColumns._ID;
+import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.CONTENT_URI;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -36,15 +43,19 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class FavoriteMoviesFragment extends Fragment
-        implements MoviesAdapter.ListItemClickListener {
+        implements MoviesAdapter.ListItemClickListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private OnFragmentInteractionListener mListener;
+
+    private static final String TAG = FavoriteMoviesFragment.class.getSimpleName();
 
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selection";
 
     private SQLiteDatabase mDb;
 
+    private static final int TASK_LOADER_ID = 0;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -72,37 +83,8 @@ public class FavoriteMoviesFragment extends Fragment
         // TODO: 10/03/2018 remove SQLdbHelper and replace with ContenProvider
         MoviesDbHelper dbHelper = new MoviesDbHelper(getContext());
         mDb = dbHelper.getReadableDatabase();
-        Cursor cursor = getAllGuests();
 
-        for (int i = 0; i < cursor.getCount(); i++) {
-            if (!cursor.moveToPosition(i))
-                return;
-            else {
-                mMoviesList.add(new MoviesModel(cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_ID)),
-                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_VOTE_AVERAGE)),
-                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_TITLE)),
-                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_POSTER_PATH)),
-                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_BACKDROP_PATH)),
-                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW)),
-                        cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE))));
 
-                Log.d("AJDB", "Poster: " + mMoviesList.get(i).getTitle());
-            }
-        }
-        cursor.close();
-    }
-
-    private Cursor getAllGuests() {
-
-        return mDb.query(
-                MoviesContract.MoviesEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                MoviesContract.MoviesEntry._ID
-        );
     }
 
 
@@ -117,6 +99,14 @@ public class FavoriteMoviesFragment extends Fragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // re-queries for all tasks
+        getActivity().getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
@@ -125,15 +115,18 @@ public class FavoriteMoviesFragment extends Fragment
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
         //if (savedInstanceState == null) {
-           // makeMoviesQuery();
-       // } else {
-          //  mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-            Log.d("AJDB", "mMoviesList: " + mMoviesList.size());
-            moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, FavoriteMoviesFragment.this);
-            mRecyclerView.setAdapter(moviesAdapter);
-            //mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
-      //  }
+        // makeMoviesQuery();
+        // } else {
+        //  mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
+        Log.d("AJDB", "mMoviesList: " + mMoviesList.size());
+        //moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, FavoriteMoviesFragment.this);
+        moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, FavoriteMoviesFragment.this);
+        mRecyclerView.setAdapter(moviesAdapter);
+        //mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+        //  }
 
+
+        getActivity().getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
         return view;
     }
 
@@ -157,5 +150,69 @@ public class FavoriteMoviesFragment extends Fragment
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(MoviesModel moviesModel);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        return new AsyncTaskLoader<Cursor>(getContext()) {
+
+            Cursor mMoviesData = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (mMoviesData != null)
+                    deliverResult(mMoviesData);
+                else
+                    forceLoad();
+            }
+
+            @Nullable
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    return getContext().getContentResolver().query(
+                            CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            _ID
+                    );
+                } catch (Exception e) {
+                    Log.d(TAG, "Failed to asynchronously load data.");
+                    return null;
+                }
+            }
+
+            public void deliverResult(Cursor data) {
+                mMoviesData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        mMoviesList.clear();
+        for (int i = 0; i < data.getCount(); i++) {
+            if (!data.moveToPosition(i))
+                return;
+            else {
+                mMoviesList.add(new MoviesModel(data.getInt(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_ID)),
+                        data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_VOTE_AVERAGE)),
+                        data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_TITLE)),
+                        data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_POSTER_PATH)),
+                        data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_BACKDROP_PATH)),
+                        data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW)),
+                        data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE))));
+            }
+            Log.d("AJDB", "Poster: " + mMoviesList.get(i).getTitle());
+        }
+        moviesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
     }
 }

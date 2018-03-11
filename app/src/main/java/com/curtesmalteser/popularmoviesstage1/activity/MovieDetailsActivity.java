@@ -30,6 +30,9 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.COLUMN_NAME_ID;
+import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.CONTENT_URI;
+
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private MoviesModel model;
@@ -105,8 +108,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     Toast.makeText(MovieDetailsActivity.this, R.string.string_error_add_fav, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                boolean deleted = removeFavoriteMovie();
-                if (deleted) {
+                int deleted = removeFavoriteMovie();
+                if (deleted > 0) {
                     likeButton.setImageResource(R.drawable.ic_heart_white);
                     tvAddRemove.setText(R.string.string_add_fav);
                     Toast.makeText(MovieDetailsActivity.this, "You don't like this movie!", Toast.LENGTH_SHORT).show();
@@ -121,6 +124,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Cursor cursor = checkFavoriteMovie();
 
         if (cursor.getCount() > 0) {
+            Log.d("AJDB", "Count: " + cursor.getCount());
             tvAddRemove.setText(R.string.string_remove_fav);
             likeButton.setImageResource(R.drawable.ic_heart_red);
             state = true;
@@ -196,7 +200,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
-
     private int addFavoriteMovie() {
         ContentValues cv = new ContentValues();
         cv.put(MoviesContract.MoviesEntry.COLUMN_NAME_ID, model.getId());
@@ -210,23 +213,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Uri uri = getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, cv);
 
         if (uri != null) {
-            Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
             return 1;
         } else return 0;
     }
 
-    private boolean removeFavoriteMovie() {
-        return mDb.delete(MoviesContract.MoviesEntry.TABLE_NAME, MoviesContract.MoviesEntry.COLUMN_NAME_ID + "=" + model.getId(), null) > 0;
+    private int removeFavoriteMovie() {
+        Uri uri = CONTENT_URI;
+        uri = uri.buildUpon().appendPath(String.valueOf(model.getId())).build();
+
+        return getContentResolver().delete(uri,null,null);
+
     }
 
     private Cursor checkFavoriteMovie() {
-        return mDb.query(
-                MoviesContract.MoviesEntry.TABLE_NAME,
-                new String[]{MoviesContract.MoviesEntry.COLUMN_NAME_ID},
-                MoviesContract.MoviesEntry.COLUMN_NAME_ID + "=" + model.getId(),
+
+        String[] selectionArgs = new String[]{String.valueOf(model.getId())};
+        return getContentResolver().query(
+                CONTENT_URI,
                 null,
-                null,
-                null,
+                COLUMN_NAME_ID + " = ? ",
+                selectionArgs,
                 null
         );
     }
