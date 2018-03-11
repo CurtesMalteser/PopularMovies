@@ -46,17 +46,15 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         bottomNavigationMenu.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        return setFragment(item.getItemId());
-                    }
-                });
+                (item -> setFragment(item.getItemId()));
+
 
         if (savedInstanceState == null) {
             Log.d("AJDB", "the Frgament is null");
 
             setFragment(readPreferences());
+        bottomNavigationMenu.setSelectedItemId(readPreferences());
+
         }
 
     }

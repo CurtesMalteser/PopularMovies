@@ -3,6 +3,8 @@ package com.curtesmalteser.popularmoviesstage1.fragment;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
@@ -21,6 +25,7 @@ import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.ReviewsModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,14 +39,24 @@ public class ReviewsFragment extends Fragment
 
     private static final String TAG = ReviewsFragment.class.getSimpleName();
 
-    @BindView(R.id.reviewsRecyclerView)
-    RecyclerView mRecyclerView;
+    private static final String SAVED_STATE_REVIEWS_LIST = "reviewsListSaved";
 
     private ReviewsAdapter mReviewsAdapter;
 
-    private List<ReviewsModel> mReviewsList;
+    private ArrayList<ReviewsModel> mReviewsList;
+
+    private Parcelable stateRecyclerView;
 
     private ConnectivityManager cm;
+
+    @BindView(R.id.reviewsRecyclerView)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.reconnectButton)
+    ImageButton reconnectButton;
+
+    @BindView(R.id.noMoviesButton)
+    ImageView noMoviesButton;
 
     public ReviewsFragment() {
         // Required empty public constructor
@@ -51,14 +66,9 @@ public class ReviewsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        /** TODO: 01/03/2018
-         * Fix the Frament Lifecycle -> All steps are missing
-         * 1.onSaveInstanceState
-         * 2.onCreateView
-         **/
+
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
-        makeReviewsQuery(model.getId());
+
     }
 
     @Override
@@ -66,12 +76,43 @@ public class ReviewsFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reviews, container, false);
         ButterKnife.bind(this, view);
+
+        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 DividerItemDecoration.VERTICAL);
         mDividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.item_decoration));
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+            reconnectButton.setVisibility(View.GONE);
+            noMoviesButton.setVisibility(View.GONE);
+
+
+            if (savedInstanceState == null) {
+                makeReviewsQuery(model.getId());
+            } else
+                mReviewsList = savedInstanceState.getParcelableArrayList(SAVED_STATE_REVIEWS_LIST);
+            if (mReviewsList != null) {
+                mReviewsAdapter = new ReviewsAdapter(getContext(), mReviewsList, ReviewsFragment.this);
+                mRecyclerView.setAdapter(mReviewsAdapter);
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+            }
+
+        } else {
+            reconnectButton.setVisibility(View.VISIBLE);
+            noMoviesButton.setVisibility(View.GONE);
+        }
+
+        reconnectButton.setOnClickListener(v -> {
+            makeReviewsQuery(model.getId());
+        });
+
+
         return view;
     }
 
@@ -88,11 +129,17 @@ public class ReviewsFragment extends Fragment
                 @Override
                 public void onResponse(Call<ReviewsModel> call, Response<ReviewsModel> response) {
                     if (response.body().getReviewsModels().size() != 0) {
+
+                        reconnectButton.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+
                         mReviewsList = response.body().getReviewsModels();
-                        mReviewsAdapter = new ReviewsAdapter(mReviewsList, ReviewsFragment.this);
+                        mReviewsAdapter = new ReviewsAdapter(getContext(), mReviewsList, ReviewsFragment.this);
                         mRecyclerView.setAdapter(mReviewsAdapter);
+
                     } else {
-                        Log.d(TAG, "There are no reviews for this movie.");
+                        noMoviesButton.setVisibility(View.VISIBLE);
+                        reconnectButton.setVisibility(View.GONE);
                     }
                 }
 
@@ -108,5 +155,14 @@ public class ReviewsFragment extends Fragment
     @Override
     public void onListItemClick(ReviewsModel reviewsModel) {
         // Nothing implemented for now
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mRecyclerView != null && mReviewsList != null) {
+            stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
+            outState.putParcelableArrayList(SAVED_STATE_REVIEWS_LIST, mReviewsList);
+        }
     }
 }

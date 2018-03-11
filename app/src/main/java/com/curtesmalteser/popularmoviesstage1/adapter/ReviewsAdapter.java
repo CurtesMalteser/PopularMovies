@@ -18,6 +18,7 @@ import java.util.List;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsViewHolder> {
 
+    private Context mContext;
     private List<ReviewsModel> mReviewsArrayList;
     final private ReviewsAdapter.ListItemClickListener mOnClickListener;
 
@@ -25,8 +26,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         void onListItemClick(ReviewsModel reviewsModel);
     }
 
-    public ReviewsAdapter(List<ReviewsModel> reviewsArrayList,
-                         ReviewsAdapter.ListItemClickListener listener) {
+    public ReviewsAdapter(Context context, List<ReviewsModel> reviewsArrayList,
+                          ReviewsAdapter.ListItemClickListener listener) {
+        this.mContext = context;
         this.mReviewsArrayList = reviewsArrayList;
         this.mOnClickListener = listener;
     }

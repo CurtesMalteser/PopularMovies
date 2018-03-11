@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
@@ -24,7 +27,7 @@ import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.VideosModel;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,14 +40,24 @@ public class VideosFragment extends Fragment
 
     private static final String TAG = VideosFragment.class.getSimpleName();
 
-    @BindView(R.id.videosRecyclerView)
-    RecyclerView mRecyclerView;
+    private static final String SAVED_STATE_VIDEOS_LIST = "moviesListSaved";
 
     private VideosAdapter mVideosAdapter;
 
-    private List<VideosModel> mVideosList;
+    private ArrayList<VideosModel> mVideosList;
+
+    private Parcelable stateRecyclerView;
 
     private ConnectivityManager cm;
+
+    @BindView(R.id.videosRecyclerView)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.reconnectButton)
+    ImageButton reconnectButton;
+
+    @BindView(R.id.noMoviesButton)
+    ImageView noMoviesButton;
 
     public VideosFragment() {
         // Required empty public constructor
@@ -54,12 +67,9 @@ public class VideosFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        /** TODO: 01/03/2018 fix this fragment lifecycle
-         * missing fill onSaveInstanceState and recover it in onCreateView
-        **/
+
         cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
-        makeVideosQuery(model.getId());
+
     }
 
     @Override
@@ -67,12 +77,40 @@ public class VideosFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos, container, false);
         ButterKnife.bind(this, view);
+
+        MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 DividerItemDecoration.VERTICAL);
         mDividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.item_decoration));
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+            reconnectButton.setVisibility(View.GONE);
+            noMoviesButton.setVisibility(View.GONE);
+
+            if (savedInstanceState == null) {
+                makeVideosQuery(model.getId());
+            } else {
+                mVideosList = savedInstanceState.getParcelableArrayList(SAVED_STATE_VIDEOS_LIST);
+                if (mVideosList != null) {
+                    mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
+                    mRecyclerView.setAdapter(mVideosAdapter);
+                    mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+                }
+            }
+        } else {
+            reconnectButton.setVisibility(View.VISIBLE);
+            noMoviesButton.setVisibility(View.GONE);
+        }
+        reconnectButton.setOnClickListener(v -> {
+            makeVideosQuery(model.getId());
+        });
+
         return view;
     }
 
@@ -89,13 +127,19 @@ public class VideosFragment extends Fragment
                 @Override
                 public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
                     if (response.body().getVideosModels().size() != 0) {
-                        Log.d(TAG, "getMovies called");
+
+                        reconnectButton.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+
                         mVideosList = response.body().getVideosModels();
                         mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
                         mRecyclerView.setAdapter(mVideosAdapter);
+
                     } else {
-                        Log.d(TAG, "There are no videos for this movie.");
-                    }
+                        noMoviesButton.setVisibility(View.VISIBLE);
+                        reconnectButton.setVisibility(View.GONE);
+
+                   }
                 }
 
                 @Override
@@ -107,6 +151,7 @@ public class VideosFragment extends Fragment
             Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void onListItemClick(VideosModel videosModel) {
         Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(), BuildConfig.YOUTUBE_KEY, videosModel.getKey());
@@ -116,5 +161,9 @@ public class VideosFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (mRecyclerView != null && mVideosList != null) {
+            stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
+            outState.putParcelableArrayList(SAVED_STATE_VIDEOS_LIST, mVideosList);
+        }
     }
 }

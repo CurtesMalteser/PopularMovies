@@ -84,7 +84,6 @@ public class PopularMoviesFragment extends Fragment
             makeMoviesQuery();
         } else {
             mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-            Log.d("AJDB", "mMoviesList: " + mMoviesList.size());
             moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
             mRecyclerView.setAdapter(moviesAdapter);
             mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
@@ -105,7 +104,7 @@ public class PopularMoviesFragment extends Fragment
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
                 public void onResponse(Call<MoviesModel> call, Response<MoviesModel> response) {
-                    Log.d("AJDB", "get movies:");
+
                     mMoviesList = response.body().getMoviesModels();
                     moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
                     mRecyclerView.setAdapter(moviesAdapter);

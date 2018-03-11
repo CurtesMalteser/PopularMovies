@@ -2,7 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/reconnectButton"
+        app:srcCompat="@drawable/ic_no_connection"
+        android:background="@color/colorPrimaryDark"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/noMoviesButton"
+        app:srcCompat="@drawable/ic_no_movies"
+        android:background="@color/colorPrimaryDark"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/videosRecyclerView"
         android:layout_width="match_parent"

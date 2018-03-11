@@ -75,7 +75,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
 
-        backgroung.setColorFilter(Color.argb(230, 0, 0, 0));
+        backgroung.setColorFilter(Color.argb(220, 0, 0, 0));
 
         // TODO: 23/02/2018 check internet connection..........................................
         if (getIntent().hasExtra(getResources().getString(R.string.string_extra))) {
