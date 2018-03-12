@@ -124,6 +124,7 @@ public class TopRatedMoviesFragment extends Fragment
                         mMoviesList.add(moviesModel);
                         moviesAdapter.notifyDataSetChanged();
                     }
+                    Log.d("LOL", "onResponse: " + page);
                 }
 
                 @Override

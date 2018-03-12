@@ -56,8 +56,8 @@ public class VideosFragment extends Fragment
     @BindView(R.id.reconnectButton)
     ImageButton reconnectButton;
 
-    @BindView(R.id.noReviewsButton)
-    ImageView noMoviesButton;
+    @BindView(R.id.noMoviesImage)
+    ImageView noMoviesImage;
 
     public VideosFragment() {
         // Required empty public constructor
@@ -91,7 +91,7 @@ public class VideosFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
             reconnectButton.setVisibility(View.GONE);
-            noMoviesButton.setVisibility(View.GONE);
+            noMoviesImage.setVisibility(View.GONE);
 
             if (savedInstanceState == null) {
                 makeVideosQuery(model.getId());
@@ -101,11 +101,13 @@ public class VideosFragment extends Fragment
                     mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
                     mRecyclerView.setAdapter(mVideosAdapter);
                     mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+                } else {
+                    noMoviesImage.setVisibility(View.VISIBLE);
                 }
             }
         } else {
             reconnectButton.setVisibility(View.VISIBLE);
-            noMoviesButton.setVisibility(View.GONE);
+            noMoviesImage.setVisibility(View.GONE);
         }
         reconnectButton.setOnClickListener(v -> makeVideosQuery(model.getId()));
 
@@ -134,7 +136,7 @@ public class VideosFragment extends Fragment
                         mRecyclerView.setAdapter(mVideosAdapter);
 
                     } else {
-                        noMoviesButton.setVisibility(View.VISIBLE);
+                        noMoviesImage.setVisibility(View.VISIBLE);
                         reconnectButton.setVisibility(View.GONE);
 
                    }

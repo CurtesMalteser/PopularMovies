@@ -54,8 +54,8 @@ public class ReviewsFragment extends Fragment
     @BindView(R.id.reconnectButton)
     ImageButton reconnectButton;
 
-    @BindView(R.id.noReviewsButton)
-    ImageView noMoviesButton;
+    @BindView(R.id.noReviewsImage)
+    ImageView noReviewsImage;
 
     public ReviewsFragment() {
         // Required empty public constructor
@@ -89,22 +89,25 @@ public class ReviewsFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
             reconnectButton.setVisibility(View.GONE);
-            noMoviesButton.setVisibility(View.GONE);
+            noReviewsImage.setVisibility(View.GONE);
 
 
             if (savedInstanceState == null) {
                 makeReviewsQuery(model.getId());
-            } else
+            } else {
                 mReviewsList = savedInstanceState.getParcelableArrayList(SAVED_STATE_REVIEWS_LIST);
-            if (mReviewsList != null) {
-                mReviewsAdapter = new ReviewsAdapter(mReviewsList, ReviewsFragment.this);
-                mRecyclerView.setAdapter(mReviewsAdapter);
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+                if (mReviewsList != null) {
+                    mReviewsAdapter = new ReviewsAdapter(mReviewsList, ReviewsFragment.this);
+                    mRecyclerView.setAdapter(mReviewsAdapter);
+                    mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+                } else {
+                    noReviewsImage.setVisibility(View.VISIBLE);
+                }
             }
 
         } else {
             reconnectButton.setVisibility(View.VISIBLE);
-            noMoviesButton.setVisibility(View.GONE);
+            noReviewsImage.setVisibility(View.GONE);
         }
 
         reconnectButton.setOnClickListener(v -> makeReviewsQuery(model.getId()));
@@ -135,7 +138,7 @@ public class ReviewsFragment extends Fragment
                         mRecyclerView.setAdapter(mReviewsAdapter);
 
                     } else {
-                        noMoviesButton.setVisibility(View.VISIBLE);
+                        noReviewsImage.setVisibility(View.VISIBLE);
                         reconnectButton.setVisibility(View.GONE);
                     }
                 }

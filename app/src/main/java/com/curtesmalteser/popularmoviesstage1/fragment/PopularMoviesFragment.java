@@ -120,11 +120,11 @@ public class PopularMoviesFragment extends Fragment
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
                 public void onResponse(@NonNull Call<MoviesModel> call, @NonNull Response<MoviesModel> response) {
-
                     for (MoviesModel moviesModel : response.body().getMoviesModels()) {
                         mMoviesList.add(moviesModel);
                         moviesAdapter.notifyDataSetChanged();
                     }
+
                 }
 
                 @Override

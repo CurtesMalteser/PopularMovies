@@ -35,7 +35,6 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 
         if (loading) {
             if (totalItemCount > previousTotal) {
-                Log.d("AJDB", "onScrolled: is loadind");
                 loading = false;
                 previousTotal = totalItemCount;
             }
