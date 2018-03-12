@@ -1,6 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,21 +39,21 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         this.mOnClickListener = listener;
     }
 
+    @NonNull
     @Override
-    public MoviesViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.single_card_view;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        MoviesViewHolder viewHolder = new MoviesViewHolder(view);
 
-        return viewHolder;
+        return  new MoviesViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MoviesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
         holder.bind(position);
     }
 

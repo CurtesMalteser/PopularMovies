@@ -56,7 +56,7 @@ public class VideosFragment extends Fragment
     @BindView(R.id.reconnectButton)
     ImageButton reconnectButton;
 
-    @BindView(R.id.noMoviesButton)
+    @BindView(R.id.noReviewsButton)
     ImageView noMoviesButton;
 
     public VideosFragment() {
@@ -73,7 +73,7 @@ public class VideosFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos, container, false);
         ButterKnife.bind(this, view);
@@ -107,9 +107,7 @@ public class VideosFragment extends Fragment
             reconnectButton.setVisibility(View.VISIBLE);
             noMoviesButton.setVisibility(View.GONE);
         }
-        reconnectButton.setOnClickListener(v -> {
-            makeVideosQuery(model.getId());
-        });
+        reconnectButton.setOnClickListener(v -> makeVideosQuery(model.getId()));
 
         return view;
     }
@@ -125,7 +123,7 @@ public class VideosFragment extends Fragment
             call = apiInterface.getVideos(String.valueOf(movieId), BuildConfig.API_KEY);
             call.enqueue(new Callback<VideosModel>() {
                 @Override
-                public void onResponse(Call<VideosModel> call, Response<VideosModel> response) {
+                public void onResponse(@NonNull Call<VideosModel> call, @NonNull Response<VideosModel> response) {
                     if (response.body().getVideosModels().size() != 0) {
 
                         reconnectButton.setVisibility(View.GONE);
@@ -143,8 +141,8 @@ public class VideosFragment extends Fragment
                 }
 
                 @Override
-                public void onFailure(Call<VideosModel> call, Throwable t) {
-                    Log.d(TAG, "onFailure:" + t.getMessage().toString());
+                public void onFailure(@NonNull Call<VideosModel> call, @NonNull Throwable t) {
+                    Log.d(TAG, "onFailure:" + t.getMessage());
                 }
             });
         } else

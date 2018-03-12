@@ -2,7 +2,6 @@ package com.curtesmalteser.popularmoviesstage1.activity;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.adapter.SimpleFragmentPagerAdapter;
 import com.curtesmalteser.popularmoviesstage1.db.MoviesContract;
-import com.curtesmalteser.popularmoviesstage1.db.MoviesDbHelper;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils;
 import com.squareup.picasso.Callback;
@@ -37,12 +35,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private MoviesModel model;
 
-    private SQLiteDatabase mDb;
-
     private boolean state;
 
     @BindView(R.id.background)
-    ImageView backgroung;
+    ImageView background;
 
     @BindView(R.id.posterInDetailsActivity)
     ImageView poster;
@@ -75,9 +71,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
 
-        backgroung.setColorFilter(Color.argb(220, 0, 0, 0));
+        background.setColorFilter(Color.argb(220, 0, 0, 0));
 
-        // TODO: 23/02/2018 check internet connection..........................................
         if (getIntent().hasExtra(getResources().getString(R.string.string_extra))) {
             model = getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
 
@@ -118,20 +113,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
-        MoviesDbHelper dbHelper = new MoviesDbHelper(this);
-        mDb = dbHelper.getWritableDatabase();
-
         Cursor cursor = checkFavoriteMovie();
 
         if (cursor.getCount() > 0) {
-            Log.d("AJDB", "Count: " + cursor.getCount());
             tvAddRemove.setText(R.string.string_remove_fav);
             likeButton.setImageResource(R.drawable.ic_heart_red);
             state = true;
         } else {
             tvAddRemove.setText(R.string.string_add_fav);
             likeButton.setImageResource(R.drawable.ic_heart_white);
-            Log.d("AJDB", "false ");
             state = false;
         }
         cursor.close();
@@ -172,7 +162,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getBackdropPath()))
                 .networkPolicy(NetworkPolicy.OFFLINE)
-                .into(backgroung, new Callback() {
+                .into(background, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -184,7 +174,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         Picasso.with(getApplicationContext())
                                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getBackdropPath()))
                                 .error(R.drawable.drawable_background)
-                                .into(backgroung, new Callback() {
+                                .into(background, new Callback() {
                                     @Override
                                     public void onSuccess() {
 

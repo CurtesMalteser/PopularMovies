@@ -1,6 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,6 @@ import java.util.List;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsViewHolder> {
 
-    private Context mContext;
     private List<ReviewsModel> mReviewsArrayList;
     final private ReviewsAdapter.ListItemClickListener mOnClickListener;
 
@@ -26,28 +26,27 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         void onListItemClick(ReviewsModel reviewsModel);
     }
 
-    public ReviewsAdapter(Context context, List<ReviewsModel> reviewsArrayList,
+    public ReviewsAdapter(List<ReviewsModel> reviewsArrayList,
                           ReviewsAdapter.ListItemClickListener listener) {
-        this.mContext = context;
         this.mReviewsArrayList = reviewsArrayList;
         this.mOnClickListener = listener;
     }
 
+    @NonNull
     @Override
-    public ReviewsAdapter.ReviewsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ReviewsAdapter.ReviewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.reviews_single_row;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        ReviewsAdapter.ReviewsViewHolder viewHolder = new ReviewsAdapter.ReviewsViewHolder(view);
 
-        return viewHolder;
+        return new ReviewsAdapter.ReviewsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ReviewsAdapter.ReviewsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReviewsAdapter.ReviewsViewHolder holder, int position) {
         holder.bind(position);
     }
 

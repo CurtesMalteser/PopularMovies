@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by António "Curtes Malteser" Bastião on 23/02/2018.
@@ -31,17 +30,19 @@ public class VideosModel implements Parcelable{
     @Expose
     private String type;
 
-    public static final Creator<VideosModel> CREATOR = new Creator<VideosModel>() {
-        @Override
-        public VideosModel createFromParcel(Parcel in) {
-            return new VideosModel(in);
-        }
-
-        @Override
-        public VideosModel[] newArray(int size) {
-            return new VideosModel[size];
-        }
-    };
+// --Commented out by Inspection START (12/03/2018 00:48):
+//    public static final Creator<VideosModel> CREATOR = new Creator<VideosModel>() {
+//        @Override
+//        public VideosModel createFromParcel(Parcel in) {
+//            return new VideosModel(in);
+//        }
+//
+//        @Override
+//        public VideosModel[] newArray(int size) {
+//            return new VideosModel[size];
+//        }
+//    };
+// --Commented out by Inspection STOP (12/03/2018 00:48)
 
     @Override
     public int describeContents() {

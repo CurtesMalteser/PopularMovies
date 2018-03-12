@@ -15,7 +15,7 @@
         android:layout_height="wrap_content" />
 
     <ImageView
-        android:id="@+id/noMoviesButton"
+        android:id="@+id/noReviewsButton"
         app:srcCompat="@drawable/ic_no_movies"
         android:background="@color/colorPrimaryDark"
         android:adjustViewBounds="true"

@@ -26,7 +26,6 @@ import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.ReviewsModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +54,7 @@ public class ReviewsFragment extends Fragment
     @BindView(R.id.reconnectButton)
     ImageButton reconnectButton;
 
-    @BindView(R.id.noMoviesButton)
+    @BindView(R.id.noReviewsButton)
     ImageView noMoviesButton;
 
     public ReviewsFragment() {
@@ -72,7 +71,7 @@ public class ReviewsFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reviews, container, false);
         ButterKnife.bind(this, view);
@@ -98,7 +97,7 @@ public class ReviewsFragment extends Fragment
             } else
                 mReviewsList = savedInstanceState.getParcelableArrayList(SAVED_STATE_REVIEWS_LIST);
             if (mReviewsList != null) {
-                mReviewsAdapter = new ReviewsAdapter(getContext(), mReviewsList, ReviewsFragment.this);
+                mReviewsAdapter = new ReviewsAdapter(mReviewsList, ReviewsFragment.this);
                 mRecyclerView.setAdapter(mReviewsAdapter);
                 mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
             }
@@ -108,9 +107,7 @@ public class ReviewsFragment extends Fragment
             noMoviesButton.setVisibility(View.GONE);
         }
 
-        reconnectButton.setOnClickListener(v -> {
-            makeReviewsQuery(model.getId());
-        });
+        reconnectButton.setOnClickListener(v -> makeReviewsQuery(model.getId()));
 
 
         return view;
@@ -127,14 +124,14 @@ public class ReviewsFragment extends Fragment
             call = apiInterface.getReviews(String.valueOf(movieId), BuildConfig.API_KEY);
             call.enqueue(new Callback<ReviewsModel>() {
                 @Override
-                public void onResponse(Call<ReviewsModel> call, Response<ReviewsModel> response) {
+                public void onResponse(@NonNull Call<ReviewsModel> call, @NonNull Response<ReviewsModel> response) {
                     if (response.body().getReviewsModels().size() != 0) {
 
                         reconnectButton.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
 
                         mReviewsList = response.body().getReviewsModels();
-                        mReviewsAdapter = new ReviewsAdapter(getContext(), mReviewsList, ReviewsFragment.this);
+                        mReviewsAdapter = new ReviewsAdapter(mReviewsList, ReviewsFragment.this);
                         mRecyclerView.setAdapter(mReviewsAdapter);
 
                     } else {
@@ -144,8 +141,8 @@ public class ReviewsFragment extends Fragment
                 }
 
                 @Override
-                public void onFailure(Call<ReviewsModel> call, Throwable t) {
-                    Log.d("AJDB", "onFailure:" + t.getMessage().toString());
+                public void onFailure(@NonNull Call<ReviewsModel> call, @NonNull Throwable t) {
+                    Log.d(TAG, "onFailure:" + t.getMessage());
                 }
             });
         } else

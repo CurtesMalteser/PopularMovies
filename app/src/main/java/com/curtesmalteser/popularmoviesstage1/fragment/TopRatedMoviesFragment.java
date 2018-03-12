@@ -18,12 +18,15 @@ import android.widget.Toast;
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.activity.MovieDetailsActivity;
+import com.curtesmalteser.popularmoviesstage1.adapter.EndlessScrollListener;
 import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,32 +34,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TopRatedMoviesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TopRatedMoviesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TopRatedMoviesFragment extends Fragment
         implements MoviesAdapter.ListItemClickListener {
 
     private static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
 
-    private OnFragmentInteractionListener mListener;
 
-    private static final String PREFERENCES_NAME = "movies_preferences";
-    private final String SELECTION = "selection";
-
-    private MoviesAdapter moviesAdapter;
-
-    private ConnectivityManager cm;
     private static final String SAVED_STATE_MOVIES_LIST = "moviesListSaved";
 
-    private ArrayList<MoviesModel> mMoviesList;
+    private ArrayList<MoviesModel> mMoviesList = new ArrayList<>();
 
     private Parcelable stateRecyclerView;
+
+    private static final String PAGE_NUMBER_KEY = "pageNumber";
+
+    private int pageNumber = 1;
+
+    private ConnectivityManager cm;
+
+    private MoviesAdapter moviesAdapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -66,8 +62,7 @@ public class TopRatedMoviesFragment extends Fragment
     }
 
     public static TopRatedMoviesFragment newInstance() {
-        TopRatedMoviesFragment fragment = new TopRatedMoviesFragment();
-        return fragment;
+        return new TopRatedMoviesFragment();
     }
 
     @Override
@@ -84,20 +79,30 @@ public class TopRatedMoviesFragment extends Fragment
         ButterKnife.bind(this, view);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns));
+        mRecyclerView.setLayoutManager(layoutManager);
         if (savedInstanceState == null) {
-            makeMoviesQuery();
+            makeMoviesQuery(pageNumber);
         } else {
             mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-            moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, TopRatedMoviesFragment.this);
-            mRecyclerView.setAdapter(moviesAdapter);
+            pageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
             mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
+
         }
+        moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, TopRatedMoviesFragment.this);
+        mRecyclerView.setAdapter(moviesAdapter);
+        mRecyclerView.addOnScrollListener(new EndlessScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                makeMoviesQuery(current_page);
+                pageNumber = current_page;
+            }
+        });
 
         return view;
     }
 
-    private void makeMoviesQuery() {
+    private void makeMoviesQuery(int page) {
         MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
         Call<MoviesModel> call;
 
@@ -105,18 +110,25 @@ public class TopRatedMoviesFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
-            call = apiInterface.getTopRated(BuildConfig.API_KEY);
+            Map<String, String> queryParams = new HashMap<>();
+            queryParams.put("api_key", BuildConfig.API_KEY);
+            queryParams.put("language", "en-US");
+            queryParams.put("page", String.valueOf(page));
+
+            call = apiInterface.getTopRated(queryParams);
             call.enqueue(new Callback<MoviesModel>() {
                 @Override
-                public void onResponse(Call<MoviesModel> call, Response<MoviesModel> response) {
-                    mMoviesList = response.body().getMoviesModels();
-                    moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, TopRatedMoviesFragment.this);
-                    mRecyclerView.setAdapter(moviesAdapter);
+                public void onResponse(@NonNull Call<MoviesModel> call, @NonNull Response<MoviesModel> response) {
+
+                    for (MoviesModel moviesModel : response.body().getMoviesModels()) {
+                        mMoviesList.add(moviesModel);
+                        moviesAdapter.notifyDataSetChanged();
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<MoviesModel> call, Throwable t) {
-                    Log.d(TAG, "onFailure:" + t.getMessage().toString());
+                public void onFailure(@NonNull Call<MoviesModel> call, @NonNull Throwable t) {
+                    Log.d(TAG, "onFailure:" + t.getMessage());
                 }
             });
         } else
@@ -131,30 +143,10 @@ public class TopRatedMoviesFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnOverviewFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(MoviesModel moviesModel);
-    }
-
-    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putInt(PAGE_NUMBER_KEY, pageNumber);
         outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
     }
 }

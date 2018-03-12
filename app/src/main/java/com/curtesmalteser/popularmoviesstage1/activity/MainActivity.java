@@ -2,13 +2,10 @@ package com.curtesmalteser.popularmoviesstage1.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuItem;
 
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment;
@@ -22,12 +19,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity
-        implements PopularMoviesFragment.OnPopularMoviesConfigChangesListener,
-        TopRatedMoviesFragment.OnFragmentInteractionListener,
-        FavoriteMoviesFragment.OnFragmentInteractionListener {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class MainActivity extends AppCompatActivity {
 
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selected_fragment";
@@ -40,7 +32,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Stetho
         Stetho.initializeWithDefaults(this);
 
         ButterKnife.bind(this);
@@ -50,8 +41,6 @@ public class MainActivity extends AppCompatActivity
 
 
         if (savedInstanceState == null) {
-            Log.d("AJDB", "the Frgament is null");
-
             setFragment(readPreferences());
         bottomNavigationMenu.setSelectedItemId(readPreferences());
 
@@ -81,23 +70,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onFragmentInteraction(MoviesModel moviesModel) {
-
-    }
-
     private void savePreferences(int selection) {
         SharedPreferences.Editor sharedPreferences = this.getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE).edit();
         sharedPreferences.putInt(SELECTION, selection);
-        sharedPreferences.commit();
+        sharedPreferences.apply();
     }
 
     private int readPreferences() {
         SharedPreferences sharedPreferences = this.getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
         return sharedPreferences.getInt(SELECTION, R.id.action_popular_movies);
-    }
-
-    @Override
-    public void onPopularMoviesConfigChangesListener(ArrayList<MoviesModel> moviesList) {
     }
 }

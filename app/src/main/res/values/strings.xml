@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="title_menu_spinner">Menu Spinner</string>
     <string name="string_popular">Popular</string>
     <string name="string_top_rated">Top Rated</string>
     <string name="string_favorite">Favorite</string>

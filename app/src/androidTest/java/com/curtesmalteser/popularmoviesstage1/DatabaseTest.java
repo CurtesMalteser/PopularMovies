@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class DatabseTest {
+public class DatabaseTest {
 
     private final Context mContext = InstrumentationRegistry.getTargetContext();
     private final Class mDbHelperClass = MoviesDbHelper.class;
@@ -52,7 +52,7 @@ public class DatabseTest {
         SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use WaitlistDbHelper to get access to a writable database */
+        /* Use MoviesDbHelper to get access to a writable database */
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
 
@@ -97,7 +97,7 @@ public class DatabseTest {
         SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use WaitlistDbHelper to get access to a writable database */
+        /* Use MoviesDbHelper to get access to a writable database */
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
@@ -139,7 +139,7 @@ public class DatabseTest {
                 null);
 
         /* Cursor.moveToFirst will return false if there are no records returned from your query */
-        String emptyQueryError = "Error: No Records returned from waitlist query";
+        String emptyQueryError = "Error: No Records returned from movies query";
         assertTrue(emptyQueryError,
                 wCursor.moveToFirst());
 
@@ -164,7 +164,7 @@ public class DatabseTest {
         SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use WaitlistDbHelper to get access to a writable database */
+        /* Use MoviesDbHelper to get access to a writable database */
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
@@ -210,7 +210,7 @@ public class DatabseTest {
         SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use WaitlistDbHelper to get access to a writable database */
+        /* Use MoviesDbHelper to get access to a writable database */
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
@@ -284,7 +284,7 @@ public class DatabseTest {
             f.setAccessible(true);
             mContext.deleteDatabase((String)f.get(null));
         }catch (NoSuchFieldException ex){
-            fail("Make sure you have a member called DATABASE_NAME in the WaitlistDbHelper");
+            fail("Make sure you have a member called DATABASE_NAME in the MoviesDbHelper");
         }catch (Exception ex){
             fail(ex.getMessage());
         }

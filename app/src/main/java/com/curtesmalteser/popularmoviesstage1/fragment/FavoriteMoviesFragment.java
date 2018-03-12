@@ -34,26 +34,11 @@ import butterknife.ButterKnife;
 import static android.provider.BaseColumns._ID;
 import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.CONTENT_URI;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FavoriteMoviesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FavoriteMoviesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FavoriteMoviesFragment extends Fragment
         implements MoviesAdapter.ListItemClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private OnFragmentInteractionListener mListener;
-
     private static final String TAG = FavoriteMoviesFragment.class.getSimpleName();
-
-    private static final String PREFERENCES_NAME = "movies_preferences";
-    private final String SELECTION = "selection";
-
-    private SQLiteDatabase mDb;
 
     private static final int TASK_LOADER_ID = 0;
 
@@ -76,26 +61,10 @@ public class FavoriteMoviesFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-
-        // TODO: 10/03/2018 remove SQLdbHelper and replace with ContenProvider
-        MoviesDbHelper dbHelper = new MoviesDbHelper(getContext());
-        mDb = dbHelper.getReadableDatabase();
-
-
-    }
-
-
-    @Override
     public void onListItemClick(MoviesModel moviesModel) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(moviesModel);
             Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
             intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
             startActivity(intent);
-        }
     }
 
     @Override
@@ -109,48 +78,19 @@ public class FavoriteMoviesFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setRetainInstance(true);
         View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
         ButterKnife.bind(this, view);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
-        //if (savedInstanceState == null) {
-        // makeMoviesQuery();
-        // } else {
-        //  mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-        Log.d("AJDB", "mMoviesList: " + mMoviesList.size());
-        //moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, FavoriteMoviesFragment.this);
         moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, FavoriteMoviesFragment.this);
         mRecyclerView.setAdapter(moviesAdapter);
-        //mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
-        //  }
-
 
         getActivity().getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
         return view;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnOverviewFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(MoviesModel moviesModel);
-    }
 
     @NonNull
     @Override
@@ -206,7 +146,6 @@ public class FavoriteMoviesFragment extends Fragment
                         data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW)),
                         data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE))));
             }
-            Log.d("AJDB", "Poster: " + mMoviesList.get(i).getTitle());
         }
         moviesAdapter.notifyDataSetChanged();
     }
