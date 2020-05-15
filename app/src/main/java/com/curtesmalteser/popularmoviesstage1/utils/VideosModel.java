@@ -30,19 +30,19 @@ public class VideosModel implements Parcelable{
     @Expose
     private String type;
 
-// --Commented out by Inspection START (12/03/2018 00:48):
-//    public static final Creator<VideosModel> CREATOR = new Creator<VideosModel>() {
-//        @Override
-//        public VideosModel createFromParcel(Parcel in) {
-//            return new VideosModel(in);
-//        }
-//
-//        @Override
-//        public VideosModel[] newArray(int size) {
-//            return new VideosModel[size];
-//        }
-//    };
-// --Commented out by Inspection STOP (12/03/2018 00:48)
+
+   public static final Creator<VideosModel> CREATOR = new Creator<VideosModel>() {
+       @Override
+       public VideosModel createFromParcel(Parcel in) {
+            return new VideosModel(in);
+       }
+
+        @Override
+       public VideosModel[] newArray(int size) {
+            return new VideosModel[size];
+       }
+    };
+
 
     @Override
     public int describeContents() {

@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.curtesmalteser.popularmoviesstage1.db.MoviesContract;
 import com.curtesmalteser.popularmoviesstage1.db.MoviesDbHelper;
@@ -31,12 +31,12 @@ import static org.junit.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTest {
 
-    private final Context mContext = InstrumentationRegistry.getTargetContext();
-    private final Class mDbHelperClass = MoviesDbHelper.class;
+   // private final Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
+    //private final Class mDbHelperClass = MoviesDbHelper.class;
 
     @Before
     public void setUp() {
-        deleteTheDatabase();
+        //deleteTheDatabase();
     }
 
     /**
@@ -49,40 +49,40 @@ public class DatabaseTest {
 
 
         /* Use reflection to try to run the correct constructor whenever implemented */
-        SQLiteOpenHelper dbHelper =
+        /*SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use MoviesDbHelper to get access to a writable database */
+        *//* Use MoviesDbHelper to get access to a writable database *//*
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
 
-        /* We think the database is open, let's verify that here */
+        *//* We think the database is open, let's verify that here *//*
         String databaseIsNotOpen = "The database should be open and isn't";
         assertEquals(databaseIsNotOpen,
                 true,
                 database.isOpen());
 
-        /* This Cursor will contain the names of each table in our database */
+        *//* This Cursor will contain the names of each table in our database *//*
         Cursor tableNameCursor = database.rawQuery(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='" +
                         MoviesContract.MoviesEntry.TABLE_NAME + "'",
                 null);
 
-        /*
+        *//*
          * If tableNameCursor.moveToFirst returns false from this query, it means the database
          * wasn't created properly. In actuality, it means that your database contains no tables.
-         */
+         *//*
         String errorInCreatingDatabase =
                 "Error: This means that the database has not been created correctly";
         assertTrue(errorInCreatingDatabase,
                 tableNameCursor.moveToFirst());
 
-        /* If this fails, it means that your database doesn't contain the expected table(s) */
+        *//* If this fails, it means that your database doesn't contain the expected table(s) *//*
         assertEquals("Error: Your database was created without the expected tables.",
                 MoviesContract.MoviesEntry.TABLE_NAME, tableNameCursor.getString(0));
 
-        /* Always close a cursor when you are done with it */
-        tableNameCursor.close();
+        *//* Always close a cursor when you are done with it *//*
+        tableNameCursor.close();*/
     }
 
     /**
@@ -94,10 +94,10 @@ public class DatabaseTest {
     public void insert_single_record_test() throws Exception{
 
         /* Use reflection to try to run the correct constructor whenever implemented */
-        SQLiteOpenHelper dbHelper =
+        /*SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use MoviesDbHelper to get access to a writable database */
+        *//* Use MoviesDbHelper to get access to a writable database *//*
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
@@ -109,43 +109,43 @@ public class DatabaseTest {
         testValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW, "overview test");
         testValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE, "2018-03-04");
 
-        /* Insert ContentValues into database and get first row ID back */
+        *//* Insert ContentValues into database and get first row ID back *//*
         long firstRowId = database.insert(
                 MoviesContract.MoviesEntry.TABLE_NAME,
                 null,
                 testValues);
 
-        /* If the insert fails, database.insert returns -1 */
+        *//* If the insert fails, database.insert returns -1 *//*
         assertNotEquals("Unable to insert into the database", -1, firstRowId);
 
-        /*
+        *//*
          * Query the database and receive a Cursor. A Cursor is the primary way to interact with
          * a database in Android.
-         */
+         *//*
         Cursor wCursor = database.query(
-                /* Name of table on which to perform the query */
+                *//* Name of table on which to perform the query *//*
                 MoviesContract.MoviesEntry.TABLE_NAME,
-                /* Columns; leaving this null returns every column in the table */
+                *//* Columns; leaving this null returns every column in the table *//*
                 null,
-                /* Optional specification for columns in the "where" clause above */
+                *//* Optional specification for columns in the "where" clause above *//*
                 null,
-                /* Values for "where" clause */
+                *//* Values for "where" clause *//*
                 null,
-                /* Columns to group by */
+                *//* Columns to group by *//*
                 null,
-                /* Columns to filter by row groups */
+                *//* Columns to filter by row groups *//*
                 null,
-                /* Sort order to return in Cursor */
+                *//* Sort order to return in Cursor *//*
                 null);
 
-        /* Cursor.moveToFirst will return false if there are no records returned from your query */
+        *//* Cursor.moveToFirst will return false if there are no records returned from your query *//*
         String emptyQueryError = "Error: No Records returned from movies query";
         assertTrue(emptyQueryError,
                 wCursor.moveToFirst());
 
-        /* Close cursor and database */
+        *//* Close cursor and database *//*
         wCursor.close();
-        dbHelper.close();
+        dbHelper.close();*/
     }
 
 
@@ -158,13 +158,13 @@ public class DatabaseTest {
     public void autoincrement_test() throws Exception{
 
         /* First, let's ensure we have some values in our table initially */
-        insert_single_record_test();
+       /* insert_single_record_test();
 
-        /* Use reflection to try to run the correct constructor whenever implemented */
+        *//* Use reflection to try to run the correct constructor whenever implemented *//*
         SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use MoviesDbHelper to get access to a writable database */
+        *//* Use MoviesDbHelper to get access to a writable database *//*
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
@@ -176,20 +176,20 @@ public class DatabaseTest {
         testValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW, "overview testII");
         testValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE, "2018-03-04");
 
-        /* Insert ContentValues into database and get first row ID back */
+        *//* Insert ContentValues into database and get first row ID back *//*
         long firstRowId = database.insert(
                 MoviesContract.MoviesEntry.TABLE_NAME,
                 null,
                 testValues);
 
-        /* Insert ContentValues into database and get another row ID back */
+        *//* Insert ContentValues into database and get another row ID back *//*
         long secondRowId = database.insert(
                 MoviesContract.MoviesEntry.TABLE_NAME,
                 null,
                 testValues);
 
         assertEquals("ID Autoincrement test failed!",
-                firstRowId + 1, secondRowId);
+                firstRowId + 1, secondRowId);*/
 
 
     }
@@ -207,10 +207,10 @@ public class DatabaseTest {
         /* Insert 2 rows before we upgrade to check that we dropped the database correctly */
 
         /* Use reflection to try to run the correct constructor whenever implemented */
-        SQLiteOpenHelper dbHelper =
+        /*SQLiteOpenHelper dbHelper =
                 (SQLiteOpenHelper) mDbHelperClass.getConstructor(Context.class).newInstance(mContext);
 
-        /* Use MoviesDbHelper to get access to a writable database */
+        *//* Use MoviesDbHelper to get access to a writable database *//*
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
@@ -222,13 +222,13 @@ public class DatabaseTest {
         testValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_OVERVIEW, "overview test");
         testValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_RELEASE_DATE, "2018-03-04");
 
-        /* Insert ContentValues into database and get first row ID back */
+        *//* Insert ContentValues into database and get first row ID back *//*
         long firstRowId = database.insert(
                 MoviesContract.MoviesEntry.TABLE_NAME,
                 null,
                 testValues);
 
-        /* Insert ContentValues into database and get another row ID back */
+        *//* Insert ContentValues into database and get another row ID back *//*
         long secondRowId = database.insert(
                 MoviesContract.MoviesEntry.TABLE_NAME,
                 null,
@@ -237,7 +237,7 @@ public class DatabaseTest {
         dbHelper.onUpgrade(database, 0, 1);
         database = dbHelper.getReadableDatabase();
 
-        /* This Cursor will contain the names of each table in our database */
+        *//* This Cursor will contain the names of each table in our database *//*
         Cursor tableNameCursor = database.rawQuery(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='" +
                         MoviesContract.MoviesEntry.TABLE_NAME + "'",
@@ -245,41 +245,41 @@ public class DatabaseTest {
 
         assertTrue(tableNameCursor.getCount() == 1);
 
-        /*
+        *//*
          * Query the database and receive a Cursor. A Cursor is the primary way to interact with
          * a database in Android.
-         */
+         *//*
         Cursor wCursor = database.query(
-                /* Name of table on which to perform the query */
+                *//* Name of table on which to perform the query *//*
                 MoviesContract.MoviesEntry.TABLE_NAME,
-                /* Columns; leaving this null returns every column in the table */
+                *//* Columns; leaving this null returns every column in the table *//*
                 null,
-                /* Optional specification for columns in the "where" clause above */
+                *//* Optional specification for columns in the "where" clause above *//*
                 null,
-                /* Values for "where" clause */
+                *//* Values for "where" clause *//*
                 null,
-                /* Columns to group by */
+                *//* Columns to group by *//*
                 null,
-                /* Columns to filter by row groups */
+                *//* Columns to filter by row groups *//*
                 null,
-                /* Sort order to return in Cursor */
+                *//* Sort order to return in Cursor *//*
                 null);
 
-        /* Cursor.moveToFirst will return false if there are no records returned from your query */
+        *//* Cursor.moveToFirst will return false if there are no records returned from your query *//*
 
         assertFalse("Database doesn't seem to have been dropped successfully when upgrading",
                 wCursor.moveToFirst());
 
         tableNameCursor.close();
-        database.close();
+        database.close();*/
     }
 
     /**
      * Deletes the entire database.
      */
     void deleteTheDatabase(){
-        try {
-            /* Use reflection to get the database name from the db helper class */
+        /*try {
+            *//* Use reflection to get the database name from the db helper class *//*
             Field f = mDbHelperClass.getDeclaredField("DATABASE_NAME");
             f.setAccessible(true);
             mContext.deleteDatabase((String)f.get(null));
@@ -287,7 +287,7 @@ public class DatabaseTest {
             fail("Make sure you have a member called DATABASE_NAME in the MoviesDbHelper");
         }catch (Exception ex){
             fail(ex.getMessage());
-        }
+        }*/
 
     }
 }

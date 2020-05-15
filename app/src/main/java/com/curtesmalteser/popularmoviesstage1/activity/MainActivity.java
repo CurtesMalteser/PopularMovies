@@ -2,29 +2,23 @@ package com.curtesmalteser.popularmoviesstage1.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment;
 import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment;
 import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.facebook.stetho.Stetho;
 
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREFERENCES_NAME = "movies_preferences";
     private final String SELECTION = "selected_fragment";
 
-    @BindView(R.id.bottomNavigationMenu)
     BottomNavigationView bottomNavigationMenu;
 
     @Override
@@ -34,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         Stetho.initializeWithDefaults(this);
 
-        ButterKnife.bind(this);
+        bottomNavigationMenu = findViewById(R.id.bottomNavigationMenu);
 
         bottomNavigationMenu.setOnNavigationItemSelectedListener
                 (item -> setFragment(item.getItemId()));

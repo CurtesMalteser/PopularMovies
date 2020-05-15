@@ -4,11 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +27,6 @@ import com.curtesmalteser.popularmoviesstage1.utils.ReviewsModel;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,13 +46,10 @@ public class ReviewsFragment extends Fragment
 
     private ConnectivityManager cm;
 
-    @BindView(R.id.reviewsRecyclerView)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.reconnectButton)
     ImageButton reconnectButton;
 
-    @BindView(R.id.noReviewsImage)
     ImageView noReviewsImage;
 
     public ReviewsFragment() {
@@ -74,7 +69,10 @@ public class ReviewsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reviews, container, false);
-        ButterKnife.bind(this, view);
+
+        mRecyclerView = view.findViewById(R.id.reviewsRecyclerView);
+                reconnectButton = view.findViewById(R.id.reconnectButton);
+        noReviewsImage = view.findViewById(R.id.noReviewsImage);
 
         MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
 

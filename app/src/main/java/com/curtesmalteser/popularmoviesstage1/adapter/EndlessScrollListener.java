@@ -1,9 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.adapter;
 
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by António "Curtes Malteser" Bastião on 12/03/2018.

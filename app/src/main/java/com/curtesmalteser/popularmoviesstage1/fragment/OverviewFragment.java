@@ -1,8 +1,8 @@
 package com.curtesmalteser.popularmoviesstage1.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +11,8 @@ import android.widget.TextView;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class OverviewFragment extends Fragment {
 
-    @BindView(R.id.overview)
     TextView tvOverview;
 
     public OverviewFragment() {
@@ -28,8 +24,8 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        ButterKnife.bind(this, view);
         MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
+        tvOverview = view.findViewById(R.id.overview);
         tvOverview.setText(model.getOverview());
 
         return view;

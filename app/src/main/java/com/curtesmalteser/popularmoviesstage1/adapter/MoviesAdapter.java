@@ -1,8 +1,8 @@
 package com.curtesmalteser.popularmoviesstage1.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +77,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         void bind(int listIndex) {
             final MoviesModel model = mMoviesArrayList.get(listIndex);
 
-            Picasso.with(mContext)
+            Picasso.get()
                     .load(NetworkUtils.getPosterUrl(mContext.getString(R.string.poster_width_segment), model.getPosterPath()))
                     .networkPolicy(NetworkPolicy.OFFLINE)
                     .into(poster, new Callback() {
@@ -87,9 +87,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                         }
 
                         @Override
-                        public void onError() {
+                        public void  onError(Exception e) {
                             //Try again online if cache failed
-                            Picasso.with(mContext)
+                            Picasso.get()
                                     .load(NetworkUtils.getPosterUrl(mContext.getString(R.string.poster_width_segment), model.getPosterPath()))
                                     .error(R.drawable.ic_heart_white)
                                     .into(poster, new Callback() {
@@ -99,7 +99,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void  onError(Exception e) {
                                             Log.v("Picasso", "Could not fetch image");
                                         }
                                     });

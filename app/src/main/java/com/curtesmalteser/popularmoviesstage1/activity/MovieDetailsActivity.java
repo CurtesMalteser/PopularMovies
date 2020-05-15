@@ -5,10 +5,13 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.core.app.NavUtils;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
@@ -25,9 +28,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.COLUMN_NAME_ID;
 import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.CONTENT_URI;
 
@@ -37,39 +37,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private boolean state;
 
-    @BindView(R.id.background)
-    ImageView background;
+    ImageView background = findViewById(R.id.background);
 
-    @BindView(R.id.posterInDetailsActivity)
-    ImageView poster;
+    ImageView poster = findViewById(R.id.posterInDetailsActivity);
 
-    @BindView(R.id.title)
-    TextView title;
+    TextView title = findViewById(R.id.title);
 
-    @BindView(R.id.voteAverage)
-    TextView voteAverage;
+    TextView voteAverage = findViewById(R.id.voteAverage);
 
-    @BindView(R.id.releaseDate)
-    TextView releaseDate;
+    TextView releaseDate = findViewById(R.id.releaseDate);
 
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    ViewPager viewPager = findViewById(R.id.viewpager);
 
-    @BindView(R.id.sliding_tabs)
-    TabLayout tabLayout;
+    TabLayout tabLayout = findViewById(R.id.sliding_tabs);
 
-    @BindView(R.id.likeButton)
-    ImageButton likeButton;
+    ImageButton likeButton = findViewById(R.id.likeButton);
 
-    @BindView(R.id.tvAddRemove)
-    TextView tvAddRemove;
+    TextView tvAddRemove = findViewById(R.id.tvAddRemove);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ButterKnife.bind(this);
 
         background.setColorFilter(Color.argb(220, 0, 0, 0));
 
@@ -128,7 +118,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void getPoster() {
-        Picasso.with(this)
+        Picasso.get()
                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getPosterPath()))
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .into(poster, new Callback() {
@@ -138,9 +128,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError() {
+                    public void onError(Exception e) {
                         //Try again online if cache failed
-                        Picasso.with(getApplicationContext())
+                        Picasso.get()
                                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getPosterPath()))
                                 .error(R.drawable.ic_heart_white)
                                 .into(poster, new Callback() {
@@ -150,7 +140,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onError() {
+                                    public void  onError(Exception e) {
                                         Log.v("Picasso", "Could not fetch image");
                                     }
                                 });
@@ -159,7 +149,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void getBackground() {
-        Picasso.with(this)
+        Picasso.get()
                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getBackdropPath()))
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .into(background, new Callback() {
@@ -169,9 +159,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError() {
+                    public void  onError(Exception e) {
                         //Try again online if cache failed
-                        Picasso.with(getApplicationContext())
+                        Picasso.get()
                                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getBackdropPath()))
                                 .error(R.drawable.drawable_background)
                                 .into(background, new Callback() {
@@ -181,7 +171,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onError() {
+                                    public void  onError(Exception e) {
                                         Log.v("Picasso", "Could not fetch image");
                                     }
                                 });
@@ -211,7 +201,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Uri uri = CONTENT_URI;
         uri = uri.buildUpon().appendPath(String.valueOf(model.getId())).build();
 
-        return getContentResolver().delete(uri,null,null);
+        return getContentResolver().delete(uri, null, null);
 
     }
 

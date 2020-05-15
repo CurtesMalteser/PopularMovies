@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +29,6 @@ import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,13 +48,10 @@ public class VideosFragment extends Fragment
 
     private ConnectivityManager cm;
 
-    @BindView(R.id.videosRecyclerView)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.reconnectButton)
     ImageButton reconnectButton;
 
-    @BindView(R.id.noMoviesImage)
     ImageView noMoviesImage;
 
     public VideosFragment() {
@@ -76,7 +71,10 @@ public class VideosFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos, container, false);
-        ButterKnife.bind(this, view);
+
+        mRecyclerView = view.findViewById(R.id.videosRecyclerView);
+        reconnectButton = view.findViewById(R.id.reconnectButton);
+        noMoviesImage = view.findViewById(R.id.noMoviesImage);
 
         MoviesModel model = getActivity().getIntent().getParcelableExtra(getResources().getString(R.string.string_extra));
 

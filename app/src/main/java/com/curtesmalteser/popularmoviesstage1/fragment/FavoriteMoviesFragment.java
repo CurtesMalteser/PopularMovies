@@ -1,19 +1,17 @@
 package com.curtesmalteser.popularmoviesstage1.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +21,9 @@ import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.activity.MovieDetailsActivity;
 import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
 import com.curtesmalteser.popularmoviesstage1.db.MoviesContract;
-import com.curtesmalteser.popularmoviesstage1.db.MoviesDbHelper;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static android.provider.BaseColumns._ID;
 import static com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry.CONTENT_URI;
@@ -42,7 +36,6 @@ public class FavoriteMoviesFragment extends Fragment
 
     private static final int TASK_LOADER_ID = 0;
 
-    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
     private MoviesAdapter moviesAdapter;
@@ -80,7 +73,8 @@ public class FavoriteMoviesFragment extends Fragment
                              Bundle savedInstanceState) {
         setRetainInstance(true);
         View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
-        ButterKnife.bind(this, view);
+
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns)));
