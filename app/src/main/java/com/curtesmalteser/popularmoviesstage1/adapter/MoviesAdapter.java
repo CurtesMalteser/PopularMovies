@@ -83,7 +83,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     .into(poster, new Callback() {
                         @Override
                         public void onSuccess() {
-
+                            Log.d("AJDB", "onSuccess");
                         }
 
                         @Override
@@ -95,7 +95,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                                     .into(poster, new Callback() {
                                         @Override
                                         public void onSuccess() {
-
+                                            Log.d("AJDB", "onSuccess");
                                         }
 
                                         @Override

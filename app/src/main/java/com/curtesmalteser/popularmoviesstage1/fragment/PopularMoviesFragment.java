@@ -88,7 +88,7 @@ public class PopularMoviesFragment extends Fragment
             mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
         }
 
-        moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, PopularMoviesFragment.this);
+        moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, this);
         mRecyclerView.setAdapter(moviesAdapter);
         mRecyclerView.addOnScrollListener(new EndlessScrollListener(layoutManager) {
             @Override
@@ -119,7 +119,7 @@ public class PopularMoviesFragment extends Fragment
                 @Override
                 public void onResponse(@NonNull Call<MoviesModel> call, @NonNull Response<MoviesModel> response) {
 
-                    Log.d("foo", "onResponse: " + response.raw());
+                    Log.d(TAG, "onResponse: " + response.raw());
                     for (MoviesModel moviesModel : response.body().getMoviesModels()) {
                         mMoviesList.add(moviesModel);
                         moviesAdapter.notifyDataSetChanged();

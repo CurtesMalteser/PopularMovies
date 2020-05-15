@@ -5,13 +5,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.app.NavUtils;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
@@ -19,11 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+import androidx.viewpager.widget.ViewPager;
+
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.adapter.SimpleFragmentPagerAdapter;
 import com.curtesmalteser.popularmoviesstage1.db.MoviesContract;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils;
+import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -37,29 +35,39 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private boolean state;
 
-    ImageView background = findViewById(R.id.background);
+    ImageView background;
 
-    ImageView poster = findViewById(R.id.posterInDetailsActivity);
+    ImageView poster;
 
-    TextView title = findViewById(R.id.title);
+    TextView title;
 
-    TextView voteAverage = findViewById(R.id.voteAverage);
+    TextView voteAverage;
 
-    TextView releaseDate = findViewById(R.id.releaseDate);
+    TextView releaseDate;
 
-    ViewPager viewPager = findViewById(R.id.viewpager);
+    ViewPager viewPager;
 
-    TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+    TabLayout tabLayout;
 
-    ImageButton likeButton = findViewById(R.id.likeButton);
+    ImageButton likeButton;
 
-    TextView tvAddRemove = findViewById(R.id.tvAddRemove);
+    TextView tvAddRemove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        background = findViewById(R.id.background);
+        poster = findViewById(R.id.posterInDetailsActivity);
+        title = findViewById(R.id.title);
+        voteAverage = findViewById(R.id.voteAverage);
+        releaseDate = findViewById(R.id.releaseDate);
+        viewPager = findViewById(R.id.viewpager);
+        tabLayout = findViewById(R.id.sliding_tabs);
+        likeButton = findViewById(R.id.likeButton);
+        tvAddRemove = findViewById(R.id.tvAddRemove);
 
         background.setColorFilter(Color.argb(220, 0, 0, 0));
 
@@ -140,7 +148,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void  onError(Exception e) {
+                                    public void onError(Exception e) {
                                         Log.v("Picasso", "Could not fetch image");
                                     }
                                 });
@@ -159,7 +167,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void  onError(Exception e) {
+                    public void onError(Exception e) {
                         //Try again online if cache failed
                         Picasso.get()
                                 .load(NetworkUtils.getPosterUrl(getResources().getString(R.string.poster_width_segment), model.getBackdropPath()))
@@ -171,7 +179,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void  onError(Exception e) {
+                                    public void onError(Exception e) {
                                         Log.v("Picasso", "Could not fetch image");
                                     }
                                 });

@@ -8,7 +8,7 @@ import android.net.Uri;
 
 public class NetworkUtils {
 
-    final static String POSTER_URL = "http://image.tmdb.org/t/p";
+    final static String POSTER_URL = "https://image.tmdb.org/t/p";
 
     final static String BASE_THUMBNAIL_URL = "https://img.youtube.com/vi";
     final static String THUMBNAIL_SIZE_URL = "0.jpg";
