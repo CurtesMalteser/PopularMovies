@@ -3,10 +3,13 @@ package com.curtesmalteser.popularmoviesstage1.activity
 import android.content.ContentValues
 import android.database.Cursor
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.curtesmalteser.popularmoviesstage1.R
@@ -83,49 +86,53 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun getPoster(posterPath: String, backdropPath: String) {
-        Picasso.get()
-                .load(NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), posterPath))
-                .networkPolicy(NetworkPolicy.OFFLINE)
-                .into(posterInDetailsActivity, object : Callback {
-                    override fun onSuccess() {
-                        getBackground(backdropPath)
+        Picasso.get().let {
+            it.loadImage(
+                    uri = NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), posterPath),
+                    imageView = posterInDetailsActivity,
+                    success = {
+                        getBackground(NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), backdropPath))
+                    },
+                    error = {
+                        it.loadImage(uri = NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), posterPath),
+                                imageView = posterInDetailsActivity,
+                                errorResId = R.drawable.ic_heart_white,
+                                success = {},
+                                error = { Log.e("Picasso", "Could not fetch image") }
+                        )
                     }
-
-                    override fun onError(e: Exception) {
-                        //Try again online if cache failed
-                        Picasso.get()
-                                .load(NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), posterPath))
-                                .error(R.drawable.ic_heart_white)
-                                .into(poster, object : Callback {
-                                    override fun onSuccess() {}
-                                    override fun onError(e: Exception) {
-                                        Log.v("Picasso", "Could not fetch image")
-                                    }
-                                })
-                    }
-                })
+            )
+        }
     }
 
-    private fun getBackground(backdropPath: String) {
-        Picasso.get()
-                .load(NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), backdropPath))
-                .networkPolicy(NetworkPolicy.OFFLINE)
-                .into(background, object : Callback {
-                    override fun onSuccess() {}
-                    override fun onError(e: Exception) {
-                        //Try again online if cache failed
-                        Picasso.get()
-                                .load(NetworkUtils.getPosterUrl(resources.getString(R.string.poster_width_segment), backdropPath))
-                                .error(R.drawable.drawable_background)
-                                .into(background, object : Callback {
-                                    override fun onSuccess() {}
-                                    override fun onError(e: Exception) {
-                                        Log.v("Picasso", "Could not fetch image")
-                                    }
-                                })
+    private fun getBackground(backdropPath: Uri) {
+        Picasso.get().let {
+            it.loadImage(
+                    uri = backdropPath,
+                    imageView = background,
+                    success = {},
+                    error = {
+                        it.loadImage(uri = backdropPath,
+                                imageView = background,
+                                success = {},
+                                error = { Log.e("Picasso", "Could not fetch image") }
+                        )
                     }
-                })
+            )
+        }
     }
+
+    private fun Picasso.loadImage(uri: Uri,
+                                  imageView: ImageView,
+                                  success: () -> Unit,
+                                  error: () -> Unit,
+                                  @DrawableRes errorResId: Int = R.drawable.drawable_background) = load(uri)
+            .error(errorResId)
+            .into(imageView, object : Callback {
+                override fun onSuccess(): Unit = success()
+                override fun onError(e: Exception?): Unit = error()
+            })
+
 
     private fun addFavoriteMovie(model: MoviesModel): Int {
         val cv = ContentValues()
