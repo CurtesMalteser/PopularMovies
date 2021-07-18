@@ -1,5 +1,6 @@
 package com.curtesmalteser.popularmoviesstage1.activity
 
+import android.app.Activity
 import android.content.ContentValues
 import android.database.Cursor
 import android.graphics.Color
@@ -12,10 +13,12 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
+import androidx.viewbinding.ViewBinding
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.adapter.SimpleFragmentPagerAdapter
 import com.curtesmalteser.popularmoviesstage1.databinding.ActivityMovieDetailsBinding
 import com.curtesmalteser.popularmoviesstage1.db.MoviesContract.MoviesEntry
+import com.curtesmalteser.popularmoviesstage1.ext.setContentBinding
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils
 import com.squareup.picasso.Callback
@@ -30,7 +33,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMovieDetailsBinding.inflate(layoutInflater)
+        binding = setContentBinding { ActivityMovieDetailsBinding.inflate(layoutInflater) }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

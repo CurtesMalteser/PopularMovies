@@ -7,10 +7,11 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.curtesmalteser.popularmoviesstage1.R
+import com.curtesmalteser.popularmoviesstage1.databinding.ActivityMainBinding
+import com.curtesmalteser.popularmoviesstage1.ext.setContentBinding
 import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment
 import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment
 import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment
-import com.facebook.stetho.Stetho
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -19,13 +20,14 @@ class MainActivity : AppCompatActivity() {
     private val selectTopRatedMoviesFragment by lazy { TopRatedMoviesFragment.newInstance() }
     private val selectFavoriteMoviesFragment by lazy { FavoriteMoviesFragment.newInstance() }
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
-        Stetho.initializeWithDefaults(this)
+        binding = setContentBinding { ActivityMainBinding.inflate(layoutInflater) }
 
-        val bottomNavigationMenu = findViewById<BottomNavigationView>(R.id.bottomNavigationMenu).apply {
+        val bottomNavigationMenu : BottomNavigationView = binding.bottomNavigationMenu.apply {
             setOnNavigationItemSelectedListener { item: MenuItem -> setFragment(item.itemId) }
         }
 

@@ -27,6 +27,7 @@ import retrofit2.Response
 import java.util.*
 
 class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
+
     private var mMoviesList: ArrayList<MoviesModel>? = ArrayList()
     private var stateRecyclerView: Parcelable? = null
     private var pageNumber = 1
@@ -109,7 +110,7 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        stateRecyclerView = mRecyclerView.layoutManager!!.onSaveInstanceState()
+        stateRecyclerView = mRecyclerView.layoutManager?.onSaveInstanceState()
         outState.putInt(PAGE_NUMBER_KEY, pageNumber)
         outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList)
     }
