@@ -69,9 +69,7 @@ class MainActivity : AppCompatActivity() {
             .getInt(SELECTION, R.id.action_popular_movies)
 
     companion object {
-
         private const val PREFERENCES_NAME = "movies_preferences"
         private const val SELECTION = "selected_fragment"
-
     }
 }
