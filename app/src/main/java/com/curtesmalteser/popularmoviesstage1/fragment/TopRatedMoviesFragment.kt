@@ -1,152 +1,140 @@
-package com.curtesmalteser.popularmoviesstage1.fragment;
+package com.curtesmalteser.popularmoviesstage1.fragment
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.os.Bundle;
-import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import com.curtesmalteser.popularmoviesstage1.BuildConfig
+import com.curtesmalteser.popularmoviesstage1.R
+import com.curtesmalteser.popularmoviesstage1.activity.MovieDetailsActivity
+import com.curtesmalteser.popularmoviesstage1.adapter.EndlessScrollListener
+import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter
+import com.curtesmalteser.popularmoviesstage1.databinding.FragmentMoviesLayoutBinding
+import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface
+import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
-import com.curtesmalteser.popularmoviesstage1.BuildConfig;
-import com.curtesmalteser.popularmoviesstage1.R;
-import com.curtesmalteser.popularmoviesstage1.activity.MovieDetailsActivity;
-import com.curtesmalteser.popularmoviesstage1.adapter.EndlessScrollListener;
-import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
+class TopRatedMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+    private var mMoviesList: ArrayList<MoviesModel>? = ArrayList()
+    private var stateRecyclerView: Parcelable? = null
+    private var pageNumber = 1
+    private var cm: ConnectivityManager? = null
+    private var moviesAdapter: MoviesAdapter? = null
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+    private var _binding: FragmentMoviesLayoutBinding? = null
+    private val binding: FragmentMoviesLayoutBinding get() = _binding!!
 
-public class TopRatedMoviesFragment extends Fragment
-        implements MoviesAdapter.ListItemClickListener {
-
-    private static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
-
-
-    private static final String SAVED_STATE_MOVIES_LIST = "moviesListSaved";
-
-    private ArrayList<MoviesModel> mMoviesList = new ArrayList<>();
-
-    private Parcelable stateRecyclerView;
-
-    private static final String PAGE_NUMBER_KEY = "pageNumber";
-
-    private int pageNumber = 1;
-
-    private ConnectivityManager cm;
-
-    private MoviesAdapter moviesAdapter;
-
-    RecyclerView mRecyclerView;
-
-    public TopRatedMoviesFragment() {
-        // Required empty public constructor
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+        cm = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
-    public static TopRatedMoviesFragment newInstance() {
-        return new TopRatedMoviesFragment();
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMoviesLayoutBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movies_layout, container, false);
+        val recyclerView = binding.recyclerView
 
-
-
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.number_of_columns));
-        mRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true)
+        val layoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.number_of_columns))
+        recyclerView.layoutManager = layoutManager
         if (savedInstanceState == null) {
-            makeMoviesQuery(pageNumber);
+            makeMoviesQuery(pageNumber)
         } else {
-            mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST);
-            pageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
-            mRecyclerView.getLayoutManager().onRestoreInstanceState(stateRecyclerView);
-
+            mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST)
+            pageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY)
+            recyclerView.layoutManager!!.onRestoreInstanceState(stateRecyclerView)
         }
-        moviesAdapter = new MoviesAdapter(getContext(), mMoviesList, TopRatedMoviesFragment.this);
-        mRecyclerView.setAdapter(moviesAdapter);
-        mRecyclerView.addOnScrollListener(new EndlessScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                makeMoviesQuery(current_page);
-                pageNumber = current_page;
+        moviesAdapter = MoviesAdapter(context, mMoviesList, this@TopRatedMoviesFragment)
+        recyclerView.adapter = moviesAdapter
+        recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {
+            override fun onLoadMore(current_page: Int) {
+                makeMoviesQuery(current_page)
+                pageNumber = current_page
             }
-        });
+        })
 
-        return view;
     }
 
-    private void makeMoviesQuery(int page) {
-        MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
-        Call<MoviesModel> call;
-
-        if (cm.getActiveNetworkInfo() != null
-                && cm.getActiveNetworkInfo().isAvailable()
-                && cm.getActiveNetworkInfo().isConnected()) {
-
-            Map<String, String> queryParams = new HashMap<>();
-            queryParams.put("api_key", BuildConfig.API_KEY);
-            queryParams.put("language", "en-US");
-            queryParams.put("page", String.valueOf(page));
-
-            call = apiInterface.getTopRated(queryParams);
-            call.enqueue(new Callback<MoviesModel>() {
-                @Override
-                public void onResponse(@NonNull Call<MoviesModel> call, @NonNull Response<MoviesModel> response) {
-
-                    for (MoviesModel moviesModel : response.body().getMoviesModels()) {
-                        mMoviesList.add(moviesModel);
-                        moviesAdapter.notifyDataSetChanged();
+    private fun makeMoviesQuery(page: Int) {
+        val apiInterface = MoviesAPIClient.getClient().create(
+            MoviesAPIInterface::class.java
+        )
+        val call: Call<MoviesModel>
+        if (cm!!.activeNetworkInfo != null && cm!!.activeNetworkInfo!!.isAvailable
+            && cm!!.activeNetworkInfo!!.isConnected
+        ) {
+            val queryParams: MutableMap<String, String> = HashMap()
+            queryParams["api_key"] = BuildConfig.API_KEY
+            queryParams["language"] = "en-US"
+            queryParams["page"] = page.toString()
+            call = apiInterface.getTopRated(queryParams)
+            call.enqueue(object : Callback<MoviesModel> {
+                override fun onResponse(call: Call<MoviesModel>, response: Response<MoviesModel>) {
+                    for (moviesModel in response.body()!!.moviesModels) {
+                        mMoviesList!!.add(moviesModel)
+                        moviesAdapter!!.notifyDataSetChanged()
                     }
-                    Log.d("LOL", "onResponse: " + page);
+                    Log.d("LOL", "onResponse: $page")
                 }
 
-                @Override
-                public void onFailure(@NonNull Call<MoviesModel> call, @NonNull Throwable t) {
-                    Log.d(TAG, "onFailure:" + t.getMessage());
+                override fun onFailure(call: Call<MoviesModel>, t: Throwable) {
+                    Log.d(TAG, "onFailure:" + t.message)
                 }
-            });
-        } else
-            Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
+            })
+        } else Toast.makeText(context, R.string.check_internet_connection, Toast.LENGTH_SHORT)
+            .show()
     }
 
-    @Override
-    public void onListItemClick(MoviesModel moviesModel) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra(getResources().getString(R.string.string_extra), moviesModel);
-        startActivity(intent);
+    override fun onListItemClick(moviesModel: MoviesModel) {
+        val intent = Intent(activity, MovieDetailsActivity::class.java)
+        intent.putExtra(resources.getString(R.string.string_extra), moviesModel)
+        startActivity(intent)
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        stateRecyclerView = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        outState.putInt(PAGE_NUMBER_KEY, pageNumber);
-        outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        stateRecyclerView = binding.recyclerView.layoutManager!!.onSaveInstanceState()
+        outState.putInt(PAGE_NUMBER_KEY, pageNumber)
+        outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    companion object {
+
+        private val TAG = TopRatedMoviesFragment::class.java.simpleName
+        private const val SAVED_STATE_MOVIES_LIST = "moviesListSaved"
+        private const val PAGE_NUMBER_KEY = "pageNumber"
+
+        fun newInstance(): TopRatedMoviesFragment = TopRatedMoviesFragment()
+
     }
 }
