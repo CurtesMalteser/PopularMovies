@@ -21,11 +21,13 @@ import com.curtesmalteser.popularmoviesstage1.databinding.FragmentMoviesLayoutBi
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
+@AndroidEntryPoint
 class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
 
     private var mMoviesList: ArrayList<MoviesModel>? = ArrayList()

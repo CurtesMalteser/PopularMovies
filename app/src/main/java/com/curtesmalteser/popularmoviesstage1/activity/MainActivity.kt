@@ -13,7 +13,9 @@ import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment
 import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment
 import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val selectPopularMoviesFragment by lazy { PopularMoviesFragment.newInstance() }
