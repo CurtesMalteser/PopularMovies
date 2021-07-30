@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.curtesmalteser.popularmoviesstage1.BuildConfig
 import com.curtesmalteser.popularmoviesstage1.R
@@ -21,6 +22,7 @@ import com.curtesmalteser.popularmoviesstage1.databinding.FragmentMoviesLayoutBi
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
+import com.curtesmalteser.popularmoviesstage1.viewmodel.PopularMoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,6 +41,8 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
     private var _binding: FragmentMoviesLayoutBinding? = null
     private val binding: FragmentMoviesLayoutBinding get() = _binding!!
 
+    private val viewModel: PopularMoviesViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -50,7 +54,6 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMoviesLayoutBinding.inflate(inflater, container, false)
-
 
         return binding.root
     }

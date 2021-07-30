@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  * Created by António 'Curtes Malteser' Bastião on 30/07/2021.
@@ -13,6 +14,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class MoviesProviderModule {
 
     @Binds
+    @Singleton
     abstract fun bindPopularMoviesProvider(provider: PopularMoviesProvider): IMoviesProvider
 
 }

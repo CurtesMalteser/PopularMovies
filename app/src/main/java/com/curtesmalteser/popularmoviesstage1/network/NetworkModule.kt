@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 /**
  * Created by António 'Curtes Malteser' Bastião on 30/07/2021.
@@ -28,6 +29,7 @@ class NetworkModule {
         .build()
 
     @Provides
+    @Singleton
     fun provideMovieAPI(): MoviesAPIInterface  = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
