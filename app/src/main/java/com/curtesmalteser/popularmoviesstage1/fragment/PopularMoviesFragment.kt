@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +26,7 @@ import java.util.*
 class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
 
     private var mMoviesList: ArrayList<MoviesModel>? = ArrayList()
-    private var stateRecyclerView: Parcelable? = null
-    private var pageNumber = 1
+
     private var cm: ConnectivityManager? = null
     private var moviesAdapter: MoviesAdapter? = null
 
@@ -61,11 +59,10 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
         recyclerView.layoutManager = layoutManager
 
         if (savedInstanceState == null) {
-            viewModel.makeMoviesQuery(pageNumber)
+            viewModel.makeMoviesQuery(viewModel.pageNumber)
         } else {
             mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_STATE_MOVIES_LIST)
-            pageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY)
-            recyclerView.layoutManager?.onRestoreInstanceState(stateRecyclerView)
+            recyclerView.layoutManager?.onRestoreInstanceState(viewModel.stateRecyclerView)
         }
         moviesAdapter = MoviesAdapter(context, mMoviesList, this)
 
@@ -74,7 +71,7 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
         recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {
             override fun onLoadMore(current_page: Int) {
                 viewModel.makeMoviesQuery(current_page)
-                pageNumber = current_page
+                viewModel.pageNumber = current_page
             }
         })
 
@@ -95,8 +92,7 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        stateRecyclerView = binding.recyclerView.layoutManager?.onSaveInstanceState()
-        outState.putInt(PAGE_NUMBER_KEY, pageNumber)
+        viewModel.stateRecyclerView = binding.recyclerView.layoutManager?.onSaveInstanceState()
         outState.putParcelableArrayList(SAVED_STATE_MOVIES_LIST, mMoviesList)
     }
 
@@ -108,8 +104,6 @@ class PopularMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListener {
     companion object {
 
         private const val SAVED_STATE_MOVIES_LIST = "moviesListSaved"
-        private const val PAGE_NUMBER_KEY = "pageNumber"
-
         fun newInstance(): PopularMoviesFragment = PopularMoviesFragment()
 
     }
