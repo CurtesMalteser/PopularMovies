@@ -1,6 +1,8 @@
 package com.curtesmalteser.popularmoviesstage1.di
 
+import com.curtesmalteser.popularmoviesstage1.BuildConfig
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
@@ -10,5 +12,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
+    @Provides
+    @ApiKey
+    fun provideApiKey(): String = BuildConfig.API_KEY
 
 }

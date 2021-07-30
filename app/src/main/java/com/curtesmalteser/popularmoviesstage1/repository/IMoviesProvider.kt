@@ -8,9 +8,13 @@ import javax.inject.Inject
  * Created by António 'Curtes Malteser' Bastião on 30/07/2021.
  */
 interface IMoviesProvider {
-    suspend fun fetchMovies(queryParams: Map<String, String>): MoviesModel
+    suspend fun fetchMovies(queryParams: Map<String, String>): Result<MoviesModel>
 }
 
-class PopularMoviesProvider @Inject constructor(private val moviesAPI: MoviesAPIInterface): IMoviesProvider {
-    override suspend fun fetchMovies(queryParams: Map<String, String>): MoviesModel = moviesAPI.fetchPopularMovies(queryParams)
+class PopularMoviesProvider @Inject constructor(private val moviesAPI: MoviesAPIInterface) :
+    IMoviesProvider {
+    override suspend fun fetchMovies(queryParams: Map<String, String>): Result<MoviesModel> =
+        runCatching {
+            moviesAPI.fetchPopularMovies(queryParams)
+        }
 }
