@@ -1,7 +1,8 @@
 package com.curtesmalteser.popularmoviesstage1.repository
 
-import dagger.Binds
+import com.curtesmalteser.popularmoviesstage1.di.*
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -11,10 +12,28 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class MoviesRepositoryModule {
+class MoviesRepositoryModule {
 
-    @Binds
+    @Provides
     @Singleton
-    abstract fun bindPopularMoviesRepository(repo: PopularMoviesRepository): IMoviesRepository
+    @PopularMoviesRepo
+    fun bindPopularMoviesRepository(
+        @ApiKey apiKey: String,
+        @PopularMovieProviderQualifier moviesProvider: IMoviesProvider,
+    ): IMoviesRepository = PopularMoviesRepository(
+        apiKey,
+        moviesProvider
+    )
+
+    @Provides
+    @Singleton
+    @TopRatedRepo
+    fun bindTopRatedMoviesRepository(
+        @ApiKey apiKey: String,
+        @TopRatedMovieProviderQualifier moviesProvider: IMoviesProvider,
+    ): IMoviesRepository = PopularMoviesRepository(
+        apiKey,
+        moviesProvider
+    )
 
 }

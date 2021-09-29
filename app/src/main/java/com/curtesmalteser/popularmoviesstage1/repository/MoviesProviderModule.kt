@@ -1,5 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.repository
 
+import com.curtesmalteser.popularmoviesstage1.di.PopularMovieProviderQualifier
+import com.curtesmalteser.popularmoviesstage1.di.TopRatedMovieProviderQualifier
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +17,12 @@ abstract class MoviesProviderModule {
 
     @Binds
     @Singleton
+    @PopularMovieProviderQualifier
     abstract fun bindPopularMoviesProvider(provider: PopularMoviesProvider): IMoviesProvider
+
+    @Binds
+    @Singleton
+    @TopRatedMovieProviderQualifier
+    abstract fun bindTopMoviesProvider(provider: TopRatedMoviesProvider): IMoviesProvider
 
 }

@@ -3,12 +3,11 @@ package com.curtesmalteser.popularmoviesstage1.repository
 import com.curtesmalteser.popularmoviesstage1.di.ApiKey
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
 
 /**
  * Created by António 'Curtes Malteser' Bastião on 25/07/2021.
  */
-class PopularMoviesRepository @Inject constructor(
+class PopularMoviesRepository(
     @ApiKey private val apiKey: String,
     private val moviesProvider: IMoviesProvider,
 ) : IMoviesRepository {

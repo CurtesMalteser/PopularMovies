@@ -8,3 +8,19 @@ import javax.inject.Qualifier
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ApiKey
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PopularMovieProviderQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PopularMoviesRepo
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class TopRatedMovieProviderQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class TopRatedRepo

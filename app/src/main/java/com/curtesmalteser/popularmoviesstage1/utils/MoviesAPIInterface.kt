@@ -32,4 +32,7 @@ interface MoviesAPIInterface {
     @GET("movie/popular")
     suspend fun fetchPopularMovies(@QueryMap queryParams: Map<String, String>): MoviesModel
 
+    @GET("movie/top_rated")
+    suspend fun fetchTopRated(@QueryMap queryParams: Map<String, String>): MoviesModel
+
 }

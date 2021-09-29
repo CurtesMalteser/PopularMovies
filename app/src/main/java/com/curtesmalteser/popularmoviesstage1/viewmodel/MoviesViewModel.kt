@@ -7,18 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.curtesmalteser.popularmoviesstage1.repository.IMoviesRepository
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
- * Created by António 'Curtes Malteser' Bastião on 25/07/2021.
+ * Created by António Bastião on 29.09.21
+ * Refer to <a href="https://github.com/CurtesMalteser">CurtesMalteser github</a>
  */
-@HiltViewModel
-class PopularMoviesViewModel @Inject constructor(
+open class MoviesViewModel(
     private val moviesRepository: IMoviesRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val moviesList: Flow<List<MoviesModel>> = moviesRepository.moviesList
@@ -50,7 +48,6 @@ class PopularMoviesViewModel @Inject constructor(
 
     companion object {
 
-        private const val SAVED_STATE_MOVIES_LIST = "moviesListSaved"
         private const val PAGE_NUMBER_KEY = "pageNumber"
 
     }
