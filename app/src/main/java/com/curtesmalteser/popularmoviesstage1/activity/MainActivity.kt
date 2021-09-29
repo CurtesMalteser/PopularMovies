@@ -13,7 +13,9 @@ import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment
 import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment
 import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val selectPopularMoviesFragment by lazy { PopularMoviesFragment.newInstance() }
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = setContentBinding { ActivityMainBinding.inflate(layoutInflater) }
 
-        val bottomNavigationMenu : BottomNavigationView = binding.bottomNavigationMenu.apply {
+        val bottomNavigationMenu: BottomNavigationView = binding.bottomNavigationMenu.apply {
             setOnNavigationItemSelectedListener { item: MenuItem -> setFragment(item.itemId) }
         }
 
@@ -52,20 +54,22 @@ class MainActivity : AppCompatActivity() {
 
             savePreferences(id)
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.frameLayout, it)
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.frameLayout, it)
+                .commit()
         }
 
         return true
     }
 
-    private fun savePreferences(@IdRes selection: Int) = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+    private fun savePreferences(@IdRes selection: Int) =
+        getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
             .edit()
             .putInt(SELECTION, selection)
             .apply()
 
-    private fun readPreferences(): Int = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+    private fun readPreferences(): Int =
+        getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
             .getInt(SELECTION, R.id.action_popular_movies)
 
     companion object {

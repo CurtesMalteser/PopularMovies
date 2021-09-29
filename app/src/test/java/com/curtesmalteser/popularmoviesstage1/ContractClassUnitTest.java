@@ -1,16 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1;
 
-import android.provider.BaseColumns;
+import org.junit.jupiter.api.Test;
 
-import com.curtesmalteser.popularmoviesstage1.db.MoviesContract;
-
-import org.junit.Test;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
