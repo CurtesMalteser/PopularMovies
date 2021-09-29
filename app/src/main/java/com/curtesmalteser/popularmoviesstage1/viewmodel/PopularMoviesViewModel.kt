@@ -40,9 +40,9 @@ class PopularMoviesViewModel @Inject constructor(
         viewModelScope.launch {
             moviesRepository.fetchMovies(page).fold(
                 onSuccess = {
-                    Log.d("AJDB", it.toString())
+                    Log.d("makeMoviesQuery", it.toString())
                 }, onFailure = {
-                    Log.e("AJDB", it.toString())
+                    Log.e("makeMoviesQuery", it.toString())
                 }
             )
         }

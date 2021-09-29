@@ -2,7 +2,7 @@ package com.curtesmalteser.popularmoviesstage1.repository
 
 import com.curtesmalteser.popularmoviesstage1.di.ApiKey
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 /**
@@ -13,7 +13,7 @@ class PopularMoviesRepository @Inject constructor(
     private val moviesProvider: IMoviesProvider,
 ) : IMoviesRepository {
 
-    override val moviesList: MutableSharedFlow<List<MoviesModel>> = MutableSharedFlow()
+    override val moviesList: MutableStateFlow<List<MoviesModel>> = MutableStateFlow(emptyList())
 
     override suspend fun fetchMovies(page: Int): Result<MoviesModel> {
 
