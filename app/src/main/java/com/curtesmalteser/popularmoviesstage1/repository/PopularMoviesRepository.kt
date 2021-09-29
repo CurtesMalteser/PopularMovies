@@ -11,10 +11,9 @@ import javax.inject.Inject
 class PopularMoviesRepository @Inject constructor(
     @ApiKey private val apiKey: String,
     private val moviesProvider: IMoviesProvider,
-) :
-    IMoviesRepository {
+) : IMoviesRepository {
 
-    override val moviesList: MutableSharedFlow<List<MoviesModel>> by lazy { MutableSharedFlow() }
+    override val moviesList: MutableSharedFlow<List<MoviesModel>> = MutableSharedFlow()
 
     override suspend fun fetchMovies(page: Int): Result<MoviesModel> {
 

@@ -1,6 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.viewmodel
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,7 +38,13 @@ class PopularMoviesViewModel @Inject constructor(
     // TODO: 30/07/2021 Handle error and no connection
     fun makeMoviesQuery(page: Int) {
         viewModelScope.launch {
-            moviesRepository.fetchMovies(page)
+            moviesRepository.fetchMovies(page).fold(
+                onSuccess = {
+                    Log.d("AJDB", it.toString())
+                }, onFailure = {
+                    Log.e("AJDB", it.toString())
+                }
+            )
         }
     }
 
