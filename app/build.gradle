@@ -23,6 +23,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     buildTypes {
@@ -39,6 +40,10 @@ android {
 
     kotlinOptions {
         jvmTarget = 11
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.2.0-alpha01'
     }
 
     testOptions {
@@ -85,5 +90,18 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.12.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2'
     implementation 'io.kotest:kotest-assertions-core:5.0.0.M2'
+
+    // compose
+    implementation "androidx.compose.ui:ui:1.2.0-alpha01"
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.0.5'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.0.5'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.0.5'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
 
 }

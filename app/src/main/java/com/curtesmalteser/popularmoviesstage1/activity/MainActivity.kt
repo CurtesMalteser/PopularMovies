@@ -1,79 +1,64 @@
 package com.curtesmalteser.popularmoviesstage1.activity
 
-import android.content.Context
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.curtesmalteser.popularmoviesstage1.R
-import com.curtesmalteser.popularmoviesstage1.databinding.ActivityMainBinding
-import com.curtesmalteser.popularmoviesstage1.ext.setContentBinding
-import com.curtesmalteser.popularmoviesstage1.fragment.FavoriteMoviesFragment
-import com.curtesmalteser.popularmoviesstage1.fragment.PopularMoviesFragment
-import com.curtesmalteser.popularmoviesstage1.fragment.TopRatedMoviesFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-
-    private val selectPopularMoviesFragment by lazy { PopularMoviesFragment.newInstance() }
-    private val selectTopRatedMoviesFragment by lazy { TopRatedMoviesFragment.newInstance() }
-    private val selectFavoriteMoviesFragment by lazy { FavoriteMoviesFragment.newInstance() }
-
-    private lateinit var binding: ActivityMainBinding
+//@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = setContentBinding { ActivityMainBinding.inflate(layoutInflater) }
-
-        val bottomNavigationMenu: BottomNavigationView = binding.bottomNavigationMenu.apply {
-            setOnNavigationItemSelectedListener { item: MenuItem -> setFragment(item.itemId) }
+        setContent {
+            ActivityContent()
         }
+    }
+}
 
-        if (savedInstanceState == null) {
-            readPreferences().let {
-                setFragment(it)
-                bottomNavigationMenu.selectedItemId = it
+@Composable
+fun ActivityContent() {
+
+    var selectedItem by remember { mutableStateOf(0) }
+    val items = listOf(
+        stringResource(R.string.string_popular) to painterResource(R.drawable.ic_thumb_up_white_24dp),
+        stringResource(R.string.string_top_rated) to painterResource(R.drawable.ic_top_games_star_white),
+        stringResource(R.string.string_favorite) to painterResource(R.drawable.ic_heart_white),
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.app_name)) }
+            )
+        },
+        bottomBar = {
+            BottomNavigation {
+                items.forEachIndexed { index, item ->
+                    BottomNavigationItem(
+                        icon = { Icon(item.second, contentDescription = null) },
+                        label = { Text(item.first) },
+                        selected = selectedItem == index,
+                        onClick = { selectedItem = index },
+                        selectedContentColor = colorResource(id = R.color.colorAccent),
+                        unselectedContentColor = colorResource(id = R.color.white)
+                    )
+                }
             }
         }
-
+    ) {
+        // Screen content
     }
+}
 
-    private fun setFragment(@IdRes id: Int): Boolean {
-        val selectedFragment: Fragment? = when (id) {
-            R.id.action_popular_movies -> selectPopularMoviesFragment
-            R.id.action_top_rated_movies -> selectTopRatedMoviesFragment
-            R.id.action_favorite_movies -> selectFavoriteMoviesFragment
-            else -> null
-        }
-
-        selectedFragment?.let {
-
-            savePreferences(id)
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.frameLayout, it)
-                .commit()
-        }
-
-        return true
-    }
-
-    private fun savePreferences(@IdRes selection: Int) =
-        getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putInt(SELECTION, selection)
-            .apply()
-
-    private fun readPreferences(): Int =
-        getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
-            .getInt(SELECTION, R.id.action_popular_movies)
-
-    companion object {
-        private const val PREFERENCES_NAME = "movies_preferences"
-        private const val SELECTION = "selected_fragment"
-    }
+@Preview
+@Composable
+fun ActivityComposablePreview() {
+    ActivityContent()
 }
