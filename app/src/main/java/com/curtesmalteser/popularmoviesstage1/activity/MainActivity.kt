@@ -12,15 +12,20 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.curtesmalteser.popularmoviesstage1.R
+import com.curtesmalteser.popularmoviesstage1.nav.Screen
 
 //@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -36,11 +41,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ActivityContent() {
 
-    var selectedItem by remember { mutableIntStateOf(0) }
+    val navController = rememberNavController()
+
     val items = listOf(
-        stringResource(R.string.string_popular) to painterResource(R.drawable.ic_thumb_up_white_24dp),
-        stringResource(R.string.string_top_rated) to painterResource(R.drawable.ic_top_games_star_white),
-        stringResource(R.string.string_favorite) to painterResource(R.drawable.ic_heart_white),
+        Screen.Popular,
+        Screen.TopRated,
+        Screen.Favorite,
     )
 
     Scaffold(
@@ -51,22 +57,60 @@ fun ActivityContent() {
         },
         bottomBar = {
             BottomNavigation {
-                items.forEachIndexed { index, item ->
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+
+                items.forEach { screen ->
                     BottomNavigationItem(
-                        icon = { Icon(item.second, contentDescription = null) },
-                        label = { Text(item.first) },
-                        selected = selectedItem == index,
-                        onClick = { selectedItem = index },
+                        icon = {
+                            Icon(
+                                painterResource(id = screen.drawableId),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text(stringResource(id = screen.stringId)) },
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        onClick = {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
                         selectedContentColor = colorResource(id = R.color.colorAccent),
                         unselectedContentColor = colorResource(id = R.color.white)
                     )
                 }
             }
         }
-    ) {
-        // Screen content
-        Text(text = "Hello World!", modifier = Modifier.padding(it))
+    ) { innerPadding ->
+        NavHost(
+            navController,
+            startDestination = Screen.Popular.route,
+            Modifier.padding(innerPadding)
+        ) {
+            composable(Screen.Popular.route) { Popular(navController) }
+            composable(Screen.TopRated.route) { TopRated(navController) }
+            composable(Screen.Favorite.route) { Favorite(navController) }
+        }
     }
+}
+
+@Composable
+fun Popular(navController: NavController) {
+    Text(text = "Popular")
+}
+
+@Composable
+fun TopRated(navController: NavController) {
+    Text(text = "TopRated")
+}
+
+@Composable
+fun Favorite(navController: NavController) {
+    Text(text = "Favorite")
 }
 
 @Preview
