@@ -3,8 +3,19 @@ package com.curtesmalteser.popularmoviesstage1.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,7 +36,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ActivityContent() {
 
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(0) }
     val items = listOf(
         stringResource(R.string.string_popular) to painterResource(R.drawable.ic_thumb_up_white_24dp),
         stringResource(R.string.string_top_rated) to painterResource(R.drawable.ic_top_games_star_white),
@@ -54,6 +65,7 @@ fun ActivityContent() {
         }
     ) {
         // Screen content
+        Text(text = "Hello World!", modifier = Modifier.padding(it))
     }
 }
 
