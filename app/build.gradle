@@ -1,13 +1,18 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 android {
-    compileSdkVersion 31
-
+    namespace "com.curtesmalteser.popularmoviesstage1"
+    compileSdkVersion = 34
+    buildToolsVersion = "34.0.0"
     defaultConfig {
-        applicationId "com.curtesmalteser.popularmovies_stage1"
+        applicationId "com.curtesmalteser.popularmoviesstage1"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -19,6 +24,8 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
+        buildConfig true
     }
 
     buildTypes {
@@ -29,9 +36,23 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.3'
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
+
 }
 
 ext {
@@ -40,24 +61,60 @@ ext {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.core:core-ktx:1.6.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation "androidx.core:core-ktx:1.12.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.annotation:annotation:1.7.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitDependencies"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitDependencies"
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation("io.coil-kt:coil:0.11.0")
+
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    implementation "androidx.activity:activity-ktx:1.8.0"
+    implementation "androidx.fragment:fragment-ktx:1.6.1"
+
+    // test dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    testImplementation 'io.mockk:mockk:1.12.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
+    implementation 'io.kotest:kotest-assertions-core:5.0.0.M2'
+
+    // compose
+    implementation "androidx.compose.ui:ui:1.6.0-alpha07"
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.8.0'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.5.3'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.5.3'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.5.3'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2'
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:2.7.4"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
+    // Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
+
+}
+
+kapt {
+    correctErrorTypes true
 }

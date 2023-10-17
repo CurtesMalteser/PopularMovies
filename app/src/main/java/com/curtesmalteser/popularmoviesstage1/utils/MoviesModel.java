@@ -19,25 +19,25 @@ public class MoviesModel implements Parcelable {
     private ArrayList<MoviesModel> moviesModels;
     @SerializedName("id")
     @Expose
-    private int id;
+    private final int id;
     @SerializedName("vote_average")
     @Expose
-    private String voteAverage; // vote average
+    private final String voteAverage; // vote average
     @SerializedName("title")
     @Expose
-    private String title; //title
+    private final String title; //title
     @SerializedName("poster_path")
     @Expose
-    private String posterPath; // movie poster
+    private final String posterPath; // movie poster
     @SerializedName("backdrop_path")
     @Expose
-    private String backdropPath;
+    private final String backdropPath;
     @SerializedName("overview")
     @Expose
-    private String overview; // plot synopsis
+    private final String overview; // plot synopsis
     @SerializedName("release_date")
     @Expose
-    private String releaseDate; // release date
+    private final String releaseDate; // release date
 
     public MoviesModel(int id, String voteAverage, String title, String posterPath, String backdropPath, String overview, String releaseDate) {
         this.id = id;
@@ -101,10 +101,6 @@ public class MoviesModel implements Parcelable {
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getPosterPath() {

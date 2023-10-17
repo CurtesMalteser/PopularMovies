@@ -1,6 +1,5 @@
 package com.curtesmalteser.popularmoviesstage1.activity
 
-import android.app.Activity
 import android.content.ContentValues
 import android.database.Cursor
 import android.graphics.Color
@@ -13,7 +12,6 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
-import androidx.viewbinding.ViewBinding
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.adapter.SimpleFragmentPagerAdapter
 import com.curtesmalteser.popularmoviesstage1.databinding.ActivityMovieDetailsBinding
@@ -43,6 +41,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
             intent.getParcelableExtra<MoviesModel>(resources.getString(R.string.string_extra))
                 ?.let { model ->
+                    // TODO: 30/07/2021 handle null 
                     getPoster(posterPath = model.posterPath, backdropPath = model.backdropPath)
                     binding.tvTitle.text = model.title
                     binding.voteAverage.text =
