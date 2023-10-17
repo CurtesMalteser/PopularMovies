@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -127,21 +128,26 @@ fun MoviesListScreen(
 
     val movies = viewModel.moviesList.collectAsStateWithLifecycle()
 
+    // TODO: improve with Adaptive or Dynamic count on larger screens
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
         itemsIndexed(
             items = movies.value.toList(),
             key = { _, item -> item.id }
         ) { _, movie ->
+
+            // TODO: add a placeholder for loading and failure
             GlideImage(
                 model = NetworkUtils.getPosterUrl(
                     stringResource(R.string.poster_width_segment),
                     movie.posterPath
                 ),
                 contentDescription = "My content description",
-                modifier = Modifier.clickable(onClick = {
-                    Log.d("MoviesListScreen", movie.title)
-                    //navController.navigate(Screen.MovieDetails.route + "/${movie.id}")
-                }),
+                modifier = Modifier
+                    .clickable(onClick = {
+                        Log.d("MoviesListScreen", movie.title)
+                        //navController.navigate(Screen.MovieDetails.route + "/${movie.id}")
+                    })
+                    .aspectRatio(0.67f),
             )
         }
     }
