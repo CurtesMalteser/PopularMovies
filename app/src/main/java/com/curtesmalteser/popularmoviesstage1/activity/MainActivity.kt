@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -17,6 +20,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -26,8 +31,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
+import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesViewModel
+import com.curtesmalteser.popularmoviesstage1.viewmodel.PopularMoviesViewModel
+import com.curtesmalteser.popularmoviesstage1.viewmodel.TopRatedMoviesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,21 +100,35 @@ fun ActivityContent() {
             startDestination = Screen.Popular.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Popular.route) { Popular(navController) }
-            composable(Screen.TopRated.route) { TopRated(navController) }
+            composable(Screen.Popular.route) {
+                val viewModel = hiltViewModel<PopularMoviesViewModel>()
+                MoviesListScreen(navController, viewModel)
+            }
+            composable(Screen.TopRated.route) {
+                val viewModel = hiltViewModel<TopRatedMoviesViewModel>()
+                MoviesListScreen(navController, viewModel)
+            }
             composable(Screen.Favorite.route) { Favorite(navController) }
         }
     }
 }
 
 @Composable
-fun Popular(navController: NavController) {
-    Text(text = "Popular")
-}
+fun MoviesListScreen(
+    navController: NavController,
+    viewModel: MoviesViewModel,
+) {
 
-@Composable
-fun TopRated(navController: NavController) {
-    Text(text = "TopRated")
+    val movies = viewModel.moviesList.collectAsStateWithLifecycle()
+
+    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+        itemsIndexed(
+            items = movies.value.toList(),
+            key = { _, item -> item.id }
+        ) { _, movie ->
+            Text(movie.title)
+        }
+    }
 }
 
 @Composable

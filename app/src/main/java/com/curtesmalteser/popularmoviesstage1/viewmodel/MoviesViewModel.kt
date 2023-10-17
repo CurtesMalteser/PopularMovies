@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.curtesmalteser.popularmoviesstage1.repository.IMoviesRepository
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -19,7 +19,8 @@ open class MoviesViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val moviesList: Flow<List<MoviesModel>> = moviesRepository.moviesList
+    private val _moviesList = MutableStateFlow<List<MoviesModel>>(emptyList())
+    val moviesList: MutableStateFlow<List<MoviesModel>> = _moviesList
 
     var pageNumber: Int
         get() = savedStateHandle.get<Int>(PAGE_NUMBER_KEY) ?: 1
@@ -33,12 +34,19 @@ open class MoviesViewModel(
         }
 
 
+    init {
+        makeMoviesQuery(pageNumber)
+        viewModelScope.launch {
+            moviesRepository.moviesList.collect(_moviesList::emit)
+        }
+    }
+
     // TODO: 30/07/2021 Handle error and no connection
     fun makeMoviesQuery(page: Int) {
         viewModelScope.launch {
             moviesRepository.fetchMovies(page).fold(
                 onSuccess = {
-                    Log.d("makeMoviesQuery", it.toString())
+                    Log.d("makeMoviesQuery", it.moviesModels.first().title)
                 }, onFailure = {
                     Log.e("makeMoviesQuery", it.toString())
                 }
