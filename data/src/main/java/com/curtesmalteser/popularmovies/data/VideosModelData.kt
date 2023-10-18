@@ -10,7 +10,7 @@ data class VideosModelData(
     @SerializedName("id")
     val id: Long,
     @SerializedName("results")
-    var videosModels: List<VideoData>,
+    val videosModels: List<VideoData>,
 )
 
 data class VideoData(

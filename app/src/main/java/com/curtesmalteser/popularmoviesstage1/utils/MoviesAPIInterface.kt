@@ -1,6 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.utils
 
 import com.curtesmalteser.popularmovies.data.MoviesModelData
+import com.curtesmalteser.popularmovies.data.ReviewsModelData
 import com.curtesmalteser.popularmovies.data.VideosModelData
 import retrofit2.Call
 import retrofit2.http.GET
@@ -23,7 +24,7 @@ interface MoviesAPIInterface {
     fun getReviews(
         @Path("id") movieId: String,
         @Query("api_key") apiKey: String
-    ): Call<ReviewsModel>
+    ): Call<ReviewsModelData>
 
     @GET("movie/popular")
     suspend fun fetchPopularMovies(@QueryMap queryParams: Map<String, String>): MoviesModelData
