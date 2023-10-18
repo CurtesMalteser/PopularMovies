@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class MoviesModelData(
     @SerializedName("page")
-    val page: Int,
+    val page: Long,
     @SerializedName("results")
     val moviesModels: List<MovieData>,
 )
