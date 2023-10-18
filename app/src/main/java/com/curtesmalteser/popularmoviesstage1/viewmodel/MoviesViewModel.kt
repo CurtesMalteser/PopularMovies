@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmoviesstage1.repository.IMoviesRepository
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -19,8 +19,8 @@ open class MoviesViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _moviesList = MutableStateFlow<List<MoviesModel>>(emptyList())
-    val moviesList: MutableStateFlow<List<MoviesModel>> = _moviesList
+    private val _moviesList = MutableStateFlow<List<MovieData>>(emptyList())
+    val moviesList: MutableStateFlow<List<MovieData>> = _moviesList
 
     var pageNumber: Int
         get() = savedStateHandle.get<Int>(PAGE_NUMBER_KEY) ?: 1

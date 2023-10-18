@@ -17,7 +17,6 @@ import com.curtesmalteser.popularmoviesstage1.adapter.MoviesAdapter
 import com.curtesmalteser.popularmoviesstage1.databinding.FragmentMoviesLayoutBinding
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
 import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesViewModel
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by António Bastião on 29.09.21
@@ -77,7 +76,18 @@ abstract class BaseMoviesFragment : Fragment(), MoviesAdapter.ListItemClickListe
 
         lifecycleScope.launchWhenResumed {
             viewModel.moviesList.collect { moviesModel ->
-                mMoviesList!!.addAll(moviesModel)
+                val moviesModelMapped = moviesModel.map {
+                    MoviesModel(
+                        it.id.toInt(),
+                        it.title,
+                        it.voteAverage,
+                        it.posterPath,
+                        it.backdropPath,
+                        it.overview,
+                        it.releaseDate
+                    )
+                }
+                mMoviesList!!.addAll(moviesModelMapped)
                 moviesAdapter!!.notifyItemInserted(mMoviesList!!.size + 1)
             }
         }

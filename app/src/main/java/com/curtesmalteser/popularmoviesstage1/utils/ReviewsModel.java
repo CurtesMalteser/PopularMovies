@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 
 public class ReviewsModel implements Parcelable {
-    @SerializedName("results")
     @Expose
+    @SerializedName("results")
     private ArrayList<ReviewsModel> reviewsModels;
     @SerializedName("author")
     @Expose
