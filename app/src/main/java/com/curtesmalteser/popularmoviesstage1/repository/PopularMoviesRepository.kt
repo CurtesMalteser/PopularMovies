@@ -1,7 +1,8 @@
 package com.curtesmalteser.popularmoviesstage1.repository
 
+import com.curtesmalteser.popularmovies.data.MovieData
+import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmoviesstage1.di.ApiKey
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -12,9 +13,9 @@ class PopularMoviesRepository(
     private val moviesProvider: IMoviesProvider,
 ) : IMoviesRepository {
 
-    override val moviesList: MutableStateFlow<List<MoviesModel>> = MutableStateFlow(emptyList())
+    override val moviesList: MutableStateFlow<List<MovieData>> = MutableStateFlow(emptyList())
 
-    override suspend fun fetchMovies(page: Int): Result<MoviesModel> {
+    override suspend fun fetchMovies(page: Int): Result<MoviesModelData> {
 
         val queryParams: Map<String, String> = mapOf(
             "api_key" to apiKey,

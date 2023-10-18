@@ -4,11 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +12,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.curtesmalteser.popularmovies.data.ReviewsModelData;
+import com.curtesmalteser.popularmovies.network.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.adapter.ReviewsAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.ReviewsModel;
 
@@ -116,22 +118,22 @@ public class ReviewsFragment extends Fragment
 
     private void makeReviewsQuery(int movieId) {
         MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
-        Call<ReviewsModel> call;
+        Call<ReviewsModelData> call;
 
         if (cm.getActiveNetworkInfo() != null
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
             call = apiInterface.getReviews(String.valueOf(movieId), BuildConfig.API_KEY);
-            call.enqueue(new Callback<ReviewsModel>() {
+            call.enqueue(new Callback<ReviewsModelData>() {
                 @Override
-                public void onResponse(@NonNull Call<ReviewsModel> call, @NonNull Response<ReviewsModel> response) {
+                public void onResponse(@NonNull Call<ReviewsModelData> call, @NonNull Response<ReviewsModelData> response) {
                     if (response.body().getReviewsModels().size() != 0) {
 
                         reconnectButton.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
 
-                        mReviewsList = response.body().getReviewsModels();
+                        mReviewsList = new ArrayList<>();
                         mReviewsAdapter = new ReviewsAdapter(mReviewsList, ReviewsFragment.this);
                         mRecyclerView.setAdapter(mReviewsAdapter);
 
@@ -142,7 +144,7 @@ public class ReviewsFragment extends Fragment
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<ReviewsModel> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<ReviewsModelData> call, @NonNull Throwable t) {
                     Log.d(TAG, "onFailure:" + t.getMessage());
                 }
             });

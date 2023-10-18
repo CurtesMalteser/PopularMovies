@@ -5,11 +5,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +13,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.curtesmalteser.popularmovies.data.VideosModelData;
+import com.curtesmalteser.popularmovies.network.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.adapter.VideosAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.VideosModel;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
@@ -114,22 +116,22 @@ public class VideosFragment extends Fragment
 
     private void makeVideosQuery(int movieId) {
         MoviesAPIInterface apiInterface = MoviesAPIClient.getClient().create(MoviesAPIInterface.class);
-        Call<VideosModel> call;
+        Call<VideosModelData> call;
 
         if (cm.getActiveNetworkInfo() != null
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
             call = apiInterface.getVideos(String.valueOf(movieId), BuildConfig.API_KEY);
-            call.enqueue(new Callback<VideosModel>() {
+            call.enqueue(new Callback<VideosModelData>() {
                 @Override
-                public void onResponse(@NonNull Call<VideosModel> call, @NonNull Response<VideosModel> response) {
+                public void onResponse(@NonNull Call<VideosModelData> call, @NonNull Response<VideosModelData> response) {
                     if (response.body().getVideosModels().size() != 0) {
 
                         reconnectButton.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
 
-                        mVideosList = response.body().getVideosModels();
+                        mVideosList = new ArrayList<>();
                         mVideosAdapter = new VideosAdapter(getContext(), mVideosList, VideosFragment.this);
                         mRecyclerView.setAdapter(mVideosAdapter);
 
@@ -141,7 +143,7 @@ public class VideosFragment extends Fragment
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<VideosModel> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<VideosModelData> call, @NonNull Throwable t) {
                     Log.d(TAG, "onFailure:" + t.getMessage());
                 }
             });
