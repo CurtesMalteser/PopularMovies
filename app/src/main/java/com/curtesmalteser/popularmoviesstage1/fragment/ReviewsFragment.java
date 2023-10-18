@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.curtesmalteser.popularmovies.data.ReviewsModelData;
+import com.curtesmalteser.popularmovies.network.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.BuildConfig;
 import com.curtesmalteser.popularmoviesstage1.R;
 import com.curtesmalteser.popularmoviesstage1.adapter.ReviewsAdapter;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIClient;
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesAPIInterface;
 import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel;
 import com.curtesmalteser.popularmoviesstage1.utils.ReviewsModel;
 

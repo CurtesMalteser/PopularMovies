@@ -1,4 +1,4 @@
-package com.curtesmalteser.popularmoviesstage1.utils
+package com.curtesmalteser.popularmovies.network
 
 import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.data.ReviewsModelData
