@@ -56,6 +56,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
     testImplementation("io.kotest:kotest-assertions-core:5.0.0.M2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 }
 
