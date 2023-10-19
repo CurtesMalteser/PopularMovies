@@ -1,4 +1,4 @@
-package com.curtesmalteser.popularmoviesstage1.di
+package com.curtesmalteser.popularmovies.core.di
 
 import javax.inject.Qualifier
 

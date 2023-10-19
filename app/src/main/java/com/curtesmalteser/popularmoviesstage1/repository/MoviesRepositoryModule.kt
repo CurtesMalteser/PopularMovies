@@ -1,7 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.repository
 
 import com.curtesmalteser.popularmovies.network.IMoviesProvider
-import com.curtesmalteser.popularmoviesstage1.di.*
+import com.curtesmalteser.popularmovies.core.di.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
