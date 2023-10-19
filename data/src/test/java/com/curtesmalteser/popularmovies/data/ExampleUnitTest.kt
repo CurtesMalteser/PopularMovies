@@ -1,4 +1,4 @@
-package com.curtesmalteser.popularemovies.data
+package com.curtesmalteser.popularmovies.data
 
 import io.kotest.matchers.ints.shouldBeExactly
 import org.junit.jupiter.api.Test

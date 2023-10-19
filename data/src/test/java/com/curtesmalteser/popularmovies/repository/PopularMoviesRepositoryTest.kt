@@ -1,9 +1,8 @@
-package com.curtesmalteser.popularmoviesstage1.repository
+package com.curtesmalteser.popularmovies.repository
 
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.network.IMoviesProvider
-import com.curtesmalteser.popularmovies.repository.PopularMoviesRepository
 import com.curtesmalteser.popularmoviesstage1.util.loadFileAsStringOrNull
 import com.google.gson.Gson
 import io.kotest.matchers.shouldBe
