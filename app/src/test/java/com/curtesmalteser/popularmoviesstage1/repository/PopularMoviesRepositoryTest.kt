@@ -7,11 +7,9 @@ import com.curtesmalteser.popularmoviesstage1.util.loadFileAsStringOrNull
 import com.google.gson.Gson
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.mockk.coEvery
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 /**
@@ -21,23 +19,15 @@ import org.junit.jupiter.api.Test
 @ExperimentalCoroutinesApi
 internal class PopularMoviesRepositoryTest {
 
-    private val moviesProviderMockk = mockk<IMoviesProvider>()
+    private val moviesProviderMockk = MoviesProviderMock()
 
     private val sut = PopularMoviesRepository(
         "test",
         moviesProviderMockk
     )
 
-    private val moviesModel: MoviesModelData?
-        get() {
-            val json = loadFileAsStringOrNull("movies_list_response.json")
-            return Gson().fromJson(json, MoviesModelData::class.java)
-        }
-
     @Test
-    fun `moviesList is not empty after successful request`() = runBlockingTest {
-
-        coEvery { moviesProviderMockk.fetchMovies(any()) } returns Result.success(moviesModel!!)
+    fun `moviesList is not empty after successful request`() = runTest {
 
         val result = sut.fetchMovies(0)
 
@@ -49,16 +39,16 @@ internal class PopularMoviesRepositoryTest {
     }
 
     @Test
-    fun `moviesList is empty, it is the default value`() = runBlockingTest {
+    fun `moviesList is empty, it is the default value`() = runTest {
 
         sut.moviesList.first().isEmpty() shouldBe true
 
     }
 
     @Test
-    fun `fetchMovies fails`() = runBlockingTest {
+    fun `fetchMovies fails`() = runTest {
 
-        coEvery { moviesProviderMockk.fetchMovies(any()) } returns Result.failure(Exception())
+         moviesProviderMockk.mockFailure()
 
         val result = sut.fetchMovies(0)
 
@@ -67,15 +57,33 @@ internal class PopularMoviesRepositoryTest {
     }
 
     @Test
-    fun `fetchMovies succeeds`() = runBlockingTest {
-
-        coEvery { moviesProviderMockk.fetchMovies(any()) } returns Result.success(moviesModel!!)
+    fun `fetchMovies succeeds`() = runTest {
 
         val result = sut.fetchMovies(0)
 
         result.isSuccess shouldBe true
 
         result.getOrNull().shouldBeInstanceOf<MoviesModelData>()
+
+    }
+
+    private class MoviesProviderMock : IMoviesProvider {
+
+        private var isFailure = false
+
+        private val moviesModel: MoviesModelData?
+            get() {
+                val json = loadFileAsStringOrNull("movies_list_response.json")
+                return Gson().fromJson(json, MoviesModelData::class.java)
+            }
+
+        override suspend fun fetchMovies(queryParams: Map<String, String>): Result<MoviesModelData> {
+            return Result.success(moviesModel!!).takeIf { !isFailure } ?: Result.failure(Exception())
+        }
+
+        fun mockFailure() {
+            isFailure = true
+        }
 
     }
 }
