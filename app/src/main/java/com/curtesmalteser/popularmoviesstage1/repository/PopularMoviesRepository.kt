@@ -2,6 +2,7 @@ package com.curtesmalteser.popularmoviesstage1.repository
 
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
+import com.curtesmalteser.popularmovies.network.IMoviesProvider
 import com.curtesmalteser.popularmoviesstage1.di.ApiKey
 import kotlinx.coroutines.flow.MutableStateFlow
 

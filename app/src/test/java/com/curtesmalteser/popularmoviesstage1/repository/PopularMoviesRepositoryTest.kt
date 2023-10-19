@@ -1,7 +1,9 @@
 package com.curtesmalteser.popularmoviesstage1.repository
 
+import com.curtesmalteser.popularmovies.data.MovieData
+import com.curtesmalteser.popularmovies.data.MoviesModelData
+import com.curtesmalteser.popularmovies.network.IMoviesProvider
 import com.curtesmalteser.popularmoviesstage1.util.loadFileAsStringOrNull
-import com.curtesmalteser.popularmoviesstage1.utils.MoviesModel
 import com.google.gson.Gson
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -26,10 +28,10 @@ internal class PopularMoviesRepositoryTest {
         moviesProviderMockk
     )
 
-    private val moviesModel: MoviesModel?
+    private val moviesModel: MoviesModelData?
         get() {
             val json = loadFileAsStringOrNull("movies_list_response.json")
-            return Gson().fromJson(json, MoviesModel::class.java)
+            return Gson().fromJson(json, MoviesModelData::class.java)
         }
 
     @Test
@@ -42,7 +44,7 @@ internal class PopularMoviesRepositoryTest {
         result.isSuccess shouldBe true
 
         sut.moviesList.first().isNotEmpty() shouldBe true
-        sut.moviesList.first().first().shouldBeInstanceOf<MoviesModel>()
+        sut.moviesList.first().first().shouldBeInstanceOf<MovieData>()
 
     }
 
@@ -73,7 +75,7 @@ internal class PopularMoviesRepositoryTest {
 
         result.isSuccess shouldBe true
 
-        result.getOrNull().shouldBeInstanceOf<MoviesModel>()
+        result.getOrNull().shouldBeInstanceOf<MoviesModelData>()
 
     }
 }
