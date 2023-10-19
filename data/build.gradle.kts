@@ -47,6 +47,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofitDependencies")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitDependencies")
 
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
     val hiltVersion = "2.46.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
