@@ -3,7 +3,7 @@ package com.curtesmalteser.popularmoviesstage1.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
-import com.curtesmalteser.popularmoviesstage1.repository.IMoviesRepository
+import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.curtesmalteser.popularmoviesstage1.repository
+package com.curtesmalteser.popularmovies.network
 
 import com.curtesmalteser.popularmovies.network.IMoviesProvider
 import com.curtesmalteser.popularmovies.network.PopularMoviesProvider
