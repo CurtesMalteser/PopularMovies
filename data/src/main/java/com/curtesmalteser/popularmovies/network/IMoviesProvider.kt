@@ -1,7 +1,6 @@
-package com.curtesmalteser.popularmoviesstage1.repository
+package com.curtesmalteser.popularmovies.network
 
 import com.curtesmalteser.popularmovies.data.MoviesModelData
-import com.curtesmalteser.popularmovies.network.MoviesAPIInterface
 import javax.inject.Inject
 
 /**

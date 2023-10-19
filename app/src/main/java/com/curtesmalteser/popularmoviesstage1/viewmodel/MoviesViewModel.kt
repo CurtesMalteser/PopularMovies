@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.curtesmalteser.popularmovies.data.MovieData
-import com.curtesmalteser.popularmoviesstage1.repository.IMoviesRepository
+import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 

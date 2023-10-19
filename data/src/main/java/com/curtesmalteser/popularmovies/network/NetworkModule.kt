@@ -1,6 +1,5 @@
-package com.curtesmalteser.popularmoviesstage1.network
+package com.curtesmalteser.popularmovies.network
 
-import com.curtesmalteser.popularmovies.network.MoviesAPIInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

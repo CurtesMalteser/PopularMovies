@@ -1,8 +1,9 @@
-package com.curtesmalteser.popularmoviesstage1.repository
+package com.curtesmalteser.popularmovies.repository
 
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
-import com.curtesmalteser.popularmoviesstage1.di.ApiKey
+import com.curtesmalteser.popularmovies.network.IMoviesProvider
+import com.curtesmalteser.popularmovies.core.di.ApiKey
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**

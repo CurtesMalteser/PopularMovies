@@ -1,7 +1,10 @@
-package com.curtesmalteser.popularmoviesstage1.repository
+package com.curtesmalteser.popularmovies.network
 
-import com.curtesmalteser.popularmoviesstage1.di.PopularMovieProviderQualifier
-import com.curtesmalteser.popularmoviesstage1.di.TopRatedMovieProviderQualifier
+import com.curtesmalteser.popularmovies.network.IMoviesProvider
+import com.curtesmalteser.popularmovies.network.PopularMoviesProvider
+import com.curtesmalteser.popularmovies.network.TopRatedMoviesProvider
+import com.curtesmalteser.popularmovies.core.di.PopularMovieProviderQualifier
+import com.curtesmalteser.popularmovies.core.di.TopRatedMovieProviderQualifier
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

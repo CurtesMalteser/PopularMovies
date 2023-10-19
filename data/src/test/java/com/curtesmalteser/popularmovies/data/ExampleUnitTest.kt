@@ -1,7 +1,7 @@
-package com.curtesmalteser.data
+package com.curtesmalteser.popularmovies.data
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import io.kotest.matchers.ints.shouldBeExactly
+import org.junit.jupiter.api.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,6 +11,6 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        4 shouldBeExactly 2 + 2
     }
 }
