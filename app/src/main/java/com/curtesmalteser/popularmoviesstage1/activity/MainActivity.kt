@@ -1,7 +1,6 @@
 package com.curtesmalteser.popularmoviesstage1.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -20,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,14 +25,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
+import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsScreen
+import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsViewModel
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils
 import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesViewModel
 import com.curtesmalteser.popularmoviesstage1.viewmodel.PopularMoviesViewModel
@@ -77,12 +78,7 @@ fun ActivityContent() {
 
                 items.forEach { screen ->
                     BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                painterResource(id = screen.drawableId),
-                                contentDescription = null
-                            )
-                        },
+                        icon = screen.icon,
                         label = { Text(stringResource(id = screen.stringId)) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
@@ -115,6 +111,13 @@ fun ActivityContent() {
                 MoviesListScreen(navController, viewModel)
             }
             composable(Screen.Favorite.route) { Favorite(navController) }
+            composable(
+                route = Screen.MovieDetails.route,
+                arguments = listOf(navArgument("movieId") { type = NavType.LongType })
+            ) {
+                val viewModel = hiltViewModel<MovieDetailsViewModel>()
+                MovieDetailsScreen(navController, viewModel)
+            }
         }
     }
 }
@@ -144,8 +147,9 @@ fun MoviesListScreen(
                 contentDescription = "My content description",
                 modifier = Modifier
                     .clickable(onClick = {
-                        Log.d("MoviesListScreen", movie.title)
-                        //navController.navigate(Screen.MovieDetails.route + "/${movie.id}")
+                        navController.navigate(
+                            Screen.MovieDetails.createRoute(movie.id),
+                        )
                     })
                     .aspectRatio(0.67f),
             )
