@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.curtesmalteser.popularmovies.data"
+    namespace = "com.curtesmalteser.presentation"
     compileSdk = 33
 
     defaultConfig {
@@ -40,14 +40,7 @@ android {
 
 dependencies {
 
-    api(project(":core"))
-    implementation("com.google.code.gson:gson:2.8.9")
-
-    val retrofitDependencies = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitDependencies")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitDependencies")
-
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation(project(":data"))
 
     val hiltVersion = "2.46.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
@@ -59,6 +52,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 }
+
 
 kapt {
     correctErrorTypes = true
