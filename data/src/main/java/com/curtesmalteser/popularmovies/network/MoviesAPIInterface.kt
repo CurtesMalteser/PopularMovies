@@ -15,16 +15,16 @@ import retrofit2.http.QueryMap
 interface MoviesAPIInterface {
 
     @GET("movie/{id}/videos")
-    fun getVideos(
+    suspend fun getVideos(
         @Path("id") movieId: String,
         @Query("api_key") apiKey: String
-    ): Call<VideosModelData>
+    ): VideosModelData
 
     @GET("movie/{id}/reviews")
-    fun getReviews(
+    suspend fun getReviews(
         @Path("id") movieId: String,
         @Query("api_key") apiKey: String
-    ): Call<ReviewsModelData>
+    ): ReviewsModelData
 
     @GET("movie/popular")
     suspend fun fetchPopularMovies(@QueryMap queryParams: Map<String, String>): MoviesModelData
