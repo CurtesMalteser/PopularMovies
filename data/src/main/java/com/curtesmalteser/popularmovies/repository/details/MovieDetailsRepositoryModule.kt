@@ -1,5 +1,6 @@
 package com.curtesmalteser.popularmovies.repository.details
 
+import com.curtesmalteser.popularmovies.core.di.ApiKey
 import com.curtesmalteser.popularmovies.network.MoviesAPIInterface
 import dagger.Module
 import dagger.Provides
@@ -17,8 +18,12 @@ class MovieDetailsRepositoryModule {
 
     @Provides
     @Singleton
-    fun provideMovieDetailsRepository(moviesAPI: MoviesAPIInterface): IMovieDetailsRepository = run {
-        MovieDetailsRepository(moviesAPI)
-    }
+    fun provideMovieDetailsRepository(
+        @ApiKey apiKey: String,
+        moviesAPI: MoviesAPIInterface,
+    ): IMovieDetailsRepository = MovieDetailsRepository(
+        apiKey = apiKey,
+        moviesAPI = moviesAPI,
+    )
 
 }

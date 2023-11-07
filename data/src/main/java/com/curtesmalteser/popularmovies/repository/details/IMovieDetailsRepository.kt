@@ -1,6 +1,8 @@
 package com.curtesmalteser.popularmovies.repository.details
 
 import com.curtesmalteser.popularmovies.core.models.MovieDetails
+import com.curtesmalteser.popularmovies.data.ReviewsModelData
+import com.curtesmalteser.popularmovies.data.VideosModelData
 import com.curtesmalteser.popularmovies.network.MoviesAPIInterface
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult.MovieDetailsData
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +17,8 @@ import kotlinx.coroutines.flow.drop
 sealed class MovieDetailsResult {
     data class MovieDetailsData(
         val details: MovieDetails,
+        val videosData: Result<VideosModelData>,
+        val reviewsData: Result<ReviewsModelData>,
     ) : MovieDetails by details, MovieDetailsResult()
 
     data object NoDetails : MovieDetailsResult()
@@ -28,21 +32,40 @@ interface IMovieDetailsRepository {
 }
 
 internal class MovieDetailsRepository(
-    private val moviesAPI: MoviesAPIInterface
+    private val apiKey: String,
+    private val moviesAPI: MoviesAPIInterface,
 ) : IMovieDetailsRepository {
 
     private val _movieDetailsFlow = MutableStateFlow<Result<MovieDetailsResult>>(
         Result.success(MovieDetailsResult.NoDetails)
     )
+
     override val movieDetailsFlow: Flow<Result<MovieDetailsResult>>
         get() = _movieDetailsFlow.drop(1)
 
     override suspend fun setupMovie(details: MovieDetails?) {
         details?.let {
-            _movieDetailsFlow.emit(Result.success(MovieDetailsData(it)))
+            val videosData = getVideos(it.id)
+            val reviewsData = getReviews(it.id)
+            _movieDetailsFlow.emit(
+                Result.success(
+                    MovieDetailsData(
+                        details = it,
+                        videosData = videosData,
+                        reviewsData = reviewsData,
+                    )
+                )
+            )
         } ?: run {
             Result.success(MovieDetailsResult.NoDetails)
         }
     }
 
+    private suspend fun getVideos(movieId: Long) = moviesAPI.runCatching {
+        getVideos(movieId.toString(), apiKey = apiKey)
+    }
+
+    private suspend fun getReviews(movieId: Long) =  moviesAPI.runCatching {
+       getReviews(movieId.toString(), apiKey = apiKey)
+    }
 }

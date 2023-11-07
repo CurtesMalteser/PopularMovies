@@ -1,5 +1,6 @@
-package com.curtesmalteser.popularmoviesstage1.util
+package com.curtesmalteser.popularmovies.util
 
+import com.google.gson.Gson
 import java.io.File
 
 /**
@@ -15,4 +16,9 @@ fun Any.loadFileAsStringOrNull(fileName: String): String? {
             File(resource).readText()
         }
     }.getOrNull()
+}
+
+inline fun <reified T> Any.jsonToData(fileName: String): T = run {
+    val json = loadFileAsStringOrNull(fileName)
+    Gson().fromJson(json, T::class.java)
 }

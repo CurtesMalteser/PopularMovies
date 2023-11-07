@@ -3,8 +3,7 @@ package com.curtesmalteser.popularmovies.repository
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.network.IMoviesProvider
-import com.curtesmalteser.popularmoviesstage1.util.loadFileAsStringOrNull
-import com.google.gson.Gson
+import com.curtesmalteser.popularmovies.util.jsonToData
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,14 +70,12 @@ internal class PopularMoviesRepositoryTest {
 
         private var isFailure = false
 
-        private val moviesModel: MoviesModelData?
-            get() {
-                val json = loadFileAsStringOrNull("movies_list_response.json")
-                return Gson().fromJson(json, MoviesModelData::class.java)
-            }
+        private val moviesModel: MoviesModelData
+            get() = jsonToData("movies_list_response.json")
+
 
         override suspend fun fetchMovies(queryParams: Map<String, String>): Result<MoviesModelData> {
-            return Result.success(moviesModel!!).takeIf { !isFailure } ?: Result.failure(Exception())
+            return Result.success(moviesModel).takeIf { !isFailure } ?: Result.failure(Exception())
         }
 
         fun mockFailure() {

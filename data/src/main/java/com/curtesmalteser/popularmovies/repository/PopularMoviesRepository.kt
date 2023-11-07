@@ -3,14 +3,13 @@ package com.curtesmalteser.popularmovies.repository
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.network.IMoviesProvider
-import com.curtesmalteser.popularmovies.core.di.ApiKey
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Created by António 'Curtes Malteser' Bastião on 25/07/2021.
  */
 class PopularMoviesRepository(
-    @ApiKey private val apiKey: String,
+    private val apiKey: String,
     private val moviesProvider: IMoviesProvider,
 ) : IMoviesRepository {
 
