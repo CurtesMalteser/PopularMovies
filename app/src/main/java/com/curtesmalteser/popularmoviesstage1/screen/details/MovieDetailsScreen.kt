@@ -16,5 +16,7 @@ fun MovieDetailsScreen(
     val movieId : Long = navController.currentBackStackEntry
         ?.arguments?.getLong("movieId") ?: 0
 
+    viewModel.setupMovieDetailsFor(movieId)
+
     Text(text = "MovieDetailsScreen id: $movieId")
 }

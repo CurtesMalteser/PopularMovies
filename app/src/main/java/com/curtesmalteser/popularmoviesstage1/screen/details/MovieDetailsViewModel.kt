@@ -1,8 +1,10 @@
 package com.curtesmalteser.popularmoviesstage1.screen.details
 
 import androidx.lifecycle.ViewModel
-import com.curtesmalteser.presentation.IMovieDetailsUseCase
+import androidx.lifecycle.viewModelScope
+import com.curtesmalteser.presentation.ISetupMovieDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -11,7 +13,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
-    private val movieDetailsUseCase: IMovieDetailsUseCase,
-): ViewModel(){
+    private val movieDetailsUseCase: ISetupMovieDetailsUseCase,
+) : ViewModel() {
 
+    fun setupMovieDetailsFor(movieId: Long) {
+        viewModelScope.launch {
+            movieDetailsUseCase.setupMovieDetailsFor(movieId)
+        }
+    }
 }

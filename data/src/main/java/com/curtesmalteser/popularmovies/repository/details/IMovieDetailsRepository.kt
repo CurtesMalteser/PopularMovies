@@ -8,6 +8,8 @@ import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult.Mo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 
 /**
  * Created by António Bastião on 06.11.2023
@@ -41,7 +43,13 @@ internal class MovieDetailsRepository(
     )
 
     override val movieDetailsFlow: Flow<Result<MovieDetailsResult>>
-        get() = _movieDetailsFlow.drop(1)
+        get() = _movieDetailsFlow
+            .map {
+                it
+            }.drop(1)
+            .onCompletion {
+                _movieDetailsFlow.value = Result.success(MovieDetailsResult.NoDetails)
+            }
 
     override suspend fun setupMovie(details: MovieDetails?) {
         details?.let {

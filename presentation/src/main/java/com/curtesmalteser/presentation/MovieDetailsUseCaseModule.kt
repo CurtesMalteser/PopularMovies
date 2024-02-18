@@ -3,6 +3,7 @@ package com.curtesmalteser.presentation
 import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
+import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +23,10 @@ class MovieDetailsUseCaseModule {
     fun provideMovieDetailsUseCase(
         @PopularMoviesRepo popularMoviesRepository: IMoviesRepository,
         @TopRatedRepo topMoviesRepository: IMoviesRepository,
-    ): IMovieDetailsUseCase = MovieDetailsUseCase(
+        movieDetailsRepository: IMovieDetailsRepository,
+    ): ISetupMovieDetailsUseCase = SetupMovieDetailsUseCase(
         popularMoviesRepository = popularMoviesRepository,
         topMoviesRepository = topMoviesRepository,
+        movieDetailsRepository = movieDetailsRepository,
     )
 }
