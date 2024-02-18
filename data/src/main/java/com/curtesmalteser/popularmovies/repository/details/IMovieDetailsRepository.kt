@@ -7,8 +7,7 @@ import com.curtesmalteser.popularmovies.network.MoviesAPIInterface
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult.MovieDetailsData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onCompletion
 
 /**
@@ -38,42 +37,36 @@ internal class MovieDetailsRepository(
     private val moviesAPI: MoviesAPIInterface,
 ) : IMovieDetailsRepository {
 
-    private val _movieDetailsFlow = MutableStateFlow<Result<MovieDetailsResult>>(
-        Result.success(MovieDetailsResult.NoDetails)
-    )
+    private val _movieDetailsFlow = MutableStateFlow<Result<MovieDetailsResult>?>(null)
 
     override val movieDetailsFlow: Flow<Result<MovieDetailsResult>>
         get() = _movieDetailsFlow
-            .map {
-                it
-            }.drop(1)
+            .filterNotNull()
             .onCompletion {
                 _movieDetailsFlow.value = Result.success(MovieDetailsResult.NoDetails)
             }
 
     override suspend fun setupMovie(details: MovieDetails?) {
-        details?.let {
+        val result = details?.let {
             val videosData = getVideos(it.id)
             val reviewsData = getReviews(it.id)
-            _movieDetailsFlow.emit(
-                Result.success(
-                    MovieDetailsData(
-                        details = it,
-                        videosData = videosData,
-                        reviewsData = reviewsData,
-                    )
+            Result.success(
+                MovieDetailsData(
+                    details = it,
+                    videosData = videosData,
+                    reviewsData = reviewsData,
                 )
             )
-        } ?: run {
-            Result.success(MovieDetailsResult.NoDetails)
-        }
+        } ?: run { Result.success(MovieDetailsResult.NoDetails) }
+
+        _movieDetailsFlow.emit(result)
     }
 
     private suspend fun getVideos(movieId: Long) = moviesAPI.runCatching {
-        getVideos(movieId.toString(), apiKey = apiKey)
+        getVideos(movieId, apiKey = apiKey)
     }
 
     private suspend fun getReviews(movieId: Long) =  moviesAPI.runCatching {
-       getReviews(movieId.toString(), apiKey = apiKey)
+getReviews(movieId, apiKey = apiKey)
     }
 }
