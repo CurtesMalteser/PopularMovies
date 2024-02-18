@@ -129,12 +129,12 @@ fun MoviesListScreen(
     viewModel: MoviesViewModel,
 ) {
 
-    val movies = viewModel.moviesList.collectAsStateWithLifecycle()
+    val movies by viewModel.moviesList.collectAsStateWithLifecycle()
 
     // TODO: improve with Adaptive or Dynamic count on larger screens
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
         itemsIndexed(
-            items = movies.value.toList(),
+            items = movies.toList(),
             key = { _, item -> item.id }
         ) { _, movie ->
 

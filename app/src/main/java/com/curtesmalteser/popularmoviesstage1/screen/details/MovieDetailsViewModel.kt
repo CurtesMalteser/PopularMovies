@@ -2,6 +2,7 @@ package com.curtesmalteser.popularmoviesstage1.screen.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.curtesmalteser.presentation.IMovieDetailsFlowUseCase
 import com.curtesmalteser.presentation.ISetupMovieDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,7 +15,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
     private val movieDetailsUseCase: ISetupMovieDetailsUseCase,
+    private val movieDetailsFlowUseCase: IMovieDetailsFlowUseCase,
 ) : ViewModel() {
+
+    val movieDetailsFlow = movieDetailsFlowUseCase.movieDetailsFlow
 
     fun setupMovieDetailsFor(movieId: Long) {
         viewModelScope.launch {

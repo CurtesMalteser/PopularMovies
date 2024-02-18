@@ -29,4 +29,11 @@ class MovieDetailsUseCaseModule {
         topMoviesRepository = topMoviesRepository,
         movieDetailsRepository = movieDetailsRepository,
     )
+
+
+    @Provides
+    @ViewModelScoped
+    fun provideMovieDetailsFlowUseCase(
+        movieDetailsRepository: IMovieDetailsRepository,
+    ): IMovieDetailsFlowUseCase = MovieDetailsFlowUseCase(movieDetailsRepository)
 }

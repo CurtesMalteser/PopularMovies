@@ -35,10 +35,22 @@ class SetupMovieDetailsUseCaseTest {
 
     private class MoviesRepositoryMock : IMoviesRepository {
 
-        override val moviesList: Flow<List<MovieData>> = flowOf(emptyList())
+        private val _moviesList = listOf(
+            MovieData(
+                id = 1,
+                title="title",
+                posterPath = "poster",
+                backdropPath = "backdrop",
+                overview = "overview",
+                releaseDate = "releaseDate",
+                voteAverage = "voteAverage",
+            )
+        )
+
+        override val moviesList: Flow<List<MovieData>> = flowOf(_moviesList)
 
         override suspend fun fetchMovies(page: Int): Result<MoviesModelData> = Result
-            .success(MoviesModelData(1, emptyList()))
+            .success(MoviesModelData(1, _moviesList))
     }
 
     private class MovieDetailsRepositoryMock: IMovieDetailsRepository {

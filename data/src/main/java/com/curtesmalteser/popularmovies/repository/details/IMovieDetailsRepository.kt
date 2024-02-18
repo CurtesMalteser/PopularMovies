@@ -67,6 +67,6 @@ internal class MovieDetailsRepository(
     }
 
     private suspend fun getReviews(movieId: Long) =  moviesAPI.runCatching {
-getReviews(movieId, apiKey = apiKey)
+        getReviews(movieId, apiKey = apiKey)
     }
 }

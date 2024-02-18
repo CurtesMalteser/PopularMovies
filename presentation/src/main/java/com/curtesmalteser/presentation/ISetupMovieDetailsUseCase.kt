@@ -2,9 +2,10 @@ package com.curtesmalteser.presentation
 
 import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
+import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 
@@ -22,14 +23,9 @@ internal class SetupMovieDetailsUseCase(
     private val movieDetailsRepository: IMovieDetailsRepository,
 ) : ISetupMovieDetailsUseCase {
 
-    override suspend fun setupMovieDetailsFor(movieId: Long) {
-        merge(
+    override suspend fun setupMovieDetailsFor(movieId: Long) = merge(
             popularMoviesRepository.moviesList,
             topMoviesRepository.moviesList,
-        ).map { listOfMoviesData ->
-            listOfMoviesData.firstOrNull { movieData -> movieData.id == movieId }
-        }.map { details ->
-            movieDetailsRepository.setupMovie(details)
-        }.first()
-    }
+        ).map { moviesData -> moviesData.firstOrNull { movieData -> movieData.id == movieId } }
+        .firstOrNull { it is MovieData }.let { movieDetailsRepository.setupMovie(it) }
 }
