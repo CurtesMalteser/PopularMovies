@@ -6,6 +6,7 @@ import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -31,6 +32,13 @@ class SetupMovieDetailsUseCaseTest {
     fun `setupMovieDetailsFor calls repository with that has correct id`() = runTest {
         sut.setupMovieDetailsFor(1)
         movieDetailsRepositoryMock.setupMovieDetailsCalled shouldBe true
+    }
+
+    @Test
+    fun `setupMovieDetailsFor throws if movie with id is not found`() = runTest {
+        shouldThrow<NoSuchElementException> {
+            sut.setupMovieDetailsFor(0)
+        }
     }
 
     private class MoviesRepositoryMock : IMoviesRepository {

@@ -17,10 +17,11 @@ fun MovieDetailsScreen(
     navController: NavController,
     viewModel: MovieDetailsViewModel,
 ) {
-    val movieId : Long = navController.currentBackStackEntry
-        ?.arguments?.getLong("movieId") ?: 0
 
-    viewModel.setupMovieDetailsFor(movieId)
+    val movieId : Long = navController.currentBackStackEntry?.arguments
+        ?.getLong("movieId") ?: 0
+
+    movieId.takeIf { it > 0 }?.let(viewModel::setupMovieDetailsFor)
 
     val movieDetails by viewModel.movieDetailsFlow.collectAsStateWithLifecycle(Result.success(MovieDetailsResult.NoDetails))
 
