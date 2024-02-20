@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode.Companion.SrcAtop
@@ -25,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -77,6 +81,8 @@ fun MovieDetailsScreen(
 fun MovieDetailsHeader(
     details: () -> MovieDetails,
 ){
+    val mustShowDialog = remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -130,6 +136,39 @@ fun MovieDetailsHeader(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
+
+            Row (
+                modifier = Modifier.padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    onClick = { mustShowDialog.value = true },
+                    modifier = Modifier.padding(end = 8.dp),
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_heart_white),
+                        contentDescription = "Add to favorites icon",
+                    )
+                }
+
+                Text(
+                    text = stringResource(id = R.string.string_add_fav),
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            mustShowDialog.value.takeIf { it }?.let {
+                Dialog(onDismissRequest = { mustShowDialog.value = false }) {
+                    Text(
+                        text = "Feature will be implemented soon",
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
+                }
+            }
+
         }
     }
 }
