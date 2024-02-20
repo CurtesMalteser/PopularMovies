@@ -20,7 +20,7 @@ data class MovieData(
     @SerializedName("title")
     override val title: String,
     @SerializedName("vote_average")
-    val voteAverage: String,
+    override val voteAverage: String,
     @SerializedName("poster_path")
     override val posterPath: String,
     @SerializedName("backdrop_path")

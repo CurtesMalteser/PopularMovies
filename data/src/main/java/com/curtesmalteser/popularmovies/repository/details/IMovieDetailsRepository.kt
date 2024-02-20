@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onCompletion
 
 sealed class MovieDetailsResult {
     data class MovieDetailsData(
-        val details: MovieDetails,
+        private val details: MovieDetails,
         val videosData: Result<VideosModelData>,
         val reviewsData: Result<ReviewsModelData>,
     ) : MovieDetails by details, MovieDetailsResult()

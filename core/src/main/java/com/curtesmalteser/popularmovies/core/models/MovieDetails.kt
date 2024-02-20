@@ -8,4 +8,5 @@ interface MovieDetails: Movie {
     val backdropPath: String
     val overview: String
     val releaseDate: String
+    val voteAverage: String
 }
