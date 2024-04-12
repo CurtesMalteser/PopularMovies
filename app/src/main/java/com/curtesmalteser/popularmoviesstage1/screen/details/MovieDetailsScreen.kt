@@ -36,6 +36,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
 import com.curtesmalteser.popularmoviesstage1.R
+import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils.getPosterUrl
 
 
@@ -64,6 +65,7 @@ fun MovieDetailsScreen(
                         MovieDetailsHeader(
                             details = { detailsResult },
                         )
+                        CollapsibleRow(title = stringResource(id = R.string.string_overview))
                     }
                 }
                 MovieDetailsResult.NoDetails ->  Text(text = detailsResult.toString())
