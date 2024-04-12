@@ -65,7 +65,42 @@ fun MovieDetailsScreen(
                         MovieDetailsHeader(
                             details = { detailsResult },
                         )
-                        CollapsibleRow(title = stringResource(id = R.string.string_overview))
+                        CollapsibleRow(title = stringResource(id = R.string.string_overview)) {
+                            Text(
+                                text = detailsResult.overview,
+                                color = Color.White,
+                                textAlign = TextAlign.Justify,
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
+                        CollapsibleRow(title = stringResource(id = R.string.string_reviews)) {
+                            detailsResult.reviewsData.fold(
+                                onSuccess = { reviews ->
+
+                                    Column {
+                                        reviews.reviewsModels.map {
+                                            Text(
+                                                text = it.author,
+                                                color = Color.White,
+                                            )
+                                            Text(
+                                                text = it.content,
+                                                color = Color.White,
+                                            )
+                                        }
+                                    }
+
+                                },
+                                onFailure = { error ->
+                                    Text(
+                                        text = error.message ?: "Unknown error",
+                                        color = Color.White,
+                                        textAlign = TextAlign.Justify,
+                                        modifier = Modifier.padding(16.dp),
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
                 MovieDetailsResult.NoDetails ->  Text(text = detailsResult.toString())

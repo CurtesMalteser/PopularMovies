@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,6 +24,7 @@ fun CollapsibleRow(
     title: String,
     content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
+    // todo: replace with state from viewModel (to be implemented)
     val isExpanded = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -36,7 +36,6 @@ fun CollapsibleRow(
                 .clickable { isExpanded.value = !isExpanded.value }
         )
 
-        // This content will be shown or hidden when the header is clicked
         AnimatedVisibility(visible = isExpanded.value, content = content)
 
     }
