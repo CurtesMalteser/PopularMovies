@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.curtesmalteser.popularmovies.data.ReviewsModelData
+import com.curtesmalteser.popularmovies.data.VideosModelData
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
 
@@ -18,19 +18,22 @@ import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
  * Refer to <a href="https://github.com/CurtesMalteser">CurtesMalteser github</a>
  */
 @Composable
-fun ReviewsRow(reviewsResult: Result<ReviewsModelData>) {
-    CollapsibleRow(title = stringResource(id = R.string.string_reviews)) {
-        reviewsResult.fold(
+fun VideosRow(videosResult: Result<VideosModelData>) {
+    CollapsibleRow(title = stringResource(id = R.string.string_videos)) {
+        videosResult.fold(
             onSuccess = { reviews ->
-
                 Column {
-                    reviews.reviewsModels.map {
+                    reviews.videosModels.map {
                         Text(
-                            text = it.author,
+                            text = it.name,
                             color = Color.White,
                         )
                         Text(
-                            text = it.content,
+                            text = it.type,
+                            color = Color.White,
+                        )
+                        Text(
+                            text = it.key,
                             color = Color.White,
                         )
                     }

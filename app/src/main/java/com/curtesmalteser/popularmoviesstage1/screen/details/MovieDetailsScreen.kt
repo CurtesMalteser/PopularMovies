@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -36,8 +37,9 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
 import com.curtesmalteser.popularmoviesstage1.R
-import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
+import com.curtesmalteser.popularmoviesstage1.component.details.OverviewRow
 import com.curtesmalteser.popularmoviesstage1.component.details.ReviewsRow
+import com.curtesmalteser.popularmoviesstage1.component.details.VideosRow
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils.getPosterUrl
 
 
@@ -66,15 +68,19 @@ fun MovieDetailsScreen(
                         MovieDetailsHeader(
                             details = { detailsResult },
                         )
-                        CollapsibleRow(title = stringResource(id = R.string.string_overview)) {
-                            Text(
-                                text = detailsResult.overview,
-                                color = Color.White,
-                                textAlign = TextAlign.Justify,
-                                modifier = Modifier.padding(16.dp),
-                            )
-                        }
-                       ReviewsRow(reviewsResult = detailsResult.reviewsData)
+                        LazyColumn(
+                            content = {
+                                item (key = R.string.string_overview) {
+                                    OverviewRow(overview = detailsResult.overview)
+                                }
+                                item(key = R.string.string_reviews) {
+                                    ReviewsRow(reviewsResult = detailsResult.reviewsData)
+                                }
+                                item(key = R.string.string_videos) {
+                                    VideosRow(videosResult = detailsResult.videosData)
+                                }
+                            }
+                        )
                     }
                 }
                 MovieDetailsResult.NoDetails ->  Text(text = detailsResult.toString())

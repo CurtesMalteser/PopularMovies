@@ -24,7 +24,7 @@ fun CollapsibleRow(
     title: String,
     content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
-    // todo: replace with state from viewModel (to be implemented)
+    //todo: replace with state from viewModel (to be implemented)
     val isExpanded = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(16.dp)) {
