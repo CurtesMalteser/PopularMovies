@@ -37,6 +37,7 @@ import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
+import com.curtesmalteser.popularmoviesstage1.component.details.ReviewsRow
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils.getPosterUrl
 
 
@@ -73,34 +74,7 @@ fun MovieDetailsScreen(
                                 modifier = Modifier.padding(16.dp),
                             )
                         }
-                        CollapsibleRow(title = stringResource(id = R.string.string_reviews)) {
-                            detailsResult.reviewsData.fold(
-                                onSuccess = { reviews ->
-
-                                    Column {
-                                        reviews.reviewsModels.map {
-                                            Text(
-                                                text = it.author,
-                                                color = Color.White,
-                                            )
-                                            Text(
-                                                text = it.content,
-                                                color = Color.White,
-                                            )
-                                        }
-                                    }
-
-                                },
-                                onFailure = { error ->
-                                    Text(
-                                        text = error.message ?: "Unknown error",
-                                        color = Color.White,
-                                        textAlign = TextAlign.Justify,
-                                        modifier = Modifier.padding(16.dp),
-                                    )
-                                }
-                            )
-                        }
+                       ReviewsRow(reviewsResult = detailsResult.reviewsData)
                     }
                 }
                 MovieDetailsResult.NoDetails ->  Text(text = detailsResult.toString())
