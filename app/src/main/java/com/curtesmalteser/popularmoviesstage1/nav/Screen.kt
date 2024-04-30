@@ -1,7 +1,7 @@
 package com.curtesmalteser.popularmoviesstage1.nav
 
 import androidx.annotation.StringRes
-import androidx.compose.material.Icon
+import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.runtime.Composable

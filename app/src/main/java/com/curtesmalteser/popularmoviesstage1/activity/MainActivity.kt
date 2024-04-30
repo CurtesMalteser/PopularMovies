@@ -9,11 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityContent() {
 
@@ -72,12 +74,12 @@ fun ActivityContent() {
             )
         },
         bottomBar = {
-            BottomNavigation {
+            NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
                 items.forEach { screen ->
-                    BottomNavigationItem(
+                    NavigationBarItem(
                         icon = screen.icon,
                         label = { Text(stringResource(id = screen.stringId)) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
@@ -90,8 +92,8 @@ fun ActivityContent() {
                                 restoreState = true
                             }
                         },
-                        selectedContentColor = colorResource(id = R.color.colorAccent),
-                        unselectedContentColor = colorResource(id = R.color.white)
+                        //selectedContentColor = colorResource(id = R.color.colorAccent),
+                        //unselectedContentColor = colorResource(id = R.color.white)
                     )
                 }
             }
