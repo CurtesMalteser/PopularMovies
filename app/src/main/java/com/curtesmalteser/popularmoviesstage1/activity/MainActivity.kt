@@ -40,6 +40,7 @@ import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
 import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsScreen
 import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsViewModel
+import com.curtesmalteser.popularmoviesstage1.theme.AppTheme
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils
 import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesViewModel
 import com.curtesmalteser.popularmoviesstage1.viewmodel.PopularMoviesViewModel
@@ -52,7 +53,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ActivityContent()
+            AppTheme {
+                ActivityContent()
+            }
         }
     }
 }
@@ -94,6 +97,8 @@ fun ActivityContent() {
                                 restoreState = true
                             }
                         },
+                        // TODO: check from where these colors are coming and override on theme
+                        // for light and dark mode
                         colors = NavigationBarItemColors(
                             selectedIconColor = colorResource(id = R.color.colorAccent),
                             selectedTextColor = colorResource(id = R.color.colorAccent),
