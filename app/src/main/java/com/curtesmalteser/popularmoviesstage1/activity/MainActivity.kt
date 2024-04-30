@@ -12,12 +12,14 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,8 +94,15 @@ fun ActivityContent() {
                                 restoreState = true
                             }
                         },
-                        //selectedContentColor = colorResource(id = R.color.colorAccent),
-                        //unselectedContentColor = colorResource(id = R.color.white)
+                        colors = NavigationBarItemColors(
+                            selectedIconColor = colorResource(id = R.color.colorAccent),
+                            selectedTextColor = colorResource(id = R.color.colorAccent),
+                            selectedIndicatorColor = Color.Transparent,
+                            unselectedIconColor = colorResource(id = R.color.white),
+                            unselectedTextColor = colorResource(id = R.color.white),
+                            disabledIconColor = colorResource(id = R.color.colorPrimaryDark).copy(alpha = 0.38f),
+                            disabledTextColor = colorResource(id = R.color.white).copy(alpha = 0.38f),
+                        )
                     )
                 }
             }
