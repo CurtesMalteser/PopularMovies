@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.curtesmalteser.popularmovies.data"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 28
@@ -49,7 +49,7 @@ dependencies {
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
-    val hiltVersion = "2.46.1"
+    val hiltVersion = "2.49"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 

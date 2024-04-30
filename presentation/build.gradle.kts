@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.curtesmalteser.presentation"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 28
@@ -42,7 +42,7 @@ dependencies {
 
     implementation(project(":data"))
 
-    val hiltVersion = "2.46.1"
+    val hiltVersion = "2.49"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
