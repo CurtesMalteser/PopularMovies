@@ -6,8 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.curtesmalteser.popularmovies.data.MovieData
-import com.curtesmalteser.popularmoviesstage1.repository.IMoviesRepository
+import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -19,8 +20,9 @@ open class MoviesViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    // TODO: 18/02/2024 Use Movie and inject use case when Fragment is deleted
     private val _moviesList = MutableStateFlow<List<MovieData>>(emptyList())
-    val moviesList: MutableStateFlow<List<MovieData>> = _moviesList
+    val moviesList: StateFlow<List<MovieData>> = _moviesList
 
     var pageNumber: Int
         get() = savedStateHandle.get<Int>(PAGE_NUMBER_KEY) ?: 1
@@ -41,8 +43,9 @@ open class MoviesViewModel(
         }
     }
 
-    // TODO: 30/07/2021 Handle error and no connection
-    fun makeMoviesQuery(page: Int) {
+    // TODO: 18/02/2024 30/07/2021 Handle error and no connection,
+    //  handle with use case
+    private fun makeMoviesQuery(page: Int) {
         viewModelScope.launch {
             moviesRepository.fetchMovies(page).fold(
                 onSuccess = {

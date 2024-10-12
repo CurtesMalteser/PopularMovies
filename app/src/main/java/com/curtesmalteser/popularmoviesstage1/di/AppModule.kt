@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import com.curtesmalteser.popularmovies.core.di.ApiKey
 
 /**
  * Created by António 'Curtes Malteser' Bastião on 25/07/2021.

@@ -1,11 +1,13 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.curtesmalteser.popularmovies.data"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 28
@@ -24,23 +26,39 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
+    }
+
+    testOptions.unitTests.all {
+        it.useJUnitPlatform()
     }
 }
 
 dependencies {
 
-    implementation(project(":core"))
-    implementation("com.google.code.gson:gson:2.8.9")
+    api(project(":core"))
+    implementation(libs.gson)
 
-    val retrofitDependencies = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitDependencies")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitDependencies")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
-    testImplementation("junit:junit:4.13.2")
+    implementation(libs.logging.interceptor)
 
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
+}
+
+kapt {
+    correctErrorTypes = true
 }

@@ -124,8 +124,8 @@ public class ReviewsFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
-            call = apiInterface.getReviews(String.valueOf(movieId), BuildConfig.API_KEY);
-            call.enqueue(new Callback<ReviewsModelData>() {
+            //call = apiInterface.getReviews(String.valueOf(movieId), BuildConfig.API_KEY);
+            /*call.enqueue(new Callback<ReviewsModelData>() {
                 @Override
                 public void onResponse(@NonNull Call<ReviewsModelData> call, @NonNull Response<ReviewsModelData> response) {
                     if (response.body().getReviewsModels().size() != 0) {
@@ -147,7 +147,7 @@ public class ReviewsFragment extends Fragment
                 public void onFailure(@NonNull Call<ReviewsModelData> call, @NonNull Throwable t) {
                     Log.d(TAG, "onFailure:" + t.getMessage());
                 }
-            });
+            })*/;
         } else
             Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }

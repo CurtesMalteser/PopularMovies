@@ -122,8 +122,8 @@ public class VideosFragment extends Fragment
                 && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().isConnected()) {
 
-            call = apiInterface.getVideos(String.valueOf(movieId), BuildConfig.API_KEY);
-            call.enqueue(new Callback<VideosModelData>() {
+           // call = apiInterface.getVideos(String.valueOf(movieId), BuildConfig.API_KEY);
+            /*call.enqueue(new Callback<VideosModelData>() {
                 @Override
                 public void onResponse(@NonNull Call<VideosModelData> call, @NonNull Response<VideosModelData> response) {
                     if (response.body().getVideosModels().size() != 0) {
@@ -146,7 +146,7 @@ public class VideosFragment extends Fragment
                 public void onFailure(@NonNull Call<VideosModelData> call, @NonNull Throwable t) {
                     Log.d(TAG, "onFailure:" + t.getMessage());
                 }
-            });
+            })*/;
         } else
             Toast.makeText(getContext(), R.string.check_internet_connection, Toast.LENGTH_SHORT).show();
     }

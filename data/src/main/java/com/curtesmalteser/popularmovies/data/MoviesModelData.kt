@@ -1,6 +1,6 @@
 package com.curtesmalteser.popularmovies.data
 
-import com.curtesmalteser.popularmovies.core.models.Movie
+import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -20,13 +20,13 @@ data class MovieData(
     @SerializedName("title")
     override val title: String,
     @SerializedName("vote_average")
-    val voteAverage: String,
+    override val voteAverage: String,
     @SerializedName("poster_path")
     override val posterPath: String,
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    override val backdropPath: String,
     @SerializedName("overview")
-    val overview: String,
+    override val overview: String,
     @SerializedName("release_date")
-    val releaseDate: String,
-) : Movie
+    override val releaseDate: String,
+) : MovieDetails

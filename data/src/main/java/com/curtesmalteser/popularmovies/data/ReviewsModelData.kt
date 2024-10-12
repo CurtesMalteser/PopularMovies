@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName
  * Refer to <a href="https://github.com/CurtesMalteser">CurtesMalteser github</a>
  */
 data class ReviewsModelData(
+    @SerializedName("id")
+    internal val id: Long,
     @SerializedName("results")
     val reviewsModels: ArrayList<ReviewData>,
 )
