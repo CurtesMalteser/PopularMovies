@@ -9,8 +9,6 @@ glide = "1.0.0-beta01"
 gradle = "8.7.0"
 gson = "2.8.9"
 hiltAndroid = "2.49"
-hiltAndroidGradlePlugin = "2.46.1"
-hiltCompiler = "2.46.1"
 hiltNavigationCompose = "1.2.0"
 javaxInject = "1"
 junitJupiterApi = "5.9.1"
@@ -48,9 +46,8 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
-hilt-compiler-v2461 = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterApi" }
