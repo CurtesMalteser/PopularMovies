@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -83,6 +84,8 @@ fun ActivityContent() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
+                val unselectedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+
                 items.forEach { screen ->
                     NavigationBarItem(
                         icon = screen.icon,
@@ -97,16 +100,16 @@ fun ActivityContent() {
                                 restoreState = true
                             }
                         },
-                        // TODO: check from where these colors are coming and override on theme
+                        // TODO: ovrride these colors in the Material 3 theme once identified
                         // for light and dark mode
                         colors = NavigationBarItemColors(
                             selectedIconColor = colorResource(id = R.color.colorAccent),
                             selectedTextColor = colorResource(id = R.color.colorAccent),
                             selectedIndicatorColor = Color.Transparent,
-                            unselectedIconColor = colorResource(id = R.color.white),
-                            unselectedTextColor = colorResource(id = R.color.white),
+                            unselectedIconColor = unselectedColor,
+                            unselectedTextColor = unselectedColor,
                             disabledIconColor = colorResource(id = R.color.colorPrimaryDark).copy(alpha = 0.38f),
-                            disabledTextColor = colorResource(id = R.color.white).copy(alpha = 0.38f),
+                            disabledTextColor = unselectedColor.copy(alpha = 0.38f),
                         )
                     )
                 }
