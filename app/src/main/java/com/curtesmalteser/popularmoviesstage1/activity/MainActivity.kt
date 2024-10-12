@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.curtesmalteser.popularmoviesstage1.R
@@ -64,14 +65,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityContent() {
-
     val navController = rememberNavController()
-
-    val items = listOf(
-        Screen.Popular,
-        Screen.TopRated,
-        Screen.Favorite,
-    )
 
     Scaffold(
         topBar = {
@@ -80,56 +74,28 @@ fun ActivityContent() {
             )
         },
         bottomBar = {
-            NavigationBar {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-
-                val unselectedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-
-                items.forEach { screen ->
-                    NavigationBarItem(
-                        icon = screen.icon,
-                        label = { Text(stringResource(id = screen.stringId)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        // TODO: ovrride these colors in the Material 3 theme once identified
-                        // for light and dark mode
-                        colors = NavigationBarItemColors(
-                            selectedIconColor = colorResource(id = R.color.colorAccent),
-                            selectedTextColor = colorResource(id = R.color.colorAccent),
-                            selectedIndicatorColor = Color.Transparent,
-                            unselectedIconColor = unselectedColor,
-                            unselectedTextColor = unselectedColor,
-                            disabledIconColor = colorResource(id = R.color.colorPrimaryDark).copy(alpha = 0.38f),
-                            disabledTextColor = unselectedColor.copy(alpha = 0.38f),
-                        )
-                    )
-                }
+            if (shouldShowBottomBar(navController)) {
+                MainBottomNavigationBar(navController)
             }
         }
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Popular.route,
+            startDestination = "main",
             Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Popular.route) {
-                val viewModel = hiltViewModel<PopularMoviesViewModel>()
-                MoviesListScreen(navController, viewModel)
+            navigation(startDestination = Screen.Popular.route, route = "main") {
+                composable(Screen.Popular.route) {
+                    val viewModel = hiltViewModel<PopularMoviesViewModel>()
+                    MoviesListScreen(navController, viewModel)
+                }
+                composable(Screen.TopRated.route) {
+                    val viewModel = hiltViewModel<TopRatedMoviesViewModel>()
+                    MoviesListScreen(navController, viewModel)
+                }
+                composable(Screen.Favorite.route) { Favorite(navController) }
             }
-            composable(Screen.TopRated.route) {
-                val viewModel = hiltViewModel<TopRatedMoviesViewModel>()
-                MoviesListScreen(navController, viewModel)
-            }
-            composable(Screen.Favorite.route) { Favorite(navController) }
+
             composable(
                 route = Screen.MovieDetails.route,
                 arguments = listOf(navArgument("movieId") { type = NavType.LongType })
@@ -139,6 +105,56 @@ fun ActivityContent() {
             }
         }
     }
+}
+
+@Composable
+fun MainBottomNavigationBar(navController: NavController) {
+    val items = listOf(
+        Screen.Popular,
+        Screen.TopRated,
+        Screen.Favorite,
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val selectedColor = colorResource(id = R.color.colorAccent)
+    val unselectedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+
+    NavigationBar {
+        items.forEach { screen ->
+            NavigationBarItem(
+                icon = screen.icon,
+                label = { Text(stringResource(id = screen.stringId)) },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        val destinationIdToPop = currentDestination?.id ?: navController.graph.findStartDestination().id
+                        popUpTo(destinationIdToPop) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                colors = NavigationBarItemColors(
+                    selectedIconColor = selectedColor,
+                    selectedTextColor = selectedColor,
+                    selectedIndicatorColor = Color.Transparent,
+                    unselectedIconColor = unselectedColor,
+                    unselectedTextColor = unselectedColor,
+                    disabledIconColor = colorResource(id = R.color.colorPrimaryDark).copy(alpha = 0.38f),
+                    disabledTextColor = unselectedColor.copy(alpha = 0.38f),
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun shouldShowBottomBar(navController: NavController): Boolean {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination?.route
+    return currentDestination in listOf(Screen.Popular.route, Screen.TopRated.route, Screen.Favorite.route)
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
