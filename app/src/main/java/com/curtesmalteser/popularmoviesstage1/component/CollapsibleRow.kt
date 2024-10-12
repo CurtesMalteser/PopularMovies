@@ -6,8 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +30,7 @@ fun CollapsibleRow(
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = title,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .background(color = Color.Red)
                 .clickable { isExpanded.value = !isExpanded.value }

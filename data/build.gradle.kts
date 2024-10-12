@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.curtesmalteser.popularmovies.data"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 28
@@ -26,11 +26,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 
     testOptions.unitTests.all {
@@ -49,7 +49,7 @@ dependencies {
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
-    val hiltVersion = "2.46.1"
+    val hiltVersion = "2.49"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
