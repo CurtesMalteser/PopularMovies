@@ -41,23 +41,21 @@ android {
 dependencies {
 
     api(project(":core"))
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation(libs.gson)
 
-    val retrofitDependencies = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitDependencies")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitDependencies")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation(libs.logging.interceptor)
 
-    val hiltVersion = "2.49"
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
-    testImplementation("io.kotest:kotest-assertions-core:5.0.0.M2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
 }
 

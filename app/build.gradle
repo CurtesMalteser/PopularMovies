@@ -75,7 +75,7 @@ dependencies {
     implementation(libs.coil)
 
     implementation libs.hilt.android
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    kapt libs.hilt.compiler.v2461
 
     implementation libs.androidx.activity.ktx
     implementation libs.androidx.fragment.ktx
