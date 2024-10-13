@@ -12,10 +12,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.curtesmalteser.popularmoviesstage1.activity.Favorite
-import com.curtesmalteser.popularmoviesstage1.activity.MoviesListScreen
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
 import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsScreen
 import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsViewModel
+import com.curtesmalteser.popularmoviesstage1.screen.movieslist.MoviesListScreen
 import com.curtesmalteser.popularmoviesstage1.viewmodel.PopularMoviesViewModel
 import com.curtesmalteser.popularmoviesstage1.viewmodel.TopRatedMoviesViewModel
 
