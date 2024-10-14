@@ -9,5 +9,5 @@ import androidx.room.RoomDatabase
  */
 @Database(entities = [MovieEntity::class], version = 1)
 abstract class MoviesDataBase: RoomDatabase() {
-    //abstract fun favoriteMoviesDao(): FavoriteMoviesDao
+    abstract fun favoriteMoviesDao(): FavoriteMoviesDao
 }
