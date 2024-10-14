@@ -25,6 +25,8 @@ picasso = "2.71828"
 retrofitDependencies = "2.9.0"
 turbine = "1.0.0"
 ui = "1.6.6"
+room = "2.6.1"
+ksp = "1.9.23-1.0.20"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityKtx" }
@@ -61,6 +63,10 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitDependencies" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+room-compiler = { module= "androidx.room:room-compiler", version.ref = "room"}
+room-runtime = { module= "androidx.room:room-runtime", version.ref = "room"}
+room-ktx = { module= "androidx.room:room-ktx", version.ref = "room"}
 
 [plugins]
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
