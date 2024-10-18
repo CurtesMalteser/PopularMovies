@@ -19,3 +19,13 @@ data class MovieEntity(
     override val title: String,
     override val posterPath: String
 ): MovieDetails
+
+fun MovieDetails.toEntity() = MovieEntity(
+    id = id,
+    title = title,
+    posterPath = posterPath,
+    backdropPath = backdropPath,
+    overview = overview,
+    releaseDate = releaseDate,
+    voteAverage = voteAverage
+)

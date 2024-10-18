@@ -3,16 +3,14 @@ package com.curtesmalteser.popularmovies.repository.details
 import app.cash.turbine.test
 import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.curtesmalteser.popularmovies.data.MoviesModelData
-import com.curtesmalteser.popularmovies.data.ReviewsModelData
-import com.curtesmalteser.popularmovies.data.VideosModelData
-import com.curtesmalteser.popularmovies.network.MoviesAPIInterface
-import com.curtesmalteser.popularmovies.repository.details.MovieDetailsRepositoryTest.MoviesAPIMock.MovieDetailsException
+import com.curtesmalteser.popularmovies.database.FavoriteMoviesDaoMock
+import com.curtesmalteser.popularmovies.database.toEntity
+import com.curtesmalteser.popularmovies.network.MoviesAPIMock
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult.MovieDetailsData
 import com.curtesmalteser.popularmovies.util.jsonToData
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import java.lang.Exception
 import kotlin.Result.Companion.failure
 
 /**
@@ -25,9 +23,12 @@ class MovieDetailsRepositoryTest {
 
     private val apiMock = MoviesAPIMock()
 
+    private val favoriteMoviesDaoMock = FavoriteMoviesDaoMock()
+
     private val sut = MovieDetailsRepository(
         apiKey = "apiKey",
         moviesAPI = apiMock,
+        favoriteMoviesDao = favoriteMoviesDaoMock
     )
 
     @Test
@@ -51,6 +52,7 @@ class MovieDetailsRepositoryTest {
                 details = movieDetails.moviesModels.first(),
                 videosData = Result.success(apiMock.videosData),
                 reviewsData = Result.success(apiMock.reviewsData),
+                isFavorite = false
             )
 
         }
@@ -67,46 +69,64 @@ class MovieDetailsRepositoryTest {
                 override val backdropPath = ""
                 override val overview = ""
                 override val releaseDate = ""
+                override val voteAverage = ""
             }
 
             sut.setupMovie(movieDetails)
 
-            val movieDetailsResult =  (awaitItem().getOrThrow() as MovieDetailsData)
+            val movieDetailsResult = (awaitItem().getOrThrow() as MovieDetailsData)
 
             movieDetailsResult.run {
-                videosData shouldBe failure<MovieDetailsData>(MovieDetailsException(apiMock.noVideosMessageForId(movieDetails.id)))
-                reviewsData shouldBe failure<MovieDetailsData>(MovieDetailsException(apiMock.noReviewsMessageForId(movieDetails.id)))
+                videosData shouldBe failure<MovieDetailsData>(
+                    MoviesAPIMock.MovieDetailsException(
+                        apiMock.noVideosMessageForId(
+                            movieDetails.id
+                        )
+                    )
+                )
+                reviewsData shouldBe failure<MovieDetailsData>(
+                    MoviesAPIMock.MovieDetailsException(
+                        apiMock.noReviewsMessageForId(
+                            movieDetails.id
+                        )
+                    )
+                )
             }
         }
     }
 
-    private class MoviesAPIMock : MoviesAPIInterface {
+    @Test
+    fun `toggleFavorite updates movie isFavorite to true`() = runTest {
+        sut.movieDetailsFlow.test {
 
-        val videosData = jsonToData<VideosModelData>("videos_response.json")
-        val reviewsData = jsonToData<ReviewsModelData>("reviews_response.json")
+            val movie = movieDetails.moviesModels.first()
+            sut.setupMovie(movie)
 
-        val noVideosMessageForId = { id: Long -> "No videos found for movieId: $id" }
-        val noReviewsMessageForId = { id: Long -> "No reviews found for movieId: $id" }
-        override suspend fun getVideos(movieId: Long, apiKey: String): VideosModelData = run {
-            if(movieId == videosData.id) videosData else throw MovieDetailsException(noVideosMessageForId(movieId))
-        }
+            skipItems(1)
 
-        override suspend fun getReviews(movieId: Long, apiKey: String): ReviewsModelData = run {
-            if(movieId == reviewsData.id) reviewsData else throw MovieDetailsException(noReviewsMessageForId(movieId))
-        }
+            sut.toggleFavorite(movie)
 
-        override suspend fun fetchPopularMovies(queryParams: Map<String, String>): MoviesModelData {
-            throw NotImplementedError(message = "Not relevant for this test")
-        }
+            val data = awaitItem().getOrThrow() as MovieDetailsData
 
-        override suspend fun fetchTopRated(queryParams: Map<String, String>): MoviesModelData {
-            throw NotImplementedError(message = "Not relevant for this test")
-        }
-
-        class MovieDetailsException(message: String) : Exception(message) {
-            override fun equals(other: Any?): Boolean = message == (other as MovieDetailsException).message
-            override fun hashCode(): Int = javaClass.hashCode()
+            data.isFavorite shouldBe true
         }
     }
 
+    @Test
+    fun `toggleFavorite updates movie isFavorite to false`() = runTest {
+        sut.movieDetailsFlow.test {
+
+            val movie = movieDetails.moviesModels.first()
+            favoriteMoviesDaoMock.insert(movie.toEntity())
+            sut.setupMovie(movie)
+
+            skipItems(1)
+
+            sut.toggleFavorite(movie)
+
+            val data = awaitItem().getOrThrow() as MovieDetailsData
+
+            data.isFavorite shouldBe false
+        }
+    }
 }
