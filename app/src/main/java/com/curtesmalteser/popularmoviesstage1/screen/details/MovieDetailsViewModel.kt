@@ -3,8 +3,8 @@ package com.curtesmalteser.popularmoviesstage1.screen.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
-import com.curtesmalteser.presentation.IMovieDetailsFlowUseCase
-import com.curtesmalteser.presentation.ISetupMovieDetailsUseCase
+import com.curtesmalteser.presentation.details.IMovieDetailsFlowUseCase
+import com.curtesmalteser.presentation.details.ISetupMovieDetailsUseCase
 import com.curtesmalteser.presentation.details.IToggleFavoriteMovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

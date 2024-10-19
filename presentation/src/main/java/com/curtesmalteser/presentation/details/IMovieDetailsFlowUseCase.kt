@@ -1,4 +1,4 @@
-package com.curtesmalteser.presentation
+package com.curtesmalteser.presentation.details
 
 import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult

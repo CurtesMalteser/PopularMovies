@@ -1,11 +1,9 @@
-package com.curtesmalteser.presentation
+package com.curtesmalteser.presentation.details
 
 import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
-import com.curtesmalteser.presentation.details.IToggleFavoriteMovieUseCase
-import com.curtesmalteser.presentation.details.ToggleFavoriteMovieUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

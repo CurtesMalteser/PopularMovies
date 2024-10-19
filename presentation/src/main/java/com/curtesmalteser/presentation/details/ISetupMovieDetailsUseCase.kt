@@ -1,5 +1,6 @@
-package com.curtesmalteser.presentation
+package com.curtesmalteser.presentation.details
 
+import com.curtesmalteser.popularmovies.core.di.FavoriteRepo
 import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
 import com.curtesmalteser.popularmovies.data.MovieData
@@ -20,6 +21,7 @@ interface ISetupMovieDetailsUseCase {
 internal class SetupMovieDetailsUseCase(
     @PopularMoviesRepo private val popularMoviesRepository: IMoviesRepository,
     @TopRatedRepo private val topMoviesRepository: IMoviesRepository,
+    @FavoriteRepo private val favoriteMoviesRepository: IMoviesRepository,
     private val movieDetailsRepository: IMovieDetailsRepository,
 ) : ISetupMovieDetailsUseCase {
 
@@ -28,6 +30,7 @@ internal class SetupMovieDetailsUseCase(
     override suspend fun setupMovieDetailsFor(movieId: Long) = merge(
             popularMoviesRepository.moviesList,
             topMoviesRepository.moviesList,
+            favoriteMoviesRepository.moviesList,
         ).map { moviesData -> moviesData.firstOrNull { movieData -> movieData.id == movieId } }
         .first { it is MovieData }.let { movieDetailsRepository.setupMovie(it) }
 }
