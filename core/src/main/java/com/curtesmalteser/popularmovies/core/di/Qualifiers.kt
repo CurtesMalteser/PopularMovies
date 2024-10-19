@@ -27,4 +27,8 @@ annotation class TopRatedRepo
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class FavoriteRepo
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class IoDispatcher
