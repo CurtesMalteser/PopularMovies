@@ -19,13 +19,15 @@ import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
 @Composable
 fun OverviewRow(overview: String) {
     CollapsibleRow(title = stringResource(id = R.string.string_overview)) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = overview,
-                color = Color.White,
-                textAlign = TextAlign.Justify,
-                modifier = Modifier.padding(16.dp),
-            )
+        Row {
+            DetailsCard {
+                Text(
+                    text = overview,
+                    color = Color.White,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
         }
     }
 }
