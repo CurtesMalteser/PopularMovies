@@ -24,7 +24,8 @@ class SetupMovieDetailsUseCaseTest {
     private val sut = SetupMovieDetailsUseCase(
         popularMoviesRepository = moviesRepositoryMock,
         topMoviesRepository = moviesRepositoryMock,
-        movieDetailsRepository = movieDetailsRepositoryMock
+        movieDetailsRepository = movieDetailsRepositoryMock,
+        favoriteMoviesRepository = moviesRepositoryMock,
     )
 
     @Test
