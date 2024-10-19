@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    alias(libs.plugins.devtools.ksp)
     id("dagger.hilt.android.plugin")
 }
 
@@ -56,6 +57,10 @@ dependencies {
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
 }
 

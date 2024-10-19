@@ -1,11 +1,9 @@
 package com.curtesmalteser.presentation
 
-import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
-import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
-import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
+import com.curtesmalteser.presentation.mock.repository.MovieDetailsRepositoryMock
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +44,7 @@ class SetupMovieDetailsUseCaseTest {
         private val _moviesList = listOf(
             MovieData(
                 id = 1,
-                title="title",
+                title = "title",
                 posterPath = "poster",
                 backdropPath = "backdrop",
                 overview = "overview",
@@ -59,19 +57,5 @@ class SetupMovieDetailsUseCaseTest {
 
         override suspend fun fetchMovies(page: Int): Result<MoviesModelData> = Result
             .success(MoviesModelData(1, _moviesList))
-    }
-
-    private class MovieDetailsRepositoryMock: IMovieDetailsRepository {
-
-        private var _setupMovieDetailsCalled = false
-        val setupMovieDetailsCalled get() = _setupMovieDetailsCalled
-
-        override val movieDetailsFlow: Flow<Result<MovieDetailsResult>>
-            get() = flowOf(Result.success(MovieDetailsResult.NoDetails))
-
-        override suspend fun setupMovie(details: MovieDetails?) {
-            _setupMovieDetailsCalled = true
-        }
-
     }
 }
