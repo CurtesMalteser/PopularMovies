@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="number_of_columns">3</integer>
-    <dimen name="padding_exterior">16dp</dimen>
-    <dimen name="padding_start_end">8dp</dimen>
-    <dimen name="textSize">16sp</dimen>
-    <dimen name="textTitle">24sp</dimen>
-</resources>

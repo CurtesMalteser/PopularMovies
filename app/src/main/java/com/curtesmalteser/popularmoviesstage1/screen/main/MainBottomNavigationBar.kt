@@ -9,14 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
 
 /**
@@ -32,7 +30,7 @@ fun MainBottomNavigationBar(navController: NavController) {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val selectedColor = colorResource(id = R.color.colorAccent)
+    val selectedColor = Color.Red
     val unselectedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
     NavigationBar {
