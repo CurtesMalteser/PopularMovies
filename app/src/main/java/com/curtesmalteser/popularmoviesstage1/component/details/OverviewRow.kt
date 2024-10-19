@@ -1,5 +1,6 @@
 package com.curtesmalteser.popularmoviesstage1.component.details
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,11 +19,15 @@ import com.curtesmalteser.popularmoviesstage1.component.CollapsibleRow
 @Composable
 fun OverviewRow(overview: String) {
     CollapsibleRow(title = stringResource(id = R.string.string_overview)) {
-        Text(
-            text = overview,
-            color = Color.White,
-            textAlign = TextAlign.Justify,
-            modifier = Modifier.padding(16.dp),
-        )
+        Row {
+            DetailsCard {
+                Text(
+                    text = overview,
+                    color = Color.White,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+        }
     }
 }
