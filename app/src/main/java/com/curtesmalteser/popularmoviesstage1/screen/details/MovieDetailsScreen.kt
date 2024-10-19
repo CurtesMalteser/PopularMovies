@@ -1,5 +1,6 @@
 package com.curtesmalteser.popularmoviesstage1.screen.details
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,8 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode.Companion.SrcAtop
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -53,24 +51,31 @@ fun MovieDetailsScreen(
     viewModel: MovieDetailsViewModel,
 ) {
 
-    val movieId : Long = navController.currentBackStackEntry?.arguments
+    val movieId: Long = navController.currentBackStackEntry?.arguments
         ?.getLong("movieId") ?: 0
 
     movieId.takeIf { it > 0 }?.let(viewModel::setupMovieDetailsFor)
 
-    val movieDetails by viewModel.movieDetailsFlow.collectAsStateWithLifecycle(Result.success(MovieDetailsResult.NoDetails))
+    val movieDetails by viewModel.movieDetailsFlow.collectAsStateWithLifecycle(
+        Result.success(
+            MovieDetailsResult.NoDetails
+        )
+    )
 
     movieDetails.fold(
         onSuccess = { detailsResult ->
             when (detailsResult) {
+
                 is MovieDetailsResult.MovieDetailsData -> {
                     BackgroundImage(backdropPath = detailsResult.backdropPath) {
                         MovieDetailsHeader(
                             details = { detailsResult },
+                            isFavorite = { detailsResult.isFavorite },
+                            toggleFavorite = { viewModel.toggleFavorite() },
                         )
                         LazyColumn(
                             content = {
-                                item (key = R.string.string_overview) {
+                                item(key = R.string.string_overview) {
                                     OverviewRow(overview = detailsResult.overview)
                                 }
                                 item(key = R.string.string_reviews) {
@@ -83,7 +88,8 @@ fun MovieDetailsScreen(
                         )
                     }
                 }
-                MovieDetailsResult.NoDetails ->  Text(text = detailsResult.toString())
+
+                MovieDetailsResult.NoDetails -> Text(text = detailsResult.toString())
             }
 
         },
@@ -97,9 +103,9 @@ fun MovieDetailsScreen(
 @Composable
 fun MovieDetailsHeader(
     details: () -> MovieDetails,
-){
-    val mustShowDialog = remember { mutableStateOf(false) }
-
+    isFavorite: () -> Boolean,
+    toggleFavorite: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -117,9 +123,10 @@ fun MovieDetailsHeader(
                 .fillMaxWidth(.40f)
                 .padding(end = 8.dp),
         )
-        Column(modifier = Modifier
-            .fillMaxWidth(1f)
-            .padding(start = 8.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(start = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -136,8 +143,10 @@ fun MovieDetailsHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Image(painter = painterResource(
-                    id = R.drawable.ic_star_red_24dp),
+                Image(
+                    painter = painterResource(
+                        id = R.drawable.ic_star_red_24dp
+                    ),
                     contentDescription = "Vote Average red star icon",
                     modifier = Modifier.padding(end = 8.dp),
                 )
@@ -154,17 +163,23 @@ fun MovieDetailsHeader(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            Row (
+            Row(
                 modifier = Modifier.padding(top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
-                    onClick = { mustShowDialog.value = true },
+                    onClick = toggleFavorite,
                     modifier = Modifier.padding(end = 8.dp),
                 ) {
+                    val color by animateColorAsState(
+                        if (isFavorite()) Color.Red else Color.White,
+                        label = "FavoriteIconColorAnimation",
+                    )
+
                     Image(
                         painter = painterResource(id = R.drawable.ic_heart_white),
                         contentDescription = "Add to favorites icon",
+                        colorFilter = ColorFilter.tint(color),
                     )
                 }
 
@@ -174,18 +189,6 @@ fun MovieDetailsHeader(
                     textAlign = TextAlign.Center,
                 )
             }
-
-            mustShowDialog.value.takeIf { it }?.let {
-                Dialog(onDismissRequest = { mustShowDialog.value = false }) {
-                    Text(
-                        text = "Feature will be implemented soon",
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp),
-                    )
-                }
-            }
-
         }
     }
 }
@@ -207,22 +210,26 @@ fun BackgroundImage(
             modifier = Modifier.matchParentSize(),
             colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.9f), SrcAtop),
         )
-        Column (modifier = Modifier.matchParentSize()){ content() }
+        Column(modifier = Modifier.matchParentSize()) { content() }
     }
 }
 
 @Composable
 @Preview
 fun HeaderPreview() {
-    MovieDetailsHeader(details = {
-        object : MovieDetails{
-            override val id = 1L
-            override val title = "Title"
-            override val voteAverage = "7.5"
-            override val posterPath = "poster"
-            override val backdropPath = "backdrop"
-            override val overview = "overview"
-            override val releaseDate = "releaseDate"
-        }
-    })
+    MovieDetailsHeader(
+        isFavorite = { false },
+        toggleFavorite = { },
+        details = {
+            object : MovieDetails {
+                override val id = 1L
+                override val title = "Title"
+                override val voteAverage = "7.5"
+                override val posterPath = "poster"
+                override val backdropPath = "backdrop"
+                override val overview = "overview"
+                override val releaseDate = "releaseDate"
+            }
+        },
+    )
 }

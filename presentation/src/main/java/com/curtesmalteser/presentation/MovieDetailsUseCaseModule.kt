@@ -4,6 +4,8 @@ import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
+import com.curtesmalteser.presentation.details.FavoriteMovieUseCase
+import com.curtesmalteser.presentation.details.IFavoriteMovieUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,4 +38,11 @@ class MovieDetailsUseCaseModule {
     fun provideMovieDetailsFlowUseCase(
         movieDetailsRepository: IMovieDetailsRepository,
     ): IMovieDetailsFlowUseCase = MovieDetailsFlowUseCase(movieDetailsRepository)
+
+
+    @Provides
+    @ViewModelScoped
+    fun provideFavoriteMovieUseCase(
+        movieDetailsRepository: IMovieDetailsRepository,
+    ): IFavoriteMovieUseCase = FavoriteMovieUseCase(movieDetailsRepository)
 }
