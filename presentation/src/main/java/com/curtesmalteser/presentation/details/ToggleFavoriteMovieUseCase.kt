@@ -7,13 +7,13 @@ import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsReposito
  * Created by António Bastião on 18.10.2024
  * Refer to <a href="https://github.com/CurtesMalteser">CurtesMalteser github</a>
  */
-interface IFavoriteMovieUseCase {
+interface IToggleFavoriteMovieUseCase {
     suspend fun toggleFavorite(details: MovieDetails)
 }
 
-internal class FavoriteMovieUseCase(
+internal class ToggleFavoriteMovieUseCase(
     private val movieDetailsRepository: IMovieDetailsRepository,
-) : IFavoriteMovieUseCase {
+) : IToggleFavoriteMovieUseCase {
     override suspend fun toggleFavorite(details: MovieDetails) = movieDetailsRepository
         .toggleFavorite(details)
 }

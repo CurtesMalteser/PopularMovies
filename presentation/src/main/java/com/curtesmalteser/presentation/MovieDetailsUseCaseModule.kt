@@ -4,8 +4,8 @@ import com.curtesmalteser.popularmovies.core.di.PopularMoviesRepo
 import com.curtesmalteser.popularmovies.core.di.TopRatedRepo
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import com.curtesmalteser.popularmovies.repository.details.IMovieDetailsRepository
-import com.curtesmalteser.presentation.details.FavoriteMovieUseCase
-import com.curtesmalteser.presentation.details.IFavoriteMovieUseCase
+import com.curtesmalteser.presentation.details.IToggleFavoriteMovieUseCase
+import com.curtesmalteser.presentation.details.ToggleFavoriteMovieUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,5 +44,5 @@ class MovieDetailsUseCaseModule {
     @ViewModelScoped
     fun provideFavoriteMovieUseCase(
         movieDetailsRepository: IMovieDetailsRepository,
-    ): IFavoriteMovieUseCase = FavoriteMovieUseCase(movieDetailsRepository)
+    ): IToggleFavoriteMovieUseCase = ToggleFavoriteMovieUseCase(movieDetailsRepository)
 }
