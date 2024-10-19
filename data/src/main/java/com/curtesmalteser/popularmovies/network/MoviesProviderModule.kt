@@ -1,8 +1,5 @@
 package com.curtesmalteser.popularmovies.network
 
-import com.curtesmalteser.popularmovies.network.IMoviesProvider
-import com.curtesmalteser.popularmovies.network.PopularMoviesProvider
-import com.curtesmalteser.popularmovies.network.TopRatedMoviesProvider
 import com.curtesmalteser.popularmovies.core.di.PopularMovieProviderQualifier
 import com.curtesmalteser.popularmovies.core.di.TopRatedMovieProviderQualifier
 import dagger.Binds

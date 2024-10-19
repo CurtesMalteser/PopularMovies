@@ -24,3 +24,7 @@ annotation class TopRatedMovieProviderQualifier
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class TopRatedRepo
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IoDispatcher
