@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -144,11 +147,10 @@ fun MovieDetailsHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Image(
-                    painter = painterResource(
-                        id = R.drawable.ic_star_red_24dp
-                    ),
-                    contentDescription = "Vote Average red star icon",
+                Icon(
+                    Icons.Rounded.Star,
+                    contentDescription = "Star icon",
+                    tint = Color.White,
                     modifier = Modifier.padding(end = 8.dp),
                 )
                 Text(
