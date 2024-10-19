@@ -11,13 +11,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.curtesmalteser.popularmoviesstage1.activity.Favorite
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
 import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsScreen
 import com.curtesmalteser.popularmoviesstage1.screen.details.MovieDetailsViewModel
 import com.curtesmalteser.popularmoviesstage1.screen.movieslist.MoviesListScreen
 import com.curtesmalteser.popularmoviesstage1.viewmodel.PopularMoviesViewModel
 import com.curtesmalteser.popularmoviesstage1.viewmodel.TopRatedMoviesViewModel
+import com.curtesmalteser.popularmoviesstage1.viewmodel.favorite.FavoriteMoviesViewModel
 
 /**
  * Created by António Bastião on 13.10.2024
@@ -33,7 +33,10 @@ fun NavGraphBuilder.mainNavigation(navController: NavHostController) {
             val viewModel = hiltViewModel<TopRatedMoviesViewModel>()
             MoviesListScreen(navController, viewModel)
         }
-        composable(Screen.Favorite.route) { Favorite(navController) }
+        composable(Screen.Favorite.route) {
+            val viewModel = hiltViewModel<FavoriteMoviesViewModel>()
+            MoviesListScreen(navController, viewModel)
+        }
     }
 }
 

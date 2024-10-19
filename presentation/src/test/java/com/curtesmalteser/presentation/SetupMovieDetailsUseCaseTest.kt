@@ -3,6 +3,7 @@ package com.curtesmalteser.presentation
 import com.curtesmalteser.popularmovies.data.MovieData
 import com.curtesmalteser.popularmovies.data.MoviesModelData
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
+import com.curtesmalteser.presentation.details.SetupMovieDetailsUseCase
 import com.curtesmalteser.presentation.mock.repository.MovieDetailsRepositoryMock
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -23,7 +24,8 @@ class SetupMovieDetailsUseCaseTest {
     private val sut = SetupMovieDetailsUseCase(
         popularMoviesRepository = moviesRepositoryMock,
         topMoviesRepository = moviesRepositoryMock,
-        movieDetailsRepository = movieDetailsRepositoryMock
+        movieDetailsRepository = movieDetailsRepositoryMock,
+        favoriteMoviesRepository = moviesRepositoryMock,
     )
 
     @Test

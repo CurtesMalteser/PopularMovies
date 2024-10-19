@@ -3,9 +3,9 @@ package com.curtesmalteser.popularmoviesstage1.screen.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.curtesmalteser.popularmovies.repository.details.MovieDetailsResult
-import com.curtesmalteser.presentation.IMovieDetailsFlowUseCase
-import com.curtesmalteser.presentation.ISetupMovieDetailsUseCase
-import com.curtesmalteser.presentation.details.IFavoriteMovieUseCase
+import com.curtesmalteser.presentation.details.IMovieDetailsFlowUseCase
+import com.curtesmalteser.presentation.details.ISetupMovieDetailsUseCase
+import com.curtesmalteser.presentation.details.IToggleFavoriteMovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MovieDetailsViewModel @Inject constructor(
     private val movieDetailsUseCase: ISetupMovieDetailsUseCase,
     movieDetailsFlowUseCase: IMovieDetailsFlowUseCase,
-    private val favoriteMovieUseCase: IFavoriteMovieUseCase,
+    private val favoriteMovieUseCase: IToggleFavoriteMovieUseCase,
 ) : ViewModel() {
 
     private val _movieDetailsFlow = MutableStateFlow<Result<MovieDetailsResult>>(

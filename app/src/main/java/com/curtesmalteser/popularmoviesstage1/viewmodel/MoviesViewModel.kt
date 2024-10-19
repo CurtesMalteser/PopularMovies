@@ -1,11 +1,10 @@
 package com.curtesmalteser.popularmoviesstage1.viewmodel
 
-import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.curtesmalteser.popularmovies.data.MovieData
+import com.curtesmalteser.popularmovies.core.models.MovieDetails
 import com.curtesmalteser.popularmovies.repository.IMoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,23 +17,15 @@ import kotlinx.coroutines.launch
 open class MoviesViewModel(
     private val moviesRepository: IMoviesRepository,
     private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : ViewModel(), MoviesPresenter {
 
     // TODO: 18/02/2024 Use Movie and inject use case when Fragment is deleted
-    private val _moviesList = MutableStateFlow<List<MovieData>>(emptyList())
-    val moviesList: StateFlow<List<MovieData>> = _moviesList
+    private val _moviesList = MutableStateFlow<List<MovieDetails>>(emptyList())
+    override val moviesList: StateFlow<List<MovieDetails>> = _moviesList
 
-    var pageNumber: Int
+    private var pageNumber: Int
         get() = savedStateHandle.get<Int>(PAGE_NUMBER_KEY) ?: 1
         set(value) = savedStateHandle.set(PAGE_NUMBER_KEY, value)
-
-    private var _stateRecyclerView: Parcelable? = null
-    var stateRecyclerView: Parcelable?
-        get() = _stateRecyclerView
-        set(value) {
-            _stateRecyclerView = value
-        }
-
 
     init {
         makeMoviesQuery(pageNumber)

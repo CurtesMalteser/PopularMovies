@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class FavoriteMovieUseCaseTest {
 
     private val movieDetailsRepositoryMock = MovieDetailsRepositoryMock()
-    private val sut = FavoriteMovieUseCase(movieDetailsRepositoryMock)
+    private val sut = ToggleFavoriteMovieUseCase(movieDetailsRepositoryMock)
 
     @Test
     fun toggleFavorite() = runTest {

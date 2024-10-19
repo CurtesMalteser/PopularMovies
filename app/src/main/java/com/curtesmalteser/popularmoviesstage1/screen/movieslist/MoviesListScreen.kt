@@ -16,7 +16,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.curtesmalteser.popularmoviesstage1.R
 import com.curtesmalteser.popularmoviesstage1.nav.Screen
 import com.curtesmalteser.popularmoviesstage1.utils.NetworkUtils
-import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesViewModel
+import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesPresenter
 
 /**
  * Created by António Bastião on 13.10.2024
@@ -26,10 +26,10 @@ import com.curtesmalteser.popularmoviesstage1.viewmodel.MoviesViewModel
 @Composable
 fun MoviesListScreen(
     navController: NavController,
-    viewModel: MoviesViewModel,
+    presenter: MoviesPresenter,
 ) {
 
-    val movies by viewModel.moviesList.collectAsStateWithLifecycle()
+    val movies by presenter.moviesList.collectAsStateWithLifecycle()
 
     // TODO: improve with Adaptive or Dynamic count on larger screens
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
